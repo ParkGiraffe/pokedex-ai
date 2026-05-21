@@ -1,0 +1,182 @@
+{
+  "source": "PokeAPI v2",
+  "generated_at_utc": "2026-05-21T00:00:00Z",
+  "count": 25,
+  "natures": [
+    {
+      "id": 1,
+      "ko": "노력",
+      "en": "hardy",
+      "up": null,
+      "down": null
+    },
+    {
+      "id": 2,
+      "ko": "대담",
+      "en": "bold",
+      "up": "B",
+      "down": "A"
+    },
+    {
+      "id": 3,
+      "ko": "조심",
+      "en": "modest",
+      "up": "C",
+      "down": "A"
+    },
+    {
+      "id": 4,
+      "ko": "차분",
+      "en": "calm",
+      "up": "D",
+      "down": "A"
+    },
+    {
+      "id": 5,
+      "ko": "겁쟁이",
+      "en": "timid",
+      "up": "S",
+      "down": "A"
+    },
+    {
+      "id": 6,
+      "ko": "외로움",
+      "en": "lonely",
+      "up": "A",
+      "down": "B"
+    },
+    {
+      "id": 7,
+      "ko": "온순",
+      "en": "docile",
+      "up": null,
+      "down": null
+    },
+    {
+      "id": 8,
+      "ko": "의젓",
+      "en": "mild",
+      "up": "C",
+      "down": "B"
+    },
+    {
+      "id": 9,
+      "ko": "얌전",
+      "en": "gentle",
+      "up": "D",
+      "down": "B"
+    },
+    {
+      "id": 10,
+      "ko": "성급",
+      "en": "hasty",
+      "up": "S",
+      "down": "B"
+    },
+    {
+      "id": 11,
+      "ko": "고집",
+      "en": "adamant",
+      "up": "A",
+      "down": "C"
+    },
+    {
+      "id": 12,
+      "ko": "장난꾸러기",
+      "en": "impish",
+      "up": "B",
+      "down": "C"
+    },
+    {
+      "id": 13,
+      "ko": "수줍음",
+      "en": "bashful",
+      "up": null,
+      "down": null
+    },
+    {
+      "id": 14,
+      "ko": "신중",
+      "en": "careful",
+      "up": "D",
+      "down": "C"
+    },
+    {
+      "id": 15,
+      "ko": "덜렁",
+      "en": "rash",
+      "up": "C",
+      "down": "D"
+    },
+    {
+      "id": 16,
+      "ko": "명랑",
+      "en": "jolly",
+      "up": "S",
+      "down": "C"
+    },
+    {
+      "id": 17,
+      "ko": "개구쟁이",
+      "en": "naughty",
+      "up": "A",
+      "down": "D"
+    },
+    {
+      "id": 18,
+      "ko": "촐랑",
+      "en": "lax",
+      "up": "B",
+      "down": "D"
+    },
+    {
+      "id": 19,
+      "ko": "변덕",
+      "en": "quirky",
+      "up": null,
+      "down": null
+    },
+    {
+      "id": 20,
+      "ko": "천진난만",
+      "en": "naive",
+      "up": "S",
+      "down": "D"
+    },
+    {
+      "id": 21,
+      "ko": "용감",
+      "en": "brave",
+      "up": "A",
+      "down": "S"
+    },
+    {
+      "id": 22,
+      "ko": "무사태평",
+      "en": "relaxed",
+      "up": "B",
+      "down": "S"
+    },
+    {
+      "id": 23,
+      "ko": "냉정",
+      "en": "quiet",
+      "up": "C",
+      "down": "S"
+    },
+    {
+      "id": 24,
+      "ko": "건방",
+      "en": "sassy",
+      "up": "D",
+      "down": "S"
+    },
+    {
+      "id": 25,
+      "ko": "성실",
+      "en": "serious",
+      "up": null,
+      "down": null
+    }
+  ]
+}
