@@ -1,0 +1,45 @@
+import { describe, expect, it } from "vitest";
+
+import { serializeForClaude } from "../src/export";
+import type { BattleState, Party } from "../src/types";
+
+const sampleParty: Party = [
+  {
+    species: "어써러셔",
+    level: 50,
+    nature: "신중",
+    ability: "재생력",
+    item: "돌격조끼",
+    teraType: "강철",
+    moves: ["지진", "스톤에지", "기합구슬", "탁쳐서떨구기"],
+    evs: { H: 252, A: 4, B: 0, C: 0, D: 252, S: 0 },
+    ivs: { H: 31, A: 31, B: 31, C: 31, D: 31, S: 31 },
+  },
+];
+
+describe("Claude paste 직렬화", () => {
+  it("party-analysis 작업 헤더가 첫 줄에 들어간다", () => {
+    const text = serializeForClaude("party-analysis", { party: sampleParty });
+    const firstLine = text.split("\n")[0]!;
+    expect(firstLine).toContain("작업");
+    expect(firstLine).toContain("파티 분석");
+  });
+
+  it("출력에 JSON 코드블록이 포함된다", () => {
+    const text = serializeForClaude("party-analysis", { party: sampleParty });
+    expect(text).toMatch(/```json\n[\s\S]+?\n```/);
+  });
+
+  it("battle-decision 작업도 직렬화한다", () => {
+    const state: BattleState = {
+      my: sampleParty,
+      opponent: { revealed: [], field: [] },
+      myField: [],
+      trickRoom: false,
+      turn: 3,
+    };
+    const text = serializeForClaude("battle-decision", { state });
+    expect(text).toContain("배틀 의사결정");
+    expect(text).toContain("턴");
+  });
+});
