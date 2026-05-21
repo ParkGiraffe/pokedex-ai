@@ -11,8 +11,18 @@
 2. `.claude/code-principles.md` — p2z 컨벤션 코드 작성 원칙 6가지 + 패키지 추가 규칙
 3. `.claude/client-stack.md` — `apps/client` 기술 스택과 디렉토리 구조
 4. `.claude/data-policy.md` — PokeAPI 기반 데이터 갱신 정책 (손편집 금지)
-5. `docs/lexicon.md` — 한국 SV 커뮤니티 어휘 사전 (응답·UI 문구에 사용)
-6. `docs/specs/` 아래 가장 최신 디자인 문서
+5. `.claude/rules/` — 언어·프레임워크별 코드 가이드 (p2z에서 가져옴)
+   - `type-script.md` · `react.md` · `i18n.md` · `git.md` — 본 프로젝트에서 그대로 적용
+   - `expo.md` · `react-native.md` · `nestjs.md` — 참고용 (현재 본 프로젝트엔 mobile·server 없음)
+6. `.claude/skills/` — p2z 표준 작업 절차 (스킬 카드)
+   - `tanstack-router/SKILL.md` · `tanstack-query-api-client/SKILL.md` — `apps/client` 라우팅·API
+   - `tailwind-cva-component/SKILL.md` — UI 컴포넌트 작성 표준
+   - `testing-vitest/SKILL.md` — 테스트 작성 표준
+   - `check-all/SKILL.md` · `pr-title/SKILL.md` — 일반 작업 절차
+   - 나머지(`dto-response`, `infra-up`, `nest-*`)는 server/infra 도입 전까지 참고용
+7. `docs/lexicon.md` — 한국 SV 커뮤니티 어휘 사전 (응답·UI 문구에 사용)
+8. `docs/p2z-refs/` — p2z의 루트·apps별 CLAUDE.md·README 사본 (원문 대조용)
+9. `docs/specs/` 아래 가장 최신 디자인 문서
 
 ## 운영 원칙
 
