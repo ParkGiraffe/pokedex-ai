@@ -1,20 +1,31 @@
 # Phase 1 — 스마트누오 클론 UI (윤곽 spec)
 
-> **상태:** 윤곽 (outline). Phase 0 구현이 끝난 뒤 이 spec을 다시 검토·확정한 다음 `writing-plans` 사이클로 진입한다.
+> **상태:** 확정 (2026-05-21, Phase 0 완료 후 재검토). §2를 실제 Phase 0 결과로 갱신했다. 이 spec 기준으로 Phase 1 plan을 작성한다.
 > **유연성 원칙:** 이 spec은 현재 가정에 기반한 윤곽이다. Phase 0 구현 중 발견되는 사실(데이터 누락, 공식 보정, 스키마 변경, 라이브러리 호환성)에 따라 자유롭게 수정·재구성한다. 윤곽이 부정되더라도 죄책감 없이 갈아엎는다.
 
 ## 1. 목표
 
 스마트누오(smartnuo.com)의 4페이지 UI(계산기·스피드·도감·파티빌더)를 React + Vite로 구현한다. 모든 결정론적 계산은 `@pokedex-agent/pokedex-core`를 그대로 호출하며, 각 페이지에 Claude paste 양방향 슬롯을 둔다. 9세대 SV 싱글배틀 한정.
 
-## 2. 가정 (Phase 0 결과 기반)
+## 2. Phase 0 결과 (확정 사실, 2026-05-21 완료)
 
-- `@pokedex-agent/pokedex-core`가 정상 동작하며 `pokedex`, `lookup`, `formula`, `export`, `parse` 5종 모두 export 됨.
-- 1025마리 도감 + types/moves/abilities/items JSON이 `packages/pokedex-core/data/` 에 정착.
-- 데미지 30케이스가 스마트누오와 ±0 일치 검증 완료.
-- Phase 0의 Zod 스키마(`PartyMember`, `Party`, `BattleState`, `ClaudeResponseSchema`)가 안정.
+- `@pokedex-agent/pokedex-core`가 동작하며 다음을 export 한다.
+  - 데이터: `pokedex`, `pokedexByNo/Ko/En`
+  - 조회: `findPokemon`, `findMove`, `findAbility`, `findItem`, `fuzzyPokemon`, `allMoves/allAbilities/allItems`
+  - 공식(`formula` 네임스페이스): `calculateDamage`(16롤, 4096 모디파이어), `actualStat`/`actualStatBlock`, `NATURE_TABLE`, `typeEffectiveness`, `effectiveSpeed`/`fasterSide`
+  - 직렬화: `serializeForClaude(task, payload)`, `parseClaudeResponse(text)`, `ClaudeResponseSchema`
+  - 스키마: `PartyMember`, `PartyMemberObject`, `Party`, `BattleState`, `TYPE_NAMES`, `NATURE_NAMES` 등
+- 데이터 JSON 6종이 `packages/pokedex-core/data/` 에 정착: `pokedex(1025)`, `types`, `moves(843)`, `abilities(276)`, `items(328)`, `natures(25)`. 모두 fetcher 멱등.
+- `pokedex-core` 테스트 49개 통과. 데미지 30케이스는 본 구현 회귀 기준선으로 잠금(외부 smartnuo ±0 대조는 미수행 — 잔여 수동 항목).
 
-위 가정이 깨지면 (예: 데미지 공식이 일부 케이스에서 어긋나면) Phase 1 진입 전에 Phase 0를 먼저 수정한다.
+### Phase 0에서 확정된 변경 (윤곽 대비)
+
+- **성격명·보정**: `NATURE_NAMES`를 PokeAPI 공식 표기로 교정(개구쟁이·의젓·명랑·천진난만·조심·덜렁·얌전·건방·변덕·성실 등). 보정치는 `natures.json`에서 파생. UI 성격 선택지는 이 25개를 그대로 쓴다.
+- **아이템 실명**: 돌격조끼(assault-vest), 구애머리띠/스카프/안경, 기합의띠, 생명의구슬 등 실제 한국어명 사용. "구애조끼"는 존재하지 않음.
+- **데미지 입력 형태**: `calculateDamage`는 실수치(attack/defense)·basePower·moveType·attackerTypes·defenderTypes·테라·weatherBoost(1|1.5|0.5)·itemMultiplier·burned·critical을 받는다. UI는 종족값+EV/IV/성격/랭크/도구/특성을 입력받아 `actualStatBlock`/`effectiveSpeed`로 실수치를 만든 뒤 `calculateDamage`에 넘긴다.
+- **런타임/설치 주의**: node 22.11/pnpm 10.23 환경(mise 핀 node24/pnpm10.23은 GitHub rate limit로 미설치). Vite 8/Vitest 4는 rolldown 네이티브 바인딩이 첫 설치에서 누락될 수 있어 `pnpm install --force` 1회가 필요하다. apps/client 도입 시 동일 주의.
+
+위 사실에 맞춰 §4 구조·§5 흐름·§7 라이브러리를 확정한다. 추가로 가정이 깨지면 그 시점에 Phase 0를 수정한다.
 
 ## 3. 범위 · 비범위
 
