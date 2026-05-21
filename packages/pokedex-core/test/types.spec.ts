@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { Party, PartyMember, StatBlock, TypeName, isTypeName } from "../src/types";
+import { pokedex, pokedexByKo } from "../src/data";
 
 describe("타입 스키마", () => {
   it("정상 PartyMember를 파싱한다", () => {
@@ -64,5 +65,38 @@ describe("타입 스키마", () => {
     expect(() => StatBlock.parse({ H: -1, A: 0, B: 0, C: 0, D: 0, S: 0 })).toThrow();
     expect(() => StatBlock.parse({ H: 253, A: 0, B: 0, C: 0, D: 0, S: 0 })).toThrow();
     expect(() => StatBlock.parse({ H: 100, A: 0, B: 0, C: 0, D: 0, S: 0 })).not.toThrow();
+  });
+});
+
+describe("도감 데이터", () => {
+  it("1025마리가 로드된다", () => {
+    expect(pokedex.count).toBe(1025);
+    expect(pokedex.entries).toHaveLength(1025);
+  });
+
+  it("한국어명으로 조회한다", () => {
+    expect(pokedexByKo.get("이상해씨")?.no).toBe(1);
+    expect(pokedexByKo.get("피카츄")?.no).toBe(25);
+    expect(pokedexByKo.get("뮤츠")?.no).toBe(150);
+    expect(pokedexByKo.get("복숭악동")?.no).toBe(1025);
+  });
+
+  it("모든 엔트리가 한국어명을 갖는다", () => {
+    for (const entry of pokedex.entries) {
+      expect(entry.ko).toBeTruthy();
+      expect(entry.ko.length).toBeGreaterThan(0);
+    }
+  });
+
+  it("모든 엔트리의 타입이 18타입 중 하나다", () => {
+    for (const entry of pokedex.entries) {
+      for (const t of entry.types) {
+        expect([
+          "노말", "불꽃", "물", "풀", "전기", "얼음", "격투", "독",
+          "땅", "비행", "에스퍼", "벌레", "바위", "고스트", "드래곤", "악",
+          "강철", "페어리",
+        ]).toContain(t);
+      }
+    }
   });
 });
