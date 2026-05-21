@@ -15,12 +15,13 @@ export const isTypeName = (value: unknown): value is TypeName =>
 export const TeraType = z.union([TypeName, z.literal("스텔라")]);
 export type TeraType = z.infer<typeof TeraType>;
 
+// 공식 한국어 표기(PokeAPI /nature/ 기준, 도감번호 순). 보정치는 natures.json에서 파생한다.
 export const NATURE_NAMES = [
-  "노력", "외로움", "용감", "장난꾸러기", "고집",
-  "대담", "성격없음", "무사태평", "건방짐", "차분",
-  "수줍음", "냉정", "온순", "덜렁댐", "조심스러움",
-  "얌전함", "촐랑", "변덕쟁이", "겁쟁이", "성급",
-  "느긋", "기분파", "온건", "신중", "잘참음",
+  "노력", "대담", "조심", "차분", "겁쟁이",
+  "외로움", "온순", "의젓", "얌전", "성급",
+  "고집", "장난꾸러기", "수줍음", "신중", "덜렁",
+  "명랑", "개구쟁이", "촐랑", "변덕", "천진난만",
+  "용감", "무사태평", "냉정", "건방", "성실",
 ] as const;
 
 export const NatureName = z.enum(NATURE_NAMES);
