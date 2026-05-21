@@ -1,13 +1,8 @@
 import { createRoute } from "@tanstack/react-router";
 
-import { rootRoute } from "./__root";
+import { SpeedPage } from "@/pages/speed/ui/SpeedPage";
 
-const SpeedPage = () => (
-  <section>
-    <h1 className="text-xl font-bold">스피드</h1>
-    <p className="mt-2 text-sm text-neutral-400">스피드 비교 (준비 중)</p>
-  </section>
-);
+import { rootRoute } from "./__root";
 
 export const speedRoute = createRoute({
   getParentRoute: () => rootRoute,
