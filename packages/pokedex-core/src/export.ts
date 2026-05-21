@@ -1,3 +1,5 @@
+import { analyzeParty } from "./analysis";
+import { metaSummary } from "./meta";
 import type { BattleState, Party } from "./types";
 
 const TASK_HEADERS = {
@@ -19,18 +21,42 @@ const formatMember = (m: Party[number], idx: number): string => {
   ].join("\n");
 };
 
-const partyAnalysisBody = (party: Party): string =>
-  [
+const partyAnalysisBody = (party: Party): string => {
+  const analysis = analyzeParty(party);
+  const weakLines = analysis.weakness
+    .filter((entry) => entry.weak > 0)
+    .sort((a, b) => b.weak - a.weak)
+    .map((entry) => `  - ${entry.type}: ${entry.weak}슬롯`);
+  const roleLine = Object.entries(analysis.roles)
+    .filter(([, count]) => count > 0)
+    .map(([name, count]) => `${name} ${count}`)
+    .join(", ");
+  const meta = metaSummary();
+
+  return [
     "",
     "## 파티",
     party.map(formatMember).join("\n"),
+    "",
+    "## 정적 분석 (이미 계산된 값, 재계산 불필요)",
+    `- 약점 분산 점수: ${analysis.synergy.dispersionScore}/100 (피크 ${analysis.synergy.sharedWeaknessPeak}슬롯)`,
+    analysis.synergy.stackedTypes.length > 0
+      ? `- 누적 약점(3슬롯 이상): ${analysis.synergy.stackedTypes.join(", ")}`
+      : "- 누적 약점(3슬롯 이상): 없음",
+    "- 타입별 약점 슬롯 수:",
+    ...(weakLines.length > 0 ? weakLines : ["  - 없음"]),
+    `- 역할 분포: ${roleLine || "없음"}`,
+    `- 화력 합계: 물리 ${analysis.balance.physicalPower}, 특수 ${analysis.balance.specialPower}, 내구 ${analysis.balance.bulk}, 최고스피드 ${analysis.balance.topSpeed}`,
+    `- 메타: ${meta ?? "미수집"}`,
     "",
     "## 요청",
     "- 이 파티의 장점과 약점을 한국 SV 커뮤니티 어휘로 분석",
     "- 견제가 필요한 상위 카운터와, 우리 파티가 막을 수 있는 픽 정리",
     "- 보완할 슬롯이 있다면 슬롯 번호와 함께 제안",
+    "- 위 정적 분석은 이미 계산된 값이니 재계산하지 말고 해석에 집중",
     "- 응답 마지막에 표준 JSON 코드블록을 반드시 포함",
   ].join("\n");
+};
 
 const battleDecisionBody = (state: BattleState): string => {
   const lines: string[] = [];

@@ -30,6 +30,13 @@ describe("Claude paste 직렬화", () => {
     expect(text).toMatch(/```json\n[\s\S]+?\n```/);
   });
 
+  it("정적 분석 섹션을 함께 첨부한다", () => {
+    const text = serializeForClaude("party-analysis", { party: sampleParty });
+    expect(text).toContain("정적 분석");
+    expect(text).toContain("약점 분산 점수");
+    expect(text).toContain("역할 분포");
+  });
+
   it("battle-decision 작업도 직렬화한다", () => {
     const state: BattleState = {
       my: sampleParty,
