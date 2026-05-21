@@ -55,15 +55,15 @@ pokedex-agent/
 
 ## Phase 분해 (전체 윤곽)
 
-| Phase | 산출물                                | 상태       |
-|-------|-------------------------------------|----------|
-| 0     | 데이터 파운데이션 + 공식 라이브러리         | 설계 완료, 구현 대기 |
-| 1     | 스마트누오 클론 UI (4페이지)              | 미착수      |
-| 2     | 파티 분석 AI (정적)                      | 미착수      |
-| 3     | 매치업 추천 AI                          | 미착수      |
-| 4     | 실시간 배틀 의사결정 AI                   | 미착수      |
+| Phase | 산출물                                | spec | plan |
+|-------|-------------------------------------|------|------|
+| 0     | 데이터 파운데이션 + 공식 라이브러리         | `docs/specs/2026-05-21-foundation-design.md` | `docs/plans/2026-05-21-phase-0-foundation.md` |
+| 1     | 스마트누오 클론 UI (4페이지)              | `docs/specs/2026-05-21-phase-1-client-ui-outline.md` (윤곽) | Phase 0 완료 후 작성 |
+| 2     | 파티 분석 AI (정적)                      | `docs/specs/2026-05-21-phase-2-party-analysis-outline.md` (윤곽) | Phase 1 완료 후 작성 |
+| 3     | 매치업 추천 AI                          | `docs/specs/2026-05-21-phase-3-matchup-leadrec-outline.md` (윤곽) | Phase 2 완료 후 작성 |
+| 4     | 실시간 배틀 의사결정 AI                   | `docs/specs/2026-05-21-phase-4-battle-decision-outline.md` (윤곽) | Phase 3 완료 후 작성 |
 
-오늘 시점의 디자인 상세는 `docs/specs/2026-05-21-foundation-design.md` 참고.
+각 Phase 진입 절차는 `docs/specs/2026-05-21-foundation-design.md` 의 "9a. Phase 진행 메타룰" 참고. 윤곽 spec은 갱신 가능 — 앞 Phase에서 발견한 사실로 자유롭게 재설계한다.
 
 ## 외부 참조 컨벤션
 

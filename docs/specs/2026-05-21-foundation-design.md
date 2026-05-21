@@ -220,10 +220,32 @@ E2E 없음 (개인 도구 규모).
 ## 9. 운영 흐름 (다음 세션부터)
 
 1. `cd /Users/bag-yoseb/Desktop/Project/personal/pokedex-agent && claude`
-2. 새 Claude(Opus)가 `CLAUDE.md` → `.claude/*.md` → 이 spec 읽음
-3. `writing-plans` 스킬로 Phase 0 구현 계획 작성
-4. Phase 0 구현 → 검증 → 커밋
-5. Phase 1 brainstorming → ... → 반복
+2. 새 Claude(Opus)가 `CLAUDE.md` → `.claude/*.md` → 이 spec + 각 Phase 윤곽 spec 읽음
+3. Phase 0 plan(`docs/plans/2026-05-21-phase-0-foundation.md`)을 보고 구현 → 검증 → 커밋
+4. Phase 0 완료 후 **Phase 1 윤곽 spec(`docs/specs/2026-05-21-phase-1-client-ui-outline.md`) 재검토** → 갱신 → `writing-plans` 사이클 → 구현
+5. Phase 2~4도 동일 패턴 — **앞 Phase에서 얻은 사실로 다음 Phase 윤곽 spec을 갱신한 뒤** plan 작성
+
+## 9a. Phase 진행 메타룰 (유연성)
+
+각 Phase는 다음 순서를 따른다:
+
+```
+[Phase N-1 완료]
+   ↓
+[Phase N 윤곽 spec 재검토]  ← docs/specs/2026-05-21-phase-N-*-outline.md 다시 읽고 사실 반영
+   ↓
+[필요 시 윤곽 spec 갱신·재설계]  ← 가정이 깨졌다면 자유롭게 갈아엎는다
+   ↓
+[Phase N 본 spec 작성 또는 윤곽 confirm]
+   ↓
+[writing-plans 스킬로 Phase N plan 작성]
+   ↓
+[구현 → 검증 → 커밋]
+```
+
+**원칙:** 윤곽 spec은 과거의 가정이지 미래의 약속이 아니다. 앞 Phase에서 발견한 사실이 윤곽을 부정하면 윤곽을 버린다. 가정이 살아있으면 그대로 진행. 어느 쪽이든 빠르게 진입한다.
+
+각 윤곽 spec의 마지막 두 섹션(`유연성 노트`와 `다음 Phase로 넘기는 결정 사항`)이 이 갱신 과정의 안내문 역할을 한다.
 
 ## 10. 위험·미해결 (다음 Phase 때 정함)
 
