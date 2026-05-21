@@ -1,0 +1,24 @@
+{
+  "name": "pokedex-agent",
+  "private": true,
+  "version": "0.0.0",
+  "engines": {
+    "pnpm": ">=10.0.0",
+    "node": ">=24.0.0"
+  },
+  "packageManager": "pnpm@10.23.0",
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "lint": "turbo lint",
+    "type-check": "turbo type-check",
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "test": "turbo test",
+    "fetch:all": "pnpm --filter data-fetchers run fetch:all",
+    "clean": "turbo clean && rm -rf .turbo node_modules"
+  },
+  "devDependencies": {
+    "turbo": "^2.9.6",
+    "typescript": "~6.0.3"
+  }
+}
