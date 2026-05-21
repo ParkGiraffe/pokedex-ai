@@ -1,0 +1,144 @@
+import { z } from "zod";
+
+export const TYPE_NAMES = [
+  "노말", "불꽃", "물", "풀", "전기", "얼음",
+  "격투", "독", "땅", "비행", "에스퍼", "벌레",
+  "바위", "고스트", "드래곤", "악", "강철", "페어리",
+] as const;
+
+export const TypeName = z.enum(TYPE_NAMES);
+export type TypeName = z.infer<typeof TypeName>;
+
+export const isTypeName = (value: unknown): value is TypeName =>
+  TypeName.safeParse(value).success;
+
+export const TeraType = z.union([TypeName, z.literal("스텔라")]);
+export type TeraType = z.infer<typeof TeraType>;
+
+export const NATURE_NAMES = [
+  "노력", "외로움", "용감", "장난꾸러기", "고집",
+  "대담", "성격없음", "무사태평", "건방짐", "차분",
+  "수줍음", "냉정", "온순", "덜렁댐", "조심스러움",
+  "얌전함", "촐랑", "변덕쟁이", "겁쟁이", "성급",
+  "느긋", "기분파", "온건", "신중", "잘참음",
+] as const;
+
+export const NatureName = z.enum(NATURE_NAMES);
+export type NatureName = z.infer<typeof NatureName>;
+
+const StatNumber = z.number().int().min(0).max(252);
+
+export const StatBlock = z.object({
+  H: StatNumber,
+  A: StatNumber,
+  B: StatNumber,
+  C: StatNumber,
+  D: StatNumber,
+  S: StatNumber,
+});
+export type StatBlock = z.infer<typeof StatBlock>;
+
+const IvNumber = z.number().int().min(0).max(31);
+
+export const IvBlock = z.object({
+  H: IvNumber,
+  A: IvNumber,
+  B: IvNumber,
+  C: IvNumber,
+  D: IvNumber,
+  S: IvNumber,
+});
+export type IvBlock = z.infer<typeof IvBlock>;
+
+export const PERFECT_IVS: IvBlock = { H: 31, A: 31, B: 31, C: 31, D: 31, S: 31 };
+
+const evSum = (b: StatBlock) => b.H + b.A + b.B + b.C + b.D + b.S;
+
+export const PartyMemberObject = z.object({
+  species: z.string().min(1),
+  level: z.number().int().min(1).max(100).default(50),
+  nature: NatureName,
+  ability: z.string().min(1),
+  item: z.string().optional(),
+  teraType: TeraType,
+  moves: z.array(z.string().min(1)).length(4),
+  evs: StatBlock,
+  ivs: IvBlock.default(PERFECT_IVS),
+});
+
+export const PartyMember = PartyMemberObject.refine((m) => evSum(m.evs) <= 510, {
+  message: "노력치 합계는 510을 넘을 수 없다",
+  path: ["evs"],
+});
+export type PartyMember = z.infer<typeof PartyMember>;
+
+export const Party = z.array(PartyMember).min(1).max(6);
+export type Party = z.infer<typeof Party>;
+
+export const Weather = z.enum(["맑음", "비", "모래바람", "눈"]);
+export type Weather = z.infer<typeof Weather>;
+
+export const Terrain = z.enum(["그래스필드", "미스트필드", "사이코필드", "일렉트릭필드"]);
+export type Terrain = z.infer<typeof Terrain>;
+
+export const StatusCondition = z.enum(["화상", "독", "맹독", "마비", "잠듦", "얼음"]);
+export type StatusCondition = z.infer<typeof StatusCondition>;
+
+const RankNumber = z.number().int().min(-6).max(6);
+
+export const RankBlock = z.object({
+  A: RankNumber.default(0),
+  B: RankNumber.default(0),
+  C: RankNumber.default(0),
+  D: RankNumber.default(0),
+  S: RankNumber.default(0),
+  accuracy: RankNumber.default(0),
+  evasion: RankNumber.default(0),
+});
+export type RankBlock = z.infer<typeof RankBlock>;
+
+export const FieldSlot = z.object({
+  member: PartyMember,
+  hpPercent: z.number().min(0).max(100).default(100),
+  ranks: RankBlock.default({
+    A: 0, B: 0, C: 0, D: 0, S: 0, accuracy: 0, evasion: 0,
+  }),
+  status: StatusCondition.optional(),
+  terastalized: z.boolean().default(false),
+});
+export type FieldSlot = z.infer<typeof FieldSlot>;
+
+export const BattleState = z.object({
+  my: Party,
+  opponent: z.object({
+    revealed: z.array(PartyMemberObject.partial()).max(6),
+    field: z.array(FieldSlot).max(1),
+  }),
+  myField: z.array(FieldSlot).max(1).default([]),
+  weather: Weather.optional(),
+  terrain: Terrain.optional(),
+  trickRoom: z.boolean().default(false),
+  turn: z.number().int().min(1).default(1),
+});
+export type BattleState = z.infer<typeof BattleState>;
+
+export const PokedexEntry = z.object({
+  no: z.number().int().min(1),
+  ko: z.string(),
+  en: z.string(),
+  generation: z.number().int().min(1).max(9),
+  types: z.array(TypeName).min(1).max(2),
+  types_en: z.array(z.string()).min(1).max(2),
+  past_types: z.array(z.unknown()).default([]),
+});
+export type PokedexEntry = z.infer<typeof PokedexEntry>;
+
+export const PokedexFile = z.object({
+  source: z.string(),
+  generated_at_utc: z.string(),
+  generations: z.string(),
+  count: z.number().int(),
+  type_map_ko: z.record(z.string(), z.string()),
+  entries: z.array(PokedexEntry),
+});
+export type PokedexFile = z.infer<typeof PokedexFile>;
