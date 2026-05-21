@@ -1,4 +1,5 @@
 import { analyzeParty } from "./analysis";
+import { coverage, leadBoard } from "./matchup";
 import { metaSummary } from "./meta";
 import type { BattleState, Party } from "./types";
 
@@ -79,22 +80,36 @@ const battleDecisionBody = (state: BattleState): string => {
   return lines.join("\n");
 };
 
-const matchupLeadBody = (state: BattleState): string =>
-  [
+const matchupLeadBody = (state: BattleState): string => {
+  const opponents = state.opponent.revealed
+    .map((member) => member.species)
+    .filter((species): species is string => Boolean(species));
+  const board = leadBoard(state.my, opponents);
+  const cover = coverage(state.my, opponents);
+  const boardLines = board.map((lead) => {
+    const detail = lead.pairs.map((pair) => `${pair.opponent} ${pair.verdict}`).join(", ");
+    return `- ${lead.myPick}: ${lead.finalScore}점 (유리 ${lead.favorable}/불리 ${lead.unfavorable})${detail ? ` — ${detail}` : ""}`;
+  });
+
+  return [
     "",
     "## 내 파티",
     state.my.map(formatMember).join("\n"),
     "",
     "## 상대 공개분",
-    state.opponent.revealed.length === 0
-      ? "(공개된 정보 없음)"
-      : JSON.stringify(state.opponent.revealed, null, 2),
+    opponents.length === 0 ? "(공개된 정보 없음)" : opponents.join(", "),
+    "",
+    "## 매치업 점수 (참고용, 타입·스피드 기반 결정론 계산)",
+    `- 상대 커버리지: ${cover.covered}/${cover.total}`,
+    ...(boardLines.length > 0 ? boardLines : ["- (상대 공개분 없음)"]),
     "",
     "## 요청",
     "- 선두로 낼 후보의 우선순위와 각 선택의 근거",
     "- 상대의 예상 응수 (가능성 높은 순)",
+    "- 위 점수는 참고용이니 점수만으로 단정하지 말고 메타·빌드 의도와 합쳐 추천",
     "- 응답 마지막에 표준 JSON 코드블록을 반드시 포함",
   ].join("\n");
+};
 
 export const serializeForClaude = (
   task: ExportTask,

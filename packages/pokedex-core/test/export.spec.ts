@@ -49,4 +49,18 @@ describe("Claude paste 직렬화", () => {
     expect(text).toContain("배틀 의사결정");
     expect(text).toContain("턴");
   });
+
+  it("matchup-leadrec 출력에 매치업 점수를 첨부한다", () => {
+    const state: BattleState = {
+      my: sampleParty,
+      opponent: { revealed: [{ species: "라이츄" }], field: [] },
+      myField: [],
+      trickRoom: false,
+      turn: 1,
+    };
+    const text = serializeForClaude("matchup-leadrec", { state });
+    expect(text).toContain("매치업 점수");
+    expect(text).toContain("커버리지");
+    expect(text).toContain("라이츄");
+  });
 });
