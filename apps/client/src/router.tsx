@@ -1,6 +1,7 @@
 import { createRouter } from "@tanstack/react-router";
 
 import { rootRoute } from "./routes/__root";
+import { battleRoute } from "./routes/battle";
 import { calculatorRoute } from "./routes/calculator";
 import { docsRoute } from "./routes/docs";
 import { matchupRoute } from "./routes/matchup";
@@ -13,6 +14,7 @@ const routeTree = rootRoute.addChildren([
   docsRoute,
   partyRoute,
   matchupRoute,
+  battleRoute,
 ]);
 
 export const router = createRouter({ routeTree });

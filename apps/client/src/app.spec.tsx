@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 
 import "@/i18n";
 import { rootRoute } from "@/routes/__root";
+import { battleRoute } from "@/routes/battle";
 import { calculatorRoute } from "@/routes/calculator";
 import { docsRoute } from "@/routes/docs";
 import { matchupRoute } from "@/routes/matchup";
@@ -18,6 +19,7 @@ const makeRouter = (initial: string) =>
       docsRoute,
       partyRoute,
       matchupRoute,
+      battleRoute,
     ]),
     history: createMemoryHistory({ initialEntries: [initial] }),
   });
