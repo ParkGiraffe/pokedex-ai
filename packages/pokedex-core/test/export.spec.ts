@@ -63,4 +63,24 @@ describe("Claude paste 직렬화", () => {
     expect(text).toContain("커버리지");
     expect(text).toContain("라이츄");
   });
+
+  it("battle-decision에 내 액티브 기술 옵션을 첨부한다", () => {
+    const active = sampleParty[0]!;
+    const slot = {
+      member: active,
+      hpPercent: 100,
+      ranks: { A: 0, B: 0, C: 0, D: 0, S: 0, accuracy: 0, evasion: 0 },
+      terastalized: false,
+    };
+    const state: BattleState = {
+      my: sampleParty,
+      opponent: { revealed: [], field: [slot] },
+      myField: [slot],
+      trickRoom: false,
+      turn: 5,
+    };
+    const text = serializeForClaude("battle-decision", { state });
+    expect(text).toContain("기술 옵션");
+    expect(text).toContain("KO");
+  });
 });

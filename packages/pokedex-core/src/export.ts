@@ -1,4 +1,5 @@
 import { analyzeParty } from "./analysis";
+import { moveOptions } from "./decision";
 import { coverage, leadBoard } from "./matchup";
 import { metaSummary } from "./meta";
 import type { BattleState, Party } from "./types";
@@ -72,10 +73,31 @@ const battleDecisionBody = (state: BattleState): string => {
   lines.push("");
   lines.push("## 상대 공개분");
   if (state.opponent.revealed.length === 0) lines.push("(공개된 정보 없음)");
-  else lines.push(JSON.stringify(state.opponent.revealed, null, 2));
+  else lines.push(state.opponent.revealed.map((member) => member.species ?? "?").join(", "));
+
+  const myActive = state.myField[0]?.member;
+  const opponentActive = state.opponent.field[0];
+  if (myActive && opponentActive) {
+    const options = moveOptions(myActive, opponentActive.member.species, opponentActive.hpPercent);
+    if (options) {
+      lines.push("");
+      lines.push(
+        `## 내 액티브 기술 옵션 (${myActive.species} → ${opponentActive.member.species} HP ${opponentActive.hpPercent}%, 상대 0투자 가정)`
+      );
+      for (const option of options) {
+        lines.push(
+          option.damaging
+            ? `- ${option.move} (${option.type}/${option.category} ${option.power}): ${option.min}~${option.max}, KO ${Math.round(option.koChance * 100)}% (16롤 중 ${Math.round(option.koChance * 16)})`
+            : `- ${option.move} (${option.category}): 변화/비데미지`
+        );
+      }
+    }
+  }
+
   lines.push("");
   lines.push("## 요청");
   lines.push("- 다음 턴 옵션(기술 vs 교체)을 추천하고 각 옵션의 데미지·확률을 제시");
+  lines.push("- KO 확률은 16롤 기준이니 확신처럼 단정하지 말 것");
   lines.push("- 응답 마지막에 표준 JSON 코드블록을 반드시 포함");
   return lines.join("\n");
 };
