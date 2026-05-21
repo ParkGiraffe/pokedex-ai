@@ -3,5 +3,6 @@ export * from "./data";
 export * from "./lookup";
 export * from "./export";
 export * from "./parse";
+export * from "./meta";
 export * as formula from "./formula";
 export * as analysis from "./analysis";
