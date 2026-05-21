@@ -123,6 +123,18 @@ export const BattleState = z.object({
 });
 export type BattleState = z.infer<typeof BattleState>;
 
+const BaseStatNumber = z.number().int().min(1).max(255);
+
+export const BaseStatBlock = z.object({
+  H: BaseStatNumber,
+  A: BaseStatNumber,
+  B: BaseStatNumber,
+  C: BaseStatNumber,
+  D: BaseStatNumber,
+  S: BaseStatNumber,
+});
+export type BaseStatBlock = z.infer<typeof BaseStatBlock>;
+
 export const PokedexEntry = z.object({
   no: z.number().int().min(1),
   ko: z.string(),
@@ -130,6 +142,7 @@ export const PokedexEntry = z.object({
   generation: z.number().int().min(1).max(9),
   types: z.array(TypeName).min(1).max(2),
   types_en: z.array(z.string()).min(1).max(2),
+  base: BaseStatBlock,
   past_types: z.array(z.unknown()).default([]),
 });
 export type PokedexEntry = z.infer<typeof PokedexEntry>;

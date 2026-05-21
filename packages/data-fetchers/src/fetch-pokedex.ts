@@ -15,10 +15,35 @@ type SpeciesResponse = {
 type PokemonResponse = {
   name: string;
   types: Array<{ slot: number; type: { name: string } }>;
+  stats: Array<{ base_stat: number; stat: { name: string } }>;
   past_types: Array<{
     generation: { name: string };
     types: Array<{ slot: number; type: { name: string } }>;
   }>;
+};
+
+type BaseStats = { H: number; A: number; B: number; C: number; D: number; S: number };
+
+const STAT_KEY: Record<string, keyof BaseStats> = {
+  hp: "H",
+  attack: "A",
+  defense: "B",
+  "special-attack": "C",
+  "special-defense": "D",
+  speed: "S",
+};
+
+const toBaseStats = (stats: PokemonResponse["stats"]): BaseStats => {
+  const base: Partial<BaseStats> = {};
+  for (const s of stats) {
+    const key = STAT_KEY[s.stat.name];
+    if (key) base[key] = s.base_stat;
+  }
+  const keys: Array<keyof BaseStats> = ["H", "A", "B", "C", "D", "S"];
+  for (const key of keys) {
+    if (base[key] === undefined) throw new Error(`종족값 누락: ${key}`);
+  }
+  return base as BaseStats;
 };
 
 type TypeResponse = {
@@ -59,7 +84,7 @@ const main = async () => {
   );
 
   process.stderr.write(`[3/3] pokemon 1..${TOTAL}\n`);
-  const pokemon: Record<number, { en: string; types_en: string[]; past_types: unknown[] }> = {};
+  const pokemon: Record<number, { en: string; types_en: string[]; base: BaseStats; past_types: unknown[] }> = {};
   done = 0;
   await Promise.all(
     Array.from({ length: TOTAL }, (_, i) => i + 1).map((i) =>
@@ -72,7 +97,7 @@ const main = async () => {
           until_generation: generationToInt(pt.generation.name),
           types_en: [...pt.types].sort((a, b) => a.slot - b.slot).map((t) => t.type.name),
         }));
-        pokemon[i] = { en: data.name, types_en, past_types };
+        pokemon[i] = { en: data.name, types_en, base: toBaseStats(data.stats), past_types };
         announce("pokemon", ++done, TOTAL);
       })
     )
@@ -89,6 +114,7 @@ const main = async () => {
       generation: sp.generation,
       types: pk.types_en.map((t) => typeMap[t] ?? t),
       types_en: pk.types_en,
+      base: pk.base,
       past_types: (pk.past_types as Array<{ until_generation: number; types_en: string[] }>).map((p) => ({
         until_generation: p.until_generation,
         types: p.types_en.map((t) => typeMap[t] ?? t),

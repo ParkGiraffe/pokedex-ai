@@ -99,4 +99,14 @@ describe("도감 데이터", () => {
       }
     }
   });
+
+  it("종족값을 갖는다", () => {
+    expect(pokedexByKo.get("한카리아스")?.base).toEqual({
+      H: 108, A: 130, B: 95, C: 80, D: 85, S: 102,
+    });
+    expect(pokedexByKo.get("피카츄")?.base.S).toBe(90);
+    for (const entry of pokedex.entries) {
+      expect(entry.base.H).toBeGreaterThanOrEqual(1);
+    }
+  });
 });
