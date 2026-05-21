@@ -17,10 +17,11 @@ const validDraft: MemberDraft = {
 };
 
 describe("파티빌더 페이지", () => {
-  it("기본 슬롯을 렌더한다", () => {
+  it("기본 슬롯과 분석 요약을 렌더한다", () => {
     render(<PartyPage />);
     expect(screen.getByRole("heading", { name: "파티빌더" })).toBeInTheDocument();
     expect(screen.getByText("슬롯 1")).toBeInTheDocument();
+    expect(screen.getByText("분석 요약")).toBeInTheDocument();
   });
 
   it("유효한 멤버만 파티로 모은다", () => {

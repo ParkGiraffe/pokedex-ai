@@ -1,4 +1,4 @@
-import { NATURE_NAMES, TYPE_NAMES } from "@pokedex-agent/pokedex-core";
+import { analysis, NATURE_NAMES, TYPE_NAMES } from "@pokedex-agent/pokedex-core";
 import { useState } from "react";
 
 import { cn } from "@/common/lib/cn";
@@ -117,6 +117,11 @@ export const PartyPage = () => {
   const [panelOpen, setPanelOpen] = useState(false);
 
   const party = buildParty(members);
+  const summary = analysis.analyzeParty(party);
+  const roleLine = Object.entries(summary.roles)
+    .filter(([, count]) => count > 0)
+    .map(([name, count]) => `${name} ${count}`)
+    .join(", ");
   const weakness = teamWeakness(members)
     .filter((entry) => entry.weakCount > 0)
     .sort((a, b) => b.weakCount - a.weakCount);
@@ -152,6 +157,19 @@ export const PartyPage = () => {
             ))}
           </div>
         )}
+      </Card>
+
+      <Card className="flex flex-col gap-1.5 text-sm">
+        <h2 className="text-sm font-semibold text-neutral-300">분석 요약</h2>
+        <p className="text-neutral-300">
+          약점 분산 <span className="font-semibold text-emerald-400">{summary.synergy.dispersionScore}/100</span>
+          {" "}(피크 {summary.synergy.sharedWeaknessPeak}슬롯)
+        </p>
+        <p className="text-neutral-400">역할 분포: {roleLine || "없음"}</p>
+        <p className="text-neutral-400">
+          화력 합계: 물리 {summary.balance.physicalPower} · 특수 {summary.balance.specialPower} · 내구{" "}
+          {summary.balance.bulk}
+        </p>
       </Card>
 
       <div className="grid gap-3 md:grid-cols-2">
