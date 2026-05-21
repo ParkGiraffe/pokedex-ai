@@ -6,12 +6,19 @@ import "@/i18n";
 import { rootRoute } from "@/routes/__root";
 import { calculatorRoute } from "@/routes/calculator";
 import { docsRoute } from "@/routes/docs";
+import { matchupRoute } from "@/routes/matchup";
 import { partyRoute } from "@/routes/party";
 import { speedRoute } from "@/routes/speed";
 
 const makeRouter = (initial: string) =>
   createRouter({
-    routeTree: rootRoute.addChildren([calculatorRoute, speedRoute, docsRoute, partyRoute]),
+    routeTree: rootRoute.addChildren([
+      calculatorRoute,
+      speedRoute,
+      docsRoute,
+      partyRoute,
+      matchupRoute,
+    ]),
     history: createMemoryHistory({ initialEntries: [initial] }),
   });
 

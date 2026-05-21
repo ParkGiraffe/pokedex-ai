@@ -7,6 +7,7 @@ const NAV = [
   { to: "/speed", labelKey: "speed" },
   { to: "/docs", labelKey: "dex" },
   { to: "/party", labelKey: "partyBuilder" },
+  { to: "/matchup", labelKey: "matchup" },
 ] as const;
 
 const RootLayout = () => {
