@@ -6,3 +6,4 @@ export * from "./parse";
 export * from "./meta";
 export * as formula from "./formula";
 export * as analysis from "./analysis";
+export * as matchup from "./matchup";
