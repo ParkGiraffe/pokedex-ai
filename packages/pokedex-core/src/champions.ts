@@ -115,15 +115,18 @@ export const championsSamples = (species: string, limit = 6): ChampionsSet[] => 
   if (no === undefined) {
     return [];
   }
-  return (samplesByNo[no] ?? []).slice(0, limit).map((sample) => ({
-    species,
-    level: sample.level ?? 50,
-    ability: sample.ability ?? undefined,
-    item: sample.item ?? undefined,
-    nature: sample.nature ?? undefined,
-    evs: toEvs(sample.evs),
-    moves: sample.moves ?? [],
-    mega: sample.megaForm ? true : undefined,
-    megaForme: sample.megaForm ? megaFormeOf(sample.megaForm) : undefined,
-  }));
+  return (samplesByNo[no] ?? [])
+    .filter((sample) => Array.isArray(sample.moves) && sample.moves.some((move) => Boolean(move)))
+    .slice(0, limit)
+    .map((sample) => ({
+      species,
+      level: sample.level ?? 50,
+      ability: sample.ability ?? undefined,
+      item: sample.item ?? undefined,
+      nature: sample.nature ?? undefined,
+      evs: toEvs(sample.evs),
+      moves: (sample.moves ?? []).filter((move) => Boolean(move)),
+      mega: sample.megaForm ? true : undefined,
+      megaForme: sample.megaForm ? megaFormeOf(sample.megaForm) : undefined,
+    }));
 };
