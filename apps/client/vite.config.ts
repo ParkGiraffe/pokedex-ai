@@ -9,6 +9,16 @@ export default defineConfig({
   resolve: {
     alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) },
   },
+  server: {
+    // 어드바이저 서버(apps/server, 기본 :3000) 프록시 — 브라우저 교차출처/CORS 회피
+    proxy: {
+      "/advisor": {
+        target: process.env.VITE_ADVISOR_TARGET ?? "http://localhost:3007",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/advisor/, ""),
+      },
+    },
+  },
   test: {
     environment: "jsdom",
     globals: true,

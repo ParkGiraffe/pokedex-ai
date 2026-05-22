@@ -1,6 +1,6 @@
 import { buildServer } from "./server";
 
-const port = Number(process.env.PORT ?? 3000);
+const port = Number(process.env.PORT ?? 3007);
 
 buildServer()
   .listen({ port, host: "0.0.0.0" })

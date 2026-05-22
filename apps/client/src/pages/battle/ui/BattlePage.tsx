@@ -7,6 +7,7 @@ import { Card } from "@/common/ui/Card";
 import { Field } from "@/common/ui/Field";
 import { NumberField } from "@/common/ui/NumberField";
 import { Select } from "@/common/ui/Select";
+import { AdvisorPanel } from "@/features/advisor/ui/AdvisorPanel";
 import { ExportButton } from "@/features/claude-bridge/ui/ExportButton";
 import { PasteSidePanel } from "@/features/claude-bridge/ui/PasteSidePanel";
 import { PokemonDatalist } from "@/features/pokemon-picker/ui/PokemonDatalist";
@@ -149,6 +150,14 @@ export const BattlePage = () => {
           )}
           <p className="text-xs text-neutral-500">KO 확률은 16롤 기준, 상대 0투자 중립 가정이다.</p>
         </Card>
+      )}
+
+      {myParty.length > 0 && (
+        <AdvisorPanel
+          active={myParty[activeIndex]}
+          opponentSpecies={battle.opponentSpecies}
+          bench={myParty.filter((_, index) => index !== activeIndex)}
+        />
       )}
 
       <PokemonDatalist />
