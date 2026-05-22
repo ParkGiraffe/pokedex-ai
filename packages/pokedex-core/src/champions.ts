@@ -39,13 +39,14 @@ const rosterList = (rosterRaw as unknown as {
   pokemon: Array<{ id: number; megaForm: string; regionForm: string }>;
 }).pokemon;
 
-// pkmnchamps의 EV(sps)는 0~32 압축 스케일이다(32 = 252EV). @smogon/calc용 0~252로 환산.
+// pkmnchamps의 EV(sps)는 0~32 포인트이고 총합이 66(= SV 508EV 예산)이다.
+// 따라서 1포인트 = 508/66 EV로 환산한다(스탯당 252 상한).
 const toEvs = (sps?: StatPoints): EvSpread => {
   const evs: EvSpread = {};
   for (const key of STAT_KEYS) {
     const point = sps?.[key];
     if (point) {
-      evs[key] = Math.min(252, Math.round((point * 252) / 32));
+      evs[key] = Math.min(252, Math.round((point * 508) / 66));
     }
   }
   return evs;
