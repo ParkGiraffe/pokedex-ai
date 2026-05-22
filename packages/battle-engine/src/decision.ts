@@ -1,4 +1,12 @@
-import { findItem, formula, smogonSets, toShowdownId } from "@pokedex-agent/pokedex-core";
+import {
+  type ChampionsSet,
+  championsAssumedSet,
+  championsSamples,
+  findItem,
+  formula,
+  smogonSets,
+  toShowdownId,
+} from "@pokedex-agent/pokedex-core";
 
 import {
   calcDamage,
@@ -16,8 +24,24 @@ export type MatchupVerdict = "유리" | "불리" | "호각";
 const firstOf = <T>(value: T | T[] | undefined): T | undefined =>
   Array.isArray(value) ? value[0] : value;
 
-// 사용률 1위 Smogon 세트를 "예상 세트"로 본다. 메타에 없으면 undefined.
+const fromChampions = (set: ChampionsSet): MyMon => ({
+  species: set.species,
+  level: set.level,
+  ability: set.ability,
+  item: set.item,
+  nature: set.nature,
+  evs: set.evs,
+  moves: set.moves,
+  mega: set.mega,
+  megaForme: set.megaForme,
+});
+
+// "예상 세트": 챔피언스 사용률 1위 조합을 우선하고, 없으면 Smogon SV로 폴백한다.
 export const assumedSet = (species: string): MyMon | undefined => {
+  const champion = championsAssumedSet(species);
+  if (champion) {
+    return fromChampions(champion);
+  }
   const set = smogonSets(species)[0];
   if (!set) {
     return undefined;
@@ -232,24 +256,41 @@ export type CounterEntry = {
   counters: Array<{ pick: string; move: string; koChance: number; survives: boolean }>;
 };
 
+type LabeledSet = { label: string; mon: MyMon };
+
+// 상대 흔한 세트: 챔피언스 공개 샘플(메가·도구 포함)을 우선하고, 없으면 Smogon SV로 폴백.
+const opponentSets = (species: string): LabeledSet[] => {
+  const samples = championsSamples(species, 3);
+  if (samples.length > 0) {
+    return samples.map((set, index) => ({
+      label: `${set.mega ? "메가" : "샘플"}${index + 1}${set.item ? ` (${set.item})` : ""}`,
+      mon: fromChampions(set),
+    }));
+  }
+  return smogonSets(species)
+    .slice(0, 3)
+    .map((set) => ({
+      label: `${set.format}:${set.name}`,
+      mon: {
+        species,
+        level: set.level ?? 50,
+        item: firstOf(set.item),
+        ability: firstOf(set.ability),
+        nature: firstOf(set.nature),
+        evs: set.evs,
+        ivs: set.ivs,
+        teraType: firstOf(set.teratypes),
+        moves: set.moves.map((move) => firstOf(move)).filter((move): move is string => Boolean(move)),
+      },
+    }));
+};
+
 export const counterplay = (
   opponentSpecies: string,
   myPool: MyMon[],
   field?: EngineField
-): CounterEntry[] => {
-  const sets = smogonSets(opponentSpecies).slice(0, 3);
-  return sets.map((set) => {
-    const opponentMon: MyMon = {
-      species: opponentSpecies,
-      level: set.level ?? 50,
-      item: firstOf(set.item),
-      ability: firstOf(set.ability),
-      nature: firstOf(set.nature),
-      evs: set.evs,
-      ivs: set.ivs,
-      teraType: firstOf(set.teratypes),
-      moves: set.moves.map((move) => firstOf(move)).filter((move): move is string => Boolean(move)),
-    };
+): CounterEntry[] =>
+  opponentSets(opponentSpecies).map(({ label, mon: opponentMon }) => {
     const counters = myPool
       .map((mon) => {
         const myBest = bestAttack(mon, opponentMon, field);
@@ -269,11 +310,10 @@ export const counterplay = (
       .sort((a, b) => b.koChance - a.koChance);
 
     return {
-      setName: set.name,
-      item: firstOf(set.item),
-      teraType: firstOf(set.teratypes),
+      setName: label,
+      item: opponentMon.item,
+      teraType: opponentMon.teraType,
       moves: opponentMon.moves,
       counters,
     };
   });
-};

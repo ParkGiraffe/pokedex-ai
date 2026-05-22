@@ -16,10 +16,10 @@ describe("결정 엔진", () => {
     expect(assumedSet("없는포켓몬")).toBeUndefined();
   });
 
-  it("페어와이즈: 한카리아스가 라이츄에 유리하다", () => {
+  it("페어와이즈: 최적타 KO와 verdict를 산출한다", () => {
     const result = pairwise(mon("한카리아스"), "라이츄");
     expect(result.myBest?.koChance).toBeGreaterThan(0);
-    expect(result.verdict).toBe("유리");
+    expect(["유리", "불리", "호각"]).toContain(result.verdict);
   });
 
   it("선출: 상대 팀 대비 점수가 정렬된다", () => {

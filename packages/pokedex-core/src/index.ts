@@ -5,6 +5,7 @@ export * from "./export";
 export * from "./parse";
 export * from "./meta";
 export * from "./showdown";
+export * from "./champions";
 export * as formula from "./formula";
 export * as analysis from "./analysis";
 export * as matchup from "./matchup";

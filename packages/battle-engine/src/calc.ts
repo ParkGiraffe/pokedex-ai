@@ -59,15 +59,19 @@ const buildPokemon = (side: EngineSide): Pokemon => {
   const baseEn = enSpecies(side.species);
   if (side.mega) {
     // 메가는 폼 고유 특성(부모자식사랑 등)을 쓰므로 기존 특성·도구(메가스톤)·테라를 넘기지 않는다.
-    return new Pokemon(gen, megaSpeciesName(baseEn, side.megaForme), {
-      level: side.level ?? 50,
-      nature: side.nature ? natureEnOf(side.nature) : undefined,
-      evs: side.evs,
-      ivs: side.ivs,
-      boosts: side.boosts,
-      curHP: side.curHP,
-      status: side.status,
-    });
+    try {
+      return new Pokemon(gen, megaSpeciesName(baseEn, side.megaForme), {
+        level: side.level ?? 50,
+        nature: side.nature ? natureEnOf(side.nature) : undefined,
+        evs: side.evs,
+        ivs: side.ivs,
+        boosts: side.boosts,
+        curHP: side.curHP,
+        status: side.status,
+      });
+    } catch {
+      // 존재하지 않는 메가 폼이면 기본 종족으로 폴백한다.
+    }
   }
   return new Pokemon(gen, baseEn, {
     level: side.level ?? 50,
