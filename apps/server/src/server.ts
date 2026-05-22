@@ -20,7 +20,11 @@ export const buildServer = (): FastifyInstance => {
     const body = ImportPartyBody.parse(request.body);
     const sources = body.images ?? (body.image ? [body.image] : []);
     const images = sources.map((source) => source.replace(/^data:image\/[a-zA-Z+]+;base64,/, ""));
-    const lists = await Promise.all(images.map((image) => extractPartyFromImage(image)));
+    // Ollama는 모델 하나를 직렬 처리하므로 순차로 보낸다(동시 요청 시 연결 끊김).
+    const lists: Awaited<ReturnType<typeof extractPartyFromImage>>[] = [];
+    for (const image of images) {
+      lists.push(await extractPartyFromImage(image));
+    }
     return buildImportResult(mergeMembers(lists));
   });
 

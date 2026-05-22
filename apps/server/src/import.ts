@@ -3,7 +3,7 @@ import { resolve } from "node:path";
 
 // 로컬 비전 모델(Ollama). 기본 qwen2.5vl:7b (thinking 없어 JSON 깔끔, 빠름).
 const OLLAMA_URL = process.env.OLLAMA_URL ?? "http://localhost:11434";
-const OLLAMA_MODEL = process.env.OLLAMA_MODEL ?? "qwen2.5vl:7b";
+const OLLAMA_MODEL = process.env.OLLAMA_MODEL ?? "qwen3.5:9b";
 const CORE = resolve(import.meta.dirname, "../../../packages/pokedex-core/data");
 
 const PROMPT = [
@@ -54,6 +54,7 @@ const SPECIES = readKo("pokedex.json", "entries");
 const MOVES = readKo("moves.json", "moves");
 const ITEMS = [...readKo("items.json", "items"), ...readKo("champions/items.json", "items")];
 const ABILITIES = readKo("abilities.json", "abilities");
+const NATURES = readKo("natures.json", "natures");
 
 const distance = (a: string, b: string): number => {
   const rows = Array.from({ length: a.length + 1 }, (_, i) => [i, ...Array(b.length).fill(0)]);
@@ -152,7 +153,8 @@ export const buildImportResult = (raw: RawMember[]): ImportResult => {
       species,
       ability,
       item,
-      nature: (member.nature ?? "노력").trim() || "노력",
+      // 성격은 화면에 텍스트로 안 보이는 경우가 많아, 유효 성격으로만 채우고 아니면 중립(노력).
+      nature: nearest((member.nature ?? "").trim(), NATURES)?.name ?? "노력",
       teraType: "노말",
       moves: [moves[0] ?? "", moves[1] ?? "", moves[2] ?? "", moves[3] ?? ""],
       evs,
@@ -228,7 +230,7 @@ export const extractPartyFromImage = async (base64: string): Promise<RawMember[]
         model: OLLAMA_MODEL,
         format: "json",
         stream: false,
-        options: { num_predict: 2000, temperature: 0 },
+        options: { num_predict: 4000, temperature: 0 },
         messages: [{ role: "user", content: PROMPT, images: [base64] }],
       }),
     });
