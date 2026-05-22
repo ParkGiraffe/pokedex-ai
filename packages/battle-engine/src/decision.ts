@@ -24,6 +24,16 @@ export type MatchupVerdict = "유리" | "불리" | "호각";
 const firstOf = <T>(value: T | T[] | undefined): T | undefined =>
   Array.isArray(value) ? value[0] : value;
 
+// 받침에 따라 조사 로/으로를 붙인다(예: 지진 → 지진으로, 한카리아스 → 한카리아스로).
+const withRo = (word: string): string => {
+  const code = word.charCodeAt(word.length - 1);
+  if (code < 0xac00 || code > 0xd7a3) {
+    return `${word}로`;
+  }
+  const jongseong = (code - 0xac00) % 28;
+  return jongseong === 0 || jongseong === 8 ? `${word}로` : `${word}으로`;
+};
+
 const fromChampions = (set: ChampionsSet): MyMon => ({
   species: set.species,
   level: set.level,
@@ -112,6 +122,20 @@ export type Pairwise = {
 };
 
 const verdictOf = (myKo: number, oppKo: number, faster: "win" | "lose" | "tie"): MatchupVerdict => {
+  const iThreaten = myKo >= 0.5;
+  const oppThreatens = oppKo >= 0.5;
+  // 한쪽만 결정타가 있으면 그쪽이 유리/불리.
+  if (iThreaten && !oppThreatens) {
+    return "유리";
+  }
+  if (oppThreatens && !iThreaten) {
+    return "불리";
+  }
+  // 둘 다 결정타가 있으면(공격 메타) 스피드가 승부를 가른다.
+  if (iThreaten && oppThreatens) {
+    return faster === "win" ? "유리" : faster === "lose" ? "불리" : "호각";
+  }
+  // 둘 다 결정타가 없으면 화력 + 스피드 미세 우위로 본다.
   const speedBias = faster === "win" ? 0.15 : faster === "lose" ? -0.15 : 0;
   const score = myKo - oppKo + speedBias;
   return score > 0.2 ? "유리" : score < -0.2 ? "불리" : "호각";
@@ -200,12 +224,14 @@ export const inBattle = (
 
   const topMove = moveOptions[0];
   const oppKoOnMe = opponentSet ? (bestAttack(opponentSet, active, field)?.koChance ?? 0) : 0;
+  const faster = speedOf(active) > speedOf(opponentSide);
 
   let recommendation: string;
-  if (topMove && topMove.koChance >= 0.5 && oppKoOnMe < 1) {
-    recommendation = `${topMove.move}로 공격 (KO ${Math.round(topMove.koChance * 100)}%)`;
+  // 결정타가 있고, 내가 더 빠르거나 상대가 날 한 방에 못 잡으면 공격이 안전하다.
+  if (topMove && topMove.koChance >= 0.5 && (faster || oppKoOnMe < 1)) {
+    recommendation = `${withRo(topMove.move)} 공격 (KO ${Math.round(topMove.koChance * 100)}%${faster ? ", 선공" : ""})`;
   } else if (bestSwitch && bestSwitch.matchup.verdict === "유리") {
-    recommendation = `${bestSwitch.pick}로 교체가 유리`;
+    recommendation = `${withRo(bestSwitch.pick)} 교체가 유리`;
   } else if (topMove) {
     recommendation = `안전한 결정타가 없음 — ${topMove.move} 또는 교체 검토`;
   } else {

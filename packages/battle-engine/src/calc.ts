@@ -107,10 +107,12 @@ export const calcDamage = (
     return { min: 0, max: 0, koChance: 0, koText: "데미지 없음", desc: `${move} → ${defender.species}: 무효` };
   }
   const ko = result.kochance();
+  // kochance().chance는 n번째 타격까지의 KO 확률이다(약한 기술은 9타 후 100%).
+  // 이번 턴 결정타 판단엔 OHKO 확률(n===1)만 의미가 있다.
   return {
     min: range[0],
     max: range[1],
-    koChance: ko.chance ?? (ko.n > 0 ? 1 : 0),
+    koChance: ko.n === 1 ? (ko.chance ?? 1) : 0,
     koText: ko.text,
     desc: result.desc(),
   };
