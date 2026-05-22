@@ -23,6 +23,8 @@ export type EngineSide = {
   boosts?: StatSpread; // 랭크 -6..+6
   teraType?: string; // 한국어(강철)/영문(Steel)
   terastallized?: boolean;
+  mega?: boolean; // 메가진화 (챔피언스). 테라와 동시 불가 — 기믹 1개 규칙
+  megaForme?: "X" | "Y"; // 리자몽·뮤츠 등 2종 메가 구분
   curHP?: number;
   status?: "" | "slp" | "psn" | "brn" | "frz" | "par" | "tox";
 };
@@ -47,10 +49,27 @@ const enItem = (item?: string): string | undefined =>
 const enAbility = (ability?: string): string | undefined =>
   ability ? (findAbility(ability)?.en ?? ability) : undefined;
 
+// 메가 폼 종족명 (예: charizard + Y -> charizard-mega-y). @smogon/calc이 폼 종족값·타입·특성을 자동 적용.
+const megaSpeciesName = (baseEn: string, forme?: "X" | "Y"): string =>
+  forme ? `${baseEn}-mega-${forme.toLowerCase()}` : `${baseEn}-mega`;
+
 export const toCalcPokemon = (side: EngineSide): Pokemon => buildPokemon(side);
 
-const buildPokemon = (side: EngineSide): Pokemon =>
-  new Pokemon(gen, enSpecies(side.species), {
+const buildPokemon = (side: EngineSide): Pokemon => {
+  const baseEn = enSpecies(side.species);
+  if (side.mega) {
+    // 메가는 폼 고유 특성(부모자식사랑 등)을 쓰므로 기존 특성·도구(메가스톤)·테라를 넘기지 않는다.
+    return new Pokemon(gen, megaSpeciesName(baseEn, side.megaForme), {
+      level: side.level ?? 50,
+      nature: side.nature ? natureEnOf(side.nature) : undefined,
+      evs: side.evs,
+      ivs: side.ivs,
+      boosts: side.boosts,
+      curHP: side.curHP,
+      status: side.status,
+    });
+  }
+  return new Pokemon(gen, baseEn, {
     level: side.level ?? 50,
     ability: enAbility(side.ability),
     item: enItem(side.item),
@@ -62,6 +81,7 @@ const buildPokemon = (side: EngineSide): Pokemon =>
     curHP: side.curHP,
     status: side.status,
   });
+};
 
 export const calcDamage = (
   attacker: EngineSide,

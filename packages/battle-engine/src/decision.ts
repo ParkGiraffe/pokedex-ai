@@ -191,6 +191,39 @@ export const inBattle = (
   return { moveOptions, switchOptions, recommendation };
 };
 
+export type GimmickChoice = "none" | "mega" | "tera";
+export type GimmickOption = { gimmick: GimmickChoice; move: string; koChance: number; max: number; desc: string };
+export type GimmickPlan = { recommend: GimmickChoice; options: GimmickOption[] };
+
+// 챔피언스 기믹 1개 규칙: 메가/테라/안 씀 중 이번 공격에 KO가 가장 잘 나오는 선택을 고른다.
+export const bestGimmick = (
+  attacker: MyMon,
+  defender: EngineSide,
+  opts: { canMega?: boolean; megaForme?: "X" | "Y"; canTera?: boolean; teraType?: string },
+  field?: EngineField
+): GimmickPlan => {
+  const variants: Array<{ gimmick: GimmickChoice; mon: MyMon }> = [{ gimmick: "none", mon: attacker }];
+  if (opts.canMega) {
+    variants.push({ gimmick: "mega", mon: { ...attacker, mega: true, megaForme: opts.megaForme } });
+  }
+  if (opts.canTera && opts.teraType) {
+    variants.push({
+      gimmick: "tera",
+      mon: { ...attacker, terastallized: true, teraType: opts.teraType },
+    });
+  }
+  const options = variants
+    .map(({ gimmick, mon }): GimmickOption | undefined => {
+      const best = bestAttack(mon, defender, field);
+      return best
+        ? { gimmick, move: best.move, koChance: best.koChance, max: best.max, desc: best.desc }
+        : undefined;
+    })
+    .filter((option): option is GimmickOption => option !== undefined)
+    .sort((a, b) => b.koChance - a.koChance || b.max - a.max);
+  return { recommend: options[0]?.gimmick ?? "none", options };
+};
+
 export type CounterEntry = {
   setName: string;
   item?: string;
