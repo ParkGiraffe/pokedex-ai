@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
@@ -18,7 +19,11 @@ const validDraft: MemberDraft = {
 
 describe("파티빌더 페이지", () => {
   it("기본 슬롯과 분석 요약을 렌더한다", () => {
-    render(<PartyPage />);
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <PartyPage />
+      </QueryClientProvider>
+    );
     expect(screen.getByRole("heading", { name: "파티빌더" })).toBeInTheDocument();
     expect(screen.getByText("슬롯 1")).toBeInTheDocument();
     expect(screen.getByText("분석 요약")).toBeInTheDocument();

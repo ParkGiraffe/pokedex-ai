@@ -54,3 +54,7 @@ export const CounterBody = z.object({
   myPool: z.array(MyMon).min(1),
   field: Field,
 });
+
+export const ImportPartyBody = z.object({
+  image: z.string().min(1),
+});

@@ -44,3 +44,29 @@ export const requestDecision = async (body: DecideBody): Promise<DecideResult> =
   }
   return response.json() as Promise<DecideResult>;
 };
+
+export type ImportMember = {
+  species: string;
+  ability: string;
+  item: string;
+  nature: string;
+  teraType: string;
+  moves: [string, string, string, string];
+  evs: Record<"H" | "A" | "B" | "C" | "D" | "S", number>;
+};
+
+export type ImportResult = { party: ImportMember[]; warnings: string[] };
+
+// 파티 화면 이미지(base64 data URL) → 서버 비전 분석 → 검증된 파티
+export const importPartyImage = async (image: string): Promise<ImportResult> => {
+  const response = await fetch(`${BASE}/import-party`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ image }),
+  });
+  if (!response.ok) {
+    const detail = await response.json().catch(() => null);
+    throw new Error(detail?.error ?? `이미지 분석 실패 (${response.status})`);
+  }
+  return response.json() as Promise<ImportResult>;
+};

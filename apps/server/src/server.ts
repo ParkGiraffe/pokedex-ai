@@ -7,12 +7,21 @@ import {
 } from "@pokedex-agent/battle-engine";
 import Fastify, { type FastifyInstance } from "fastify";
 
-import { CounterBody, DecideBody, TeamSelectBody } from "./dto";
+import { CounterBody, DecideBody, ImportPartyBody, TeamSelectBody } from "./dto";
+import { buildImportResult, extractPartyFromImage } from "./import";
 
 export const buildServer = (): FastifyInstance => {
-  const app = Fastify({ logger: false });
+  const app = Fastify({ logger: false, bodyLimit: 12 * 1024 * 1024 });
 
   app.get("/health", async () => ({ ok: true }));
+
+  // 파티 화면 이미지 → 로컬 비전(Ollama) → 검증된 파티(빌더 형식)
+  app.post("/import-party", async (request) => {
+    const body = ImportPartyBody.parse(request.body);
+    const base64 = body.image.replace(/^data:image\/[a-zA-Z+]+;base64,/, "");
+    const raw = await extractPartyFromImage(base64);
+    return buildImportResult(raw);
+  });
 
   // 선출: 내 팀 × 상대 팀 매치업 점수로 선출 우선순위.
   app.post("/team-select", async (request) => {
