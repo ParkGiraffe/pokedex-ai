@@ -16,6 +16,7 @@ import { PokemonPicker } from "@/features/pokemon-picker/ui/PokemonPicker";
 
 import { buildParty, memberError, teamWeakness } from "../lib/party";
 import { MAX_PARTY, type MemberDraft, usePartyStore } from "../model/store";
+import { PartyImportPanel } from "./PartyImportPanel";
 
 const TERA_OPTIONS = [...TYPE_NAMES, "스텔라"] as const;
 const EV_KEYS: Array<keyof MemberDraft["evs"]> = ["H", "A", "B", "C", "D", "S"];
@@ -119,6 +120,7 @@ const PartySlot = ({ index, draft, onChange, onRemove }: SlotProps) => {
 export const PartyPage = () => {
   const { members, addMember, removeMember, updateMember } = usePartyStore();
   const [panelOpen, setPanelOpen] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
 
   const party = buildParty(members);
   const summary = analysis.analyzeParty(party);
@@ -136,6 +138,9 @@ export const PartyPage = () => {
         <h1 className="text-xl font-bold">파티빌더</h1>
         <div className="flex gap-2">
           <ExportButton task="party-analysis" payload={{ party }} label="이 파티 분석" />
+          <Button variant="secondary" onClick={() => setImportOpen(true)}>
+            파티 가져오기
+          </Button>
           <Button variant="ghost" onClick={() => setPanelOpen(true)}>
             Claude 답변 붙여넣기
           </Button>
@@ -195,6 +200,7 @@ export const PartyPage = () => {
       )}
 
       <PokemonDatalist />
+      <PartyImportPanel open={importOpen} onClose={() => setImportOpen(false)} />
       <PasteSidePanel open={panelOpen} onClose={() => setPanelOpen(false)} />
     </section>
   );

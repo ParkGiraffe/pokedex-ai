@@ -44,6 +44,7 @@ type PartyState = {
   addMember: () => void;
   removeMember: (index: number) => void;
   updateMember: (index: number, patch: Partial<MemberDraft>) => void;
+  setMembers: (members: MemberDraft[]) => void;
 };
 
 export const usePartyStore = create<PartyState>()(
@@ -62,6 +63,7 @@ export const usePartyStore = create<PartyState>()(
         set((state) => ({
           members: state.members.map((member, i) => (i === index ? { ...member, ...patch } : member)),
         })),
+      setMembers: (members) => set({ members: members.slice(0, MAX_PARTY) }),
     }),
     { name: "pokedex-party" }
   )
