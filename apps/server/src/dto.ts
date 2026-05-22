@@ -55,6 +55,11 @@ export const CounterBody = z.object({
   field: Field,
 });
 
-export const ImportPartyBody = z.object({
-  image: z.string().min(1),
-});
+export const ImportPartyBody = z
+  .object({
+    image: z.string().min(1).optional(),
+    images: z.array(z.string().min(1)).optional(),
+  })
+  .refine((body) => Boolean(body.image) || Boolean(body.images?.length), {
+    message: "이미지가 필요합니다",
+  });

@@ -57,15 +57,15 @@ export type ImportMember = {
 
 export type ImportResult = { party: ImportMember[]; warnings: string[] };
 
-// 파티 화면 이미지(base64 data URL) → 서버 비전 분석 → 검증된 파티
-export const importPartyImage = async (image: string): Promise<ImportResult> => {
+// 파티 화면 이미지 여러 장(base64 data URL) → 서버 비전 분석·병합 → 검증된 파티
+export const importPartyImages = async (images: string[]): Promise<ImportResult> => {
   const response = await fetch(`${BASE}/import-party`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ image }),
+    body: JSON.stringify({ images }),
   });
   if (!response.ok) {
-    const detail = await response.json().catch(() => null);
+    const detail = (await response.json().catch(() => null)) as { error?: string } | null;
     throw new Error(detail?.error ?? `이미지 분석 실패 (${response.status})`);
   }
   return response.json() as Promise<ImportResult>;

@@ -20,18 +20,18 @@ export const PartyImportPanel = ({ open, onClose }: PartyImportPanelProps) => {
   const importParty = useImportParty();
   const warnings = importParty.data?.warnings ?? [];
 
-  const handleSelectImage = async (file?: File) => {
-    if (!file) {
+  const handleSelectImages = async (files: FileList | null) => {
+    if (!files || files.length === 0) {
       return;
     }
-    let image: string;
+    let images: string[];
     try {
-      image = await downscaleImage(file);
+      images = await Promise.all(Array.from(files).map((file) => downscaleImage(file)));
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "이미지 처리 실패");
       return;
     }
-    importParty.mutate(image, {
+    importParty.mutate(images, {
       onSuccess: (result) => {
         setRaw(JSON.stringify(result.party, null, 1));
         if (result.warnings.length > 0) {
@@ -62,12 +62,15 @@ export const PartyImportPanel = ({ open, onClose }: PartyImportPanelProps) => {
   return (
     <Sheet open={open} title="파티 가져오기" onClose={onClose}>
       <div className="flex flex-col gap-1.5">
-        <label className="text-sm font-medium text-neutral-300">파티 화면 이미지로 분석 (로컬 비전)</label>
+        <label className="text-sm font-medium text-neutral-300">
+          파티 화면 이미지로 분석 (로컬 비전) — 능력·스테이터스 화면을 함께 올리면 EV까지 합쳐 분석
+        </label>
         <input
           type="file"
           accept="image/*"
+          multiple
           disabled={importParty.isPending}
-          onChange={(event) => handleSelectImage(event.currentTarget.files?.[0])}
+          onChange={(event) => handleSelectImages(event.currentTarget.files)}
           className="text-sm text-neutral-300 file:mr-3 file:rounded-md file:border-0 file:bg-neutral-800 file:px-3 file:py-1.5 file:text-neutral-100 hover:file:bg-neutral-700"
         />
         {importParty.isPending && <p className="text-xs text-emerald-400">분석 중... (로컬 모델)</p>}

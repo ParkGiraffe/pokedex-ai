@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { buildImportResult } from "../src/import";
+import { buildImportResult, mergeMembers } from "../src/import";
 
 describe("buildImportResult", () => {
   it("0~32 포인트를 EV(0~252)로 환산한다 (66포인트=508)", () => {
@@ -25,6 +25,22 @@ describe("buildImportResult", () => {
     const { party } = buildImportResult([{ species: "킬라플로로", moves: ["볼릿펀치"] }]);
     expect(party[0]!.species).toBe("킬라플로르");
     expect(party[0]!.moves).toContain("불릿펀치");
+  });
+
+  it("두 화면(기술 + EV)을 종족 기준으로 병합한다", () => {
+    const merged = mergeMembers([
+      [{ species: "한카리아스", ability: "까칠한피부", item: "기합의띠", moves: ["지진", "역린"] }],
+      [{ species: "킬라플로로", points: { A: 32, S: 32, H: 2 } }],
+    ]);
+    // 능력 화면 기술 + 스테이터스 화면 EV가 한 종족으로 합쳐지고, 종족 오타는 정규화로 매칭
+    const garchomp = mergeMembers([
+      [{ species: "한카리아스", moves: ["지진"] }],
+      [{ species: "한카리아스", points: { A: 32 } }],
+    ]);
+    expect(garchomp).toHaveLength(1);
+    expect(garchomp[0]!.moves).toEqual(["지진"]);
+    expect(garchomp[0]!.points?.A).toBe(32);
+    expect(merged).toHaveLength(2);
   });
 
   it("빈 기술 슬롯을 채우고 최대 6마리만 받는다", () => {
