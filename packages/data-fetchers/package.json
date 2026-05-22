@@ -12,9 +12,14 @@
     "fetch:items": "tsx src/fetch-items.ts",
     "fetch:natures": "tsx src/fetch-natures.ts",
     "fetch:sprites": "tsx src/fetch-sprites.ts",
+    "fetch:sets": "tsx src/fetch-sets.ts",
+    "fetch:usage": "tsx src/fetch-usage.ts",
     "fetch:all": "tsx src/fetch-all.ts"
   },
   "dependencies": {
+    "@pkmn/data": "^0.10.9",
+    "@pkmn/dex": "^0.10.9",
+    "@pkmn/smogon": "^0.5.30",
     "@pokedex-agent/pokedex-core": "workspace:*",
     "p-limit": "^7.2.0",
     "zod": "^4.4.3"

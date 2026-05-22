@@ -90,6 +90,15 @@ importers:
 
   packages/data-fetchers:
     dependencies:
+      '@pkmn/data':
+        specifier: ^0.10.9
+        version: 0.10.9
+      '@pkmn/dex':
+        specifier: ^0.10.9
+        version: 0.10.9
+      '@pkmn/smogon':
+        specifier: ^0.5.30
+        version: 0.5.30
       '@pokedex-agent/pokedex-core':
         specifier: workspace:*
         version: link:../pokedex-core
@@ -390,6 +399,21 @@ packages:
 
   '@oxc-project/types@0.132.0':
     resolution: {integrity: sha512-FESMOxil5Se014ui/Eq8fT5uHJo6nIRwH0PfJrZJXs6Gek3ZVFOrpUv3YIZT20m+extU98Hg1Ym72U58rlsxUQ==}
+
+  '@pkmn/data@0.10.9':
+    resolution: {integrity: sha512-VAXcHvQNW0AYDlsms64/9wlTNF3grqtpSjHeQoV+U6kyOAg2BqqERjiRUZToF+Zv5xww+HPjm6MaTMiLnNDc9g==}
+
+  '@pkmn/dex-types@0.10.9':
+    resolution: {integrity: sha512-EPHMWM+JckpaT58VnNcazH6s6D//DmvXVqCJFUn8id19OSZgcIGqg62TJFebQ+kWeCHKcXzDX8UMxRzBjaJJXA==}
+
+  '@pkmn/dex@0.10.9':
+    resolution: {integrity: sha512-MzNQmIDrVb7kAheSvwD3fZm2gZRlsFKnKtp8FXHgVFlkTqaD0bv1M4ndFXicTKlsmeYX4WP+3mGZqFgKQTwahA==}
+
+  '@pkmn/smogon@0.5.30':
+    resolution: {integrity: sha512-tHnsoh2zBZyyukOshJrIz+mL2W3C+WB2BtMm8Iy0RsOfBxKQfbLiRI5xEQRVUqFO4suvdzOmB4ZQ9XCNDReDPg==}
+
+  '@pkmn/types@4.0.0':
+    resolution: {integrity: sha512-gR2s/pxJYEegek1TtsYCQupNR3d5hMlcJFsiD+2LyfKr4tc+gETTql47tWLX5mFSbPcbXh7f4+7txlMIDoZx/g==}
 
   '@rolldown/binding-android-arm64@1.0.2':
     resolution: {integrity: sha512-ZS4D1JPGn/MYQN/SYDWftIE/nVsM8j/AFOYEzAoOE2O3NktQOZru+/vYXGbR/qtdLdIfGCP0lcoJiYVzsEz+iQ==}
@@ -1485,6 +1509,24 @@ snapshots:
     optional: true
 
   '@oxc-project/types@0.132.0': {}
+
+  '@pkmn/data@0.10.9':
+    dependencies:
+      '@pkmn/dex-types': 0.10.9
+
+  '@pkmn/dex-types@0.10.9':
+    dependencies:
+      '@pkmn/types': 4.0.0
+
+  '@pkmn/dex@0.10.9':
+    dependencies:
+      '@pkmn/dex-types': 0.10.9
+
+  '@pkmn/smogon@0.5.30':
+    dependencies:
+      '@pkmn/data': 0.10.9
+
+  '@pkmn/types@4.0.0': {}
 
   '@rolldown/binding-android-arm64@1.0.2':
     optional: true
