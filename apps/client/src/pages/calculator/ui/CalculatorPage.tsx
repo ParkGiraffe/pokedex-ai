@@ -10,6 +10,7 @@ import { Select } from "@/common/ui/Select";
 import { CopyButton } from "@/features/claude-bridge/ui/CopyButton";
 import { PasteSidePanel } from "@/features/claude-bridge/ui/PasteSidePanel";
 import { PokemonDatalist } from "@/features/pokemon-picker/ui/PokemonDatalist";
+import { PokemonIcon } from "@/features/pokemon-picker/ui/PokemonIcon";
 import { PokemonPicker } from "@/features/pokemon-picker/ui/PokemonPicker";
 
 import { buildMatchupMarkdown, computeCalc } from "../lib/calc";
@@ -68,11 +69,14 @@ export const CalculatorPage = () => {
         <Card className="flex flex-col gap-3">
           <h2 className="text-sm font-semibold text-emerald-400">공격 (누오)</h2>
           <Field label="종족">
-            <PokemonPicker
-              value={attacker.species}
-              invalid={!result}
-              onSelect={(name) => setAttacker({ species: name })}
-            />
+            <div className="flex items-center gap-2">
+              <PokemonIcon species={attacker.species} />
+              <PokemonPicker
+                value={attacker.species}
+                invalid={!result}
+                onSelect={(name) => setAttacker({ species: name })}
+              />
+            </div>
           </Field>
           <div className="grid grid-cols-2 gap-3">
             <Field label="분류">
@@ -214,11 +218,14 @@ export const CalculatorPage = () => {
         <Card className="flex flex-col gap-3">
           <h2 className="text-sm font-semibold text-sky-400">방어 (토오)</h2>
           <Field label="종족">
-            <PokemonPicker
-              value={defender.species}
-              invalid={!result}
-              onSelect={(name) => setDefender({ species: name })}
-            />
+            <div className="flex items-center gap-2">
+              <PokemonIcon species={defender.species} />
+              <PokemonPicker
+                value={defender.species}
+                invalid={!result}
+                onSelect={(name) => setDefender({ species: name })}
+              />
+            </div>
           </Field>
           <div className="grid grid-cols-2 gap-3">
             <Field label="HP 노력치">

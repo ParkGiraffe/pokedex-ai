@@ -11,6 +11,7 @@ import { Select } from "@/common/ui/Select";
 import { ExportButton } from "@/features/claude-bridge/ui/ExportButton";
 import { PasteSidePanel } from "@/features/claude-bridge/ui/PasteSidePanel";
 import { PokemonDatalist } from "@/features/pokemon-picker/ui/PokemonDatalist";
+import { PokemonIcon } from "@/features/pokemon-picker/ui/PokemonIcon";
 import { PokemonPicker } from "@/features/pokemon-picker/ui/PokemonPicker";
 
 import { buildParty, memberError, teamWeakness } from "../lib/party";
@@ -33,7 +34,10 @@ const PartySlot = ({ index, draft, onChange, onRemove }: SlotProps) => {
   return (
     <Card className="flex flex-col gap-3">
       <div className="flex items-center justify-between">
-        <span className="text-sm font-semibold text-neutral-300">슬롯 {index + 1}</span>
+        <span className="flex items-center gap-2 text-sm font-semibold text-neutral-300">
+          슬롯 {index + 1}
+          <PokemonIcon species={draft.species} className="h-7 w-7" />
+        </span>
         <button type="button" onClick={onRemove} className="text-xs text-neutral-500 hover:text-rose-400">
           삭제
         </button>

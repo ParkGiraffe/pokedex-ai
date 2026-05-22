@@ -9,6 +9,7 @@ import { Input } from "@/common/ui/Input";
 import { Select } from "@/common/ui/Select";
 import { CopyButton } from "@/features/claude-bridge/ui/CopyButton";
 import { PasteSidePanel } from "@/features/claude-bridge/ui/PasteSidePanel";
+import { PokemonIcon } from "@/features/pokemon-picker/ui/PokemonIcon";
 
 import {
   ALL_GENERATIONS,
@@ -95,6 +96,7 @@ export const DexPage = () => {
       {selected && (
         <Card className="flex flex-col gap-3">
           <div className="flex flex-wrap items-center gap-3">
+            <PokemonIcon species={selected.ko} className="h-12 w-12" />
             <span className="text-lg font-bold">
               #{selected.no} {selected.ko}
             </span>
@@ -140,7 +142,8 @@ export const DexPage = () => {
                 : "border-neutral-800 bg-neutral-900/40 hover:border-neutral-700"
             )}
           >
-            <span className="flex items-center gap-2">
+            <span className="flex items-center gap-1.5">
+              <PokemonIcon species={entry.ko} className="h-7 w-7" />
               <span className="text-xs text-neutral-500">#{entry.no}</span>
               <span className="text-sm font-medium">{entry.ko}</span>
             </span>

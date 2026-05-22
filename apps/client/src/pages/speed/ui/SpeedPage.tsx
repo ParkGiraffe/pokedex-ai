@@ -10,6 +10,7 @@ import { Select } from "@/common/ui/Select";
 import { CopyButton } from "@/features/claude-bridge/ui/CopyButton";
 import { PasteSidePanel } from "@/features/claude-bridge/ui/PasteSidePanel";
 import { PokemonDatalist } from "@/features/pokemon-picker/ui/PokemonDatalist";
+import { PokemonIcon } from "@/features/pokemon-picker/ui/PokemonIcon";
 import { PokemonPicker } from "@/features/pokemon-picker/ui/PokemonPicker";
 
 import { buildSpeedMarkdown, compareSpeed, computeSpeed } from "../lib/calc";
@@ -31,7 +32,10 @@ const SideCard = ({ title, accent, side, onChange }: SideCardProps) => {
         <span className="text-lg font-bold">{speed ?? "-"}</span>
       </div>
       <Field label="종족">
-        <PokemonPicker value={side.species} invalid={speed === undefined} onSelect={(name) => onChange({ species: name })} />
+        <div className="flex items-center gap-2">
+          <PokemonIcon species={side.species} />
+          <PokemonPicker value={side.species} invalid={speed === undefined} onSelect={(name) => onChange({ species: name })} />
+        </div>
       </Field>
       <div className="grid grid-cols-2 gap-3">
         <Field label="스피드 노력치">

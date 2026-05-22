@@ -7,6 +7,7 @@ import { Card } from "@/common/ui/Card";
 import { ExportButton } from "@/features/claude-bridge/ui/ExportButton";
 import { PasteSidePanel } from "@/features/claude-bridge/ui/PasteSidePanel";
 import { PokemonDatalist } from "@/features/pokemon-picker/ui/PokemonDatalist";
+import { PokemonIcon } from "@/features/pokemon-picker/ui/PokemonIcon";
 import { PokemonPicker } from "@/features/pokemon-picker/ui/PokemonPicker";
 import { buildParty } from "@/pages/party/lib/party";
 import { usePartyStore } from "@/pages/party/model/store";
@@ -103,7 +104,12 @@ export const MatchupPage = () => {
               <tbody>
                 {myParty.map((member, rowIndex) => (
                   <tr key={`${member.species}-${rowIndex}`}>
-                    <td className="p-1 font-medium text-neutral-200">{member.species}</td>
+                    <td className="p-1 font-medium text-neutral-200">
+                      <span className="flex items-center gap-1">
+                        <PokemonIcon species={member.species} className="h-6 w-6" />
+                        {member.species}
+                      </span>
+                    </td>
                     {validOpponents.map((opponent) => {
                       const score = matchup.pairwise(member, opponent);
                       return (
@@ -127,7 +133,10 @@ export const MatchupPage = () => {
             <ul className="flex flex-col gap-1 text-sm">
               {board.map((lead) => (
                 <li key={lead.myPick} className="flex items-center justify-between">
-                  <span className="text-neutral-200">{lead.myPick}</span>
+                  <span className="flex items-center gap-1.5 text-neutral-200">
+                    <PokemonIcon species={lead.myPick} className="h-6 w-6" />
+                    {lead.myPick}
+                  </span>
                   <span className="text-neutral-400">
                     {lead.finalScore}점 (유리 {lead.favorable} / 불리 {lead.unfavorable})
                   </span>

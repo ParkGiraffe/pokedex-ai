@@ -10,6 +10,7 @@ import { Select } from "@/common/ui/Select";
 import { ExportButton } from "@/features/claude-bridge/ui/ExportButton";
 import { PasteSidePanel } from "@/features/claude-bridge/ui/PasteSidePanel";
 import { PokemonDatalist } from "@/features/pokemon-picker/ui/PokemonDatalist";
+import { PokemonIcon } from "@/features/pokemon-picker/ui/PokemonIcon";
 import { PokemonPicker } from "@/features/pokemon-picker/ui/PokemonPicker";
 import { buildParty } from "@/pages/party/lib/party";
 import { usePartyStore } from "@/pages/party/model/store";
@@ -99,6 +100,15 @@ export const BattlePage = () => {
               ))}
             </Select>
           </Field>
+
+          <div className="flex items-center gap-2 text-sm text-neutral-300">
+            <PokemonIcon species={myParty[activeIndex]?.species ?? ""} />
+            <span className="text-neutral-500">vs</span>
+            <PokemonIcon species={battle.opponentSpecies} />
+            <span>
+              {battle.opponentSpecies} HP {battle.opponentHpPercent}%
+            </span>
+          </div>
 
           {options ? (
             <table className="w-full border-collapse text-sm">
