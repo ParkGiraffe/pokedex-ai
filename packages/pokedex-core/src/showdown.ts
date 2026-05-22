@@ -1,9 +1,23 @@
+import naturesRaw from "../data/natures.json" with { type: "json" };
+import typesRaw from "../data/types.json" with { type: "json" };
 import setsRaw from "../data/meta/sets-gen9.json" with { type: "json" };
 import usageRaw from "../data/meta/usage-gen9.json" with { type: "json" };
 import { findPokemon } from "./lookup";
 
 // 한국어/영문/표시명 → Pokémon Showdown ID (소문자, 영숫자 외 제거).
 export const toShowdownId = (name: string): string => name.toLowerCase().replace(/[^a-z0-9]/g, "");
+
+const capitalize = (value: string): string =>
+  value ? value.charAt(0).toUpperCase() + value.slice(1) : value;
+
+const natureEnByKo = new Map(
+  (naturesRaw as { natures: Array<{ ko: string; en: string }> }).natures.map((n) => [n.ko, capitalize(n.en)])
+);
+const typeEnByKo = (typesRaw as { types_ko_to_en: Record<string, string> }).types_ko_to_en;
+
+// 성격/타입 한국어 → Showdown 영문 표기(예: 고집 → Adamant, 강철 → Steel). 미상은 그대로.
+export const natureEnOf = (nature: string): string => natureEnByKo.get(nature) ?? nature;
+export const typeEnOf = (type: string): string => capitalize(typeEnByKo[type] ?? type.toLowerCase());
 
 export type SmogonSet = {
   format: string;
