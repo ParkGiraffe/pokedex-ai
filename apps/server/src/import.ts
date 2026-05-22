@@ -2,7 +2,7 @@ import { findItem, findMove, findPokemon } from "@pokedex-agent/pokedex-core";
 
 // 로컬 비전 모델(Ollama) 설정. 기본 Qwen2.5-VL. 키·과금 없이 로컬에서 동작.
 const OLLAMA_URL = process.env.OLLAMA_URL ?? "http://localhost:11434";
-const OLLAMA_MODEL = process.env.OLLAMA_MODEL ?? "qwen2.5-vl";
+const OLLAMA_MODEL = process.env.OLLAMA_MODEL ?? "qwen2.5vl:7b";
 
 const PROMPT = [
   "이 이미지는 포켓몬 챔피언스 팀 화면이다. 6마리 각각의 정보를 추출해 JSON으로만 답하라.",
