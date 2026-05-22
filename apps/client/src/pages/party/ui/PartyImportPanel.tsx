@@ -5,6 +5,7 @@ import { Button } from "@/common/ui/Button";
 import { Sheet } from "@/common/ui/Sheet";
 import { useImportParty } from "@/features/advisor/model/useImportParty";
 
+import { downscaleImage } from "../lib/image";
 import { parsePartyImport } from "../lib/import";
 import { usePartyStore } from "../model/store";
 
@@ -19,25 +20,28 @@ export const PartyImportPanel = ({ open, onClose }: PartyImportPanelProps) => {
   const importParty = useImportParty();
   const warnings = importParty.data?.warnings ?? [];
 
-  const handleSelectImage = (file?: File) => {
+  const handleSelectImage = async (file?: File) => {
     if (!file) {
       return;
     }
-    const reader = new FileReader();
-    reader.onload = () => {
-      importParty.mutate(String(reader.result ?? ""), {
-        onSuccess: (result) => {
-          setRaw(JSON.stringify(result.party, null, 1));
-          if (result.warnings.length > 0) {
-            toast.warning(`분석 완료 — 확인 필요 ${result.warnings.length}건`);
-          } else {
-            toast.success("분석 완료 — 검토 후 등록하라");
-          }
-        },
-        onError: (error) => toast.error(error instanceof Error ? error.message : "분석 실패"),
-      });
-    };
-    reader.readAsDataURL(file);
+    let image: string;
+    try {
+      image = await downscaleImage(file);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "이미지 처리 실패");
+      return;
+    }
+    importParty.mutate(image, {
+      onSuccess: (result) => {
+        setRaw(JSON.stringify(result.party, null, 1));
+        if (result.warnings.length > 0) {
+          toast.warning(`분석 완료 — 확인 필요 ${result.warnings.length}건`);
+        } else {
+          toast.success("분석 완료 — 검토 후 등록하라");
+        }
+      },
+      onError: (error) => toast.error(error instanceof Error ? error.message : "분석 실패"),
+    });
   };
 
   const handleImport = () => {
