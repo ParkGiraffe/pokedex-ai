@@ -96,7 +96,7 @@ export const DexPage = () => {
       {selected && (
         <Card className="flex flex-col gap-3">
           <div className="flex flex-wrap items-center gap-3">
-            <PokemonIcon species={selected.ko} className="h-12 w-12" />
+            <PokemonIcon species={selected.ko} className="h-14 w-14" />
             <span className="text-lg font-bold">
               #{selected.no} {selected.ko}
             </span>
@@ -143,7 +143,7 @@ export const DexPage = () => {
             )}
           >
             <span className="flex items-center gap-1.5">
-              <PokemonIcon species={entry.ko} className="h-7 w-7" />
+              <PokemonIcon species={entry.ko} className="h-9 w-9" />
               <span className="text-xs text-neutral-500">#{entry.no}</span>
               <span className="text-sm font-medium">{entry.ko}</span>
             </span>

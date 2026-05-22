@@ -106,7 +106,7 @@ export const MatchupPage = () => {
                   <tr key={`${member.species}-${rowIndex}`}>
                     <td className="p-1 font-medium text-neutral-200">
                       <span className="flex items-center gap-1">
-                        <PokemonIcon species={member.species} className="h-6 w-6" />
+                        <PokemonIcon species={member.species} className="h-8 w-8" />
                         {member.species}
                       </span>
                     </td>
@@ -134,7 +134,7 @@ export const MatchupPage = () => {
               {board.map((lead) => (
                 <li key={lead.myPick} className="flex items-center justify-between">
                   <span className="flex items-center gap-1.5 text-neutral-200">
-                    <PokemonIcon species={lead.myPick} className="h-6 w-6" />
+                    <PokemonIcon species={lead.myPick} className="h-8 w-8" />
                     {lead.myPick}
                   </span>
                   <span className="text-neutral-400">

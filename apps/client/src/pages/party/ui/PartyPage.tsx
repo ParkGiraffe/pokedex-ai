@@ -36,7 +36,7 @@ const PartySlot = ({ index, draft, onChange, onRemove }: SlotProps) => {
       <div className="flex items-center justify-between">
         <span className="flex items-center gap-2 text-sm font-semibold text-neutral-300">
           슬롯 {index + 1}
-          <PokemonIcon species={draft.species} className="h-7 w-7" />
+          <PokemonIcon species={draft.species} className="h-9 w-9" />
         </span>
         <button type="button" onClick={onRemove} className="text-xs text-neutral-500 hover:text-rose-400">
           삭제
