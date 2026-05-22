@@ -14,6 +14,7 @@
     "fetch:sprites": "tsx src/fetch-sprites.ts",
     "fetch:sets": "tsx src/fetch-sets.ts",
     "fetch:usage": "tsx src/fetch-usage.ts",
+    "fetch:champions": "tsx src/fetch-champions.ts",
     "fetch:all": "tsx src/fetch-all.ts"
   },
   "dependencies": {
