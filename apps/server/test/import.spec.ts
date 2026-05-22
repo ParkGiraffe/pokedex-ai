@@ -12,17 +12,26 @@ describe("buildImportResult", () => {
     expect(party[0]!.evs.H).toBe(15);
   });
 
-  it("미확인 종족·기술·도구를 경고로 남긴다", () => {
-    const { warnings } = buildImportResult([
-      { species: "없는포켓몬", moves: ["없는기술"], item: "없는도구" },
+  it("도구가 기술 칸에 섞여 있어도 사전으로 재분류한다", () => {
+    const { party } = buildImportResult([
+      { species: "핫삼", item: "칼춤", moves: ["불릿펀치", "더블윙", "날개쉬기", "핫삼나이트"] },
     ]);
-    expect(warnings.some((warning) => warning.includes("종족 미확인"))).toBe(true);
-    expect(warnings.some((warning) => warning.includes("기술 미확인"))).toBe(true);
+    expect(party[0]!.item).toBe("핫삼나이트");
+    expect(party[0]!.moves).toContain("칼춤");
+    expect(party[0]!.moves).toContain("불릿펀치");
+  });
+
+  it("OCR 오타를 가까운 이름으로 교정한다", () => {
+    const { party } = buildImportResult([{ species: "킬라플로로", moves: ["볼릿펀치"] }]);
+    expect(party[0]!.species).toBe("킬라플로르");
+    expect(party[0]!.moves).toContain("불릿펀치");
   });
 
   it("빈 기술 슬롯을 채우고 최대 6마리만 받는다", () => {
     const { party } = buildImportResult([{ species: "한카리아스", moves: ["지진", "역린"] }]);
     expect(party[0]!.moves).toEqual(["지진", "역린", "", ""]);
-    expect(buildImportResult(Array.from({ length: 9 }, () => ({ species: "한카리아스" }))).party).toHaveLength(6);
+    expect(
+      buildImportResult(Array.from({ length: 9 }, () => ({ species: "한카리아스" }))).party
+    ).toHaveLength(6);
   });
 });
