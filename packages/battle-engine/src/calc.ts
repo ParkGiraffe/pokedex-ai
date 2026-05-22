@@ -47,6 +47,8 @@ const enItem = (item?: string): string | undefined =>
 const enAbility = (ability?: string): string | undefined =>
   ability ? (findAbility(ability)?.en ?? ability) : undefined;
 
+export const toCalcPokemon = (side: EngineSide): Pokemon => buildPokemon(side);
+
 const buildPokemon = (side: EngineSide): Pokemon =>
   new Pokemon(gen, enSpecies(side.species), {
     level: side.level ?? 50,
