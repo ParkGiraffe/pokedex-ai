@@ -23,6 +23,8 @@ const MyMon = z.object({
   boosts: StatSpread,
   teraType: z.string().optional(),
   terastallized: z.boolean().optional(),
+  mega: z.boolean().optional(),
+  megaForme: z.enum(["X", "Y"]).optional(),
   curHP: z.number().optional(),
   status: z.enum(["", "slp", "psn", "brn", "frz", "par", "tox"]).optional(),
 });

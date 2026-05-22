@@ -60,6 +60,22 @@ describe("어드바이저 서버", () => {
     expect(res.json().entries.length).toBeGreaterThan(0);
   });
 
+  it("/decide: 메가진화 입력이 DTO를 통과해 데미지에 반영된다", async () => {
+    const app = buildServer();
+    const base = { species: "한카리아스", moves: ["지진"], nature: "고집", evs: { atk: 252 } };
+    const plain = await app.inject({
+      method: "POST",
+      url: "/decide",
+      payload: { active: base, opponentSpecies: "마기라스", bench: [] },
+    });
+    const mega = await app.inject({
+      method: "POST",
+      url: "/decide",
+      payload: { active: { ...base, mega: true }, opponentSpecies: "마기라스", bench: [] },
+    });
+    expect(mega.json().moveOptions[0].max).toBeGreaterThan(plain.json().moveOptions[0].max);
+  });
+
   it("잘못된 본문은 400", async () => {
     const app = buildServer();
     const res = await app.inject({ method: "POST", url: "/decide", payload: {} });
