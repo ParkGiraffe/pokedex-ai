@@ -11,6 +11,7 @@
     "fetch:abilities": "tsx src/fetch-abilities.ts",
     "fetch:items": "tsx src/fetch-items.ts",
     "fetch:natures": "tsx src/fetch-natures.ts",
+    "fetch:sprites": "tsx src/fetch-sprites.ts",
     "fetch:all": "tsx src/fetch-all.ts"
   },
   "dependencies": {
