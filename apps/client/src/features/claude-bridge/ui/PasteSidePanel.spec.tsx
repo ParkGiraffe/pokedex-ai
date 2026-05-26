@@ -16,7 +16,7 @@ describe("PasteSidePanel", () => {
 
   it("표준 JSON 응답을 반영하면 요약과 약점이 표시된다", () => {
     render(<PasteSidePanel open onClose={() => {}} />);
-    fireEvent.change(screen.getByPlaceholderText(/붙여넣어라/), {
+    fireEvent.change(screen.getByPlaceholderText(/붙여넣기/), {
       target: { value: VALID_RESPONSE },
     });
     fireEvent.click(screen.getByRole("button", { name: "분석 결과 반영" }));
@@ -26,7 +26,7 @@ describe("PasteSidePanel", () => {
 
   it("형식이 어긋난 응답은 반영하지 않는다", () => {
     render(<PasteSidePanel open onClose={() => {}} />);
-    fireEvent.change(screen.getByPlaceholderText(/붙여넣어라/), {
+    fireEvent.change(screen.getByPlaceholderText(/붙여넣기/), {
       target: { value: "그냥 텍스트" },
     });
     fireEvent.click(screen.getByRole("button", { name: "분석 결과 반영" }));

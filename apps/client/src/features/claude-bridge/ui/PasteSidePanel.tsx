@@ -25,7 +25,7 @@ export const PasteSidePanel = ({ open, onClose }: PasteSidePanelProps) => {
       return;
     }
     setResult(result.data);
-    toast.success("분석 결과를 반영했다");
+    toast.success("분석 결과 반영 완료");
   };
 
   return (
@@ -33,7 +33,7 @@ export const PasteSidePanel = ({ open, onClose }: PasteSidePanelProps) => {
       <textarea
         value={raw}
         onChange={(event) => setRaw(event.currentTarget.value)}
-        placeholder="Claude 답변 전체를 붙여넣어라 (JSON 코드블록 포함)"
+        placeholder="Claude 답변 전체를 붙여넣기 (JSON 코드블록 포함)"
         className="h-48 w-full resize-y rounded-md border border-neutral-700 bg-neutral-900 p-3 text-sm text-neutral-100 placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
       />
       <Button onClick={handleApply}>분석 결과 반영</Button>

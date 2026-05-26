@@ -34,7 +34,7 @@ export const PartyImportPanel = ({ open, onClose }: PartyImportPanelProps) => {
 
   const handleAnalyze = async () => {
     if (files.length === 0) {
-      toast.error("이미지를 먼저 추가하라");
+      toast.error("이미지를 먼저 추가");
       return;
     }
     let images: string[];
@@ -50,7 +50,7 @@ export const PartyImportPanel = ({ open, onClose }: PartyImportPanelProps) => {
         if (result.warnings.length > 0) {
           toast.warning(`분석 완료 — 확인 필요 ${result.warnings.length}건`);
         } else {
-          toast.success("분석 완료 — 검토 후 등록하라");
+          toast.success("분석 완료 — 검토 후 등록");
         }
       },
       onError: (error) => toast.error(error instanceof Error ? error.message : "분석 실패"),
@@ -61,7 +61,7 @@ export const PartyImportPanel = ({ open, onClose }: PartyImportPanelProps) => {
     try {
       const members = parsePartyImport(raw);
       if (members.length === 0) {
-        toast.error("등록할 포켓몬이 없다");
+        toast.error("등록할 포켓몬 없음");
         return;
       }
       setMembers(members);
@@ -123,7 +123,7 @@ export const PartyImportPanel = ({ open, onClose }: PartyImportPanelProps) => {
         )}
       </div>
 
-      <p className="text-xs text-neutral-500">분석 결과(또는 직접 붙여넣은 JSON)를 검토 후 등록한다.</p>
+      <p className="text-xs text-neutral-500">분석 결과(또는 직접 붙여넣은 JSON)를 검토 후 등록</p>
       <textarea
         value={raw}
         onChange={(event) => setRaw(event.currentTarget.value)}

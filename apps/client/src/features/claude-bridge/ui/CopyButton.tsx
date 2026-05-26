@@ -12,7 +12,7 @@ export const CopyButton = ({ buildText, label = "Claude에 분석 요청", disab
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(buildText());
-      toast.success("클립보드에 복사했다. Claude 대화창에 붙여넣어라");
+      toast.success("복사 완료 — Claude 대화창에 붙여넣기");
     } catch (error) {
       toast.error(`복사 실패: ${String(error)}`);
     }
