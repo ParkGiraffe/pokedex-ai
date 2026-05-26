@@ -7,7 +7,16 @@ import {
 } from "@pokedex-agent/battle-engine";
 import Fastify, { type FastifyInstance } from "fastify";
 
-import { CounterBody, DecideBody, ImportPartyBody, TeamSelectBody } from "./dto";
+import { adviseBattle, adviseMatchup, adviseParty } from "./advisor";
+import {
+  AnalyzePartyBody,
+  BattleAdviceBody,
+  CounterBody,
+  DecideBody,
+  ImportPartyBody,
+  MatchupLeadrecBody,
+  TeamSelectBody,
+} from "./dto";
 import { buildImportResult, extractPartyFromImage, mergeMembers } from "./import";
 
 export const buildServer = (): FastifyInstance => {
@@ -66,6 +75,22 @@ export const buildServer = (): FastifyInstance => {
     const body = CounterBody.parse(request.body);
     const entries = counterplay(body.opponentSpecies, body.myPool as MyMon[], body.field as EngineField);
     return { opponent: body.opponentSpecies, entries };
+  });
+
+  // 추천 시스템: 서버가 Anthropic API를 호출해 ClaudeResponse 스키마로 응답.
+  app.post("/analyze-party", async (request) => {
+    const body = AnalyzePartyBody.parse(request.body);
+    return adviseParty(body.party);
+  });
+
+  app.post("/matchup-leadrec", async (request) => {
+    const body = MatchupLeadrecBody.parse(request.body);
+    return adviseMatchup(body.state);
+  });
+
+  app.post("/battle-advice", async (request) => {
+    const body = BattleAdviceBody.parse(request.body);
+    return adviseBattle(body.state);
   });
 
   app.setErrorHandler((error, _request, reply) => {

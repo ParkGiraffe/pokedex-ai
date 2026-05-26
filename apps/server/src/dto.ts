@@ -1,4 +1,9 @@
+import { BattleState, Party } from "@pokedex-agent/pokedex-core";
 import { z } from "zod";
+
+export const AnalyzePartyBody = z.object({ party: Party });
+export const MatchupLeadrecBody = z.object({ state: BattleState });
+export const BattleAdviceBody = z.object({ state: BattleState });
 
 const StatSpread = z
   .object({
