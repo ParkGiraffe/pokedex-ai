@@ -18,10 +18,30 @@
 
 ## 시작
 
-본격 개발은 Claude Code 안에서 진행한다. `claude` 실행 후 `CLAUDE.md` 자동 로드.
+### 1. 환경변수 설정
 
 ```bash
-cd /Users/bag-yoseb/Desktop/Project/personal/pokedex-agent
+cp apps/server/.env.example apps/server/.env
+cp packages/data-fetchers/.env.example packages/data-fetchers/.env
+```
+
+`.env` 파일에 실제 키 채우기:
+- `ANTHROPIC_API_KEY` — 파티 이미지 OCR용. [console.anthropic.com](https://console.anthropic.com)에서 발급.
+- `PKMNCHAMPS_ANON_KEY` — 챔피언스 데이터 수집 스크립트(`pnpm fetch:champions*`)에만 필요. pkmnchamps.com 개발자도구 Network 탭에서 Supabase 요청 헤더 `apikey` 복사.
+
+### 2. 의존성 설치 + 개발 서버 기동
+
+```bash
+mise install     # node 24 + pnpm 10
+pnpm install
+pnpm dev         # client(Vite) + server(Fastify) 병렬 기동
+```
+
+### 3. AI 분석은 Claude Code 안에서
+
+본격 개발·AI 분석은 Claude Code 대화 안에서 진행한다. `CLAUDE.md` 자동 로드.
+
+```bash
 claude
 ```
 

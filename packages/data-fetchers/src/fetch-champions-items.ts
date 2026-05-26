@@ -3,6 +3,12 @@ import { resolve } from "node:path";
 
 import { fetchJson } from "./pokeapi";
 
+try {
+  process.loadEnvFile();
+} catch {
+  // .env 없으면 무시
+}
+
 // 챔피언스 합법 도구(메가 포함)는 pkmnchamps season_allowed가 출처. 한국어 이름은
 // 우리 items.json(캐논) + 메가 파생(종족명+나이트) + 빠진 건 PokeAPI로 보충한다.
 const SUPABASE = "https://misabaliuftjkqigysvv.supabase.co/rest/v1";

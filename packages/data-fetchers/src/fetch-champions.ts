@@ -1,6 +1,12 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 
+try {
+  process.loadEnvFile();
+} catch {
+  // .env 없으면 무시
+}
+
 // 출처: pkmnchamps.com (포켓몬 챔피언스 배틀 도구). Supabase 공개 anon 키로 읽기 전용 조회.
 // 게임 데이터 테이블만 사용하며 유저 PII 테이블(user_profiles 등)은 건드리지 않는다.
 const SUPABASE = "https://misabaliuftjkqigysvv.supabase.co/rest/v1";
