@@ -11,7 +11,18 @@ import { CounterBody, DecideBody, ImportPartyBody, TeamSelectBody } from "./dto"
 import { buildImportResult, extractPartyFromImage, mergeMembers } from "./import";
 
 export const buildServer = (): FastifyInstance => {
-  const app = Fastify({ logger: false, bodyLimit: 12 * 1024 * 1024 });
+  const isDev = process.env.NODE_ENV !== "production";
+  const app = Fastify({
+    logger: isDev
+      ? {
+          transport: {
+            target: "pino-pretty",
+            options: { translateTime: "HH:MM:ss.l", ignore: "pid,hostname" },
+          },
+        }
+      : true,
+    bodyLimit: 12 * 1024 * 1024,
+  });
 
   app.get("/health", async () => ({ ok: true }));
 
