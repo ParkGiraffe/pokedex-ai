@@ -6,9 +6,10 @@ import { fetchJson } from "./pokeapi";
 // 챔피언스 합법 도구(메가 포함)는 pkmnchamps season_allowed가 출처. 한국어 이름은
 // 우리 items.json(캐논) + 메가 파생(종족명+나이트) + 빠진 건 PokeAPI로 보충한다.
 const SUPABASE = "https://misabaliuftjkqigysvv.supabase.co/rest/v1";
-const ANON_KEY =
-  process.env.PKMNCHAMPS_ANON_KEY ??
-  "[REDACTED-supabase-anon-key]";
+const ANON_KEY = process.env.PKMNCHAMPS_ANON_KEY;
+if (!ANON_KEY) {
+  throw new Error("PKMNCHAMPS_ANON_KEY 환경변수 필요 — pkmnchamps.com 개발자도구 Network 탭에서 supabase anon 키 확인");
+}
 const CORE = resolve(import.meta.dirname, "../../pokedex-core/data");
 const OUT = resolve(CORE, "champions/items.json");
 

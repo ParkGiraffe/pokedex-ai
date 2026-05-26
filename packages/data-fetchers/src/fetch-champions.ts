@@ -4,9 +4,10 @@ import { resolve } from "node:path";
 // 출처: pkmnchamps.com (포켓몬 챔피언스 배틀 도구). Supabase 공개 anon 키로 읽기 전용 조회.
 // 게임 데이터 테이블만 사용하며 유저 PII 테이블(user_profiles 등)은 건드리지 않는다.
 const SUPABASE = "https://misabaliuftjkqigysvv.supabase.co/rest/v1";
-const ANON_KEY =
-  process.env.PKMNCHAMPS_ANON_KEY ??
-  "[REDACTED-supabase-anon-key]";
+const ANON_KEY = process.env.PKMNCHAMPS_ANON_KEY;
+if (!ANON_KEY) {
+  throw new Error("PKMNCHAMPS_ANON_KEY 환경변수 필요 — pkmnchamps.com 개발자도구 Network 탭에서 supabase anon 키 확인");
+}
 const SOURCE = "pkmnchamps.com (Supabase 공개 anon, 읽기 전용)";
 const OUT_DIR = resolve(import.meta.dirname, "../../pokedex-core/data/champions");
 
