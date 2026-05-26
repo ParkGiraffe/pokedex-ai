@@ -1,9 +1,12 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import Anthropic from "@anthropic-ai/sdk";
+import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
+import { z } from "zod";
 
-// 로컬 비전 모델(Ollama). 기본 qwen2.5vl:7b (thinking 없어 JSON 깔끔, 빠름).
-const OLLAMA_URL = process.env.OLLAMA_URL ?? "http://localhost:11434";
-const OLLAMA_MODEL = process.env.OLLAMA_MODEL ?? "qwen3.5:9b";
+// Claude 비전. 기본 claude-opus-4-7 (한국어 OCR·게임 UI 정확도 최상).
+const ANTHROPIC_MODEL = process.env.ANTHROPIC_MODEL ?? "claude-opus-4-7";
+const anthropic = new Anthropic();
 const CORE = resolve(import.meta.dirname, "../../../packages/pokedex-core/data");
 
 const PROMPT = [
@@ -204,47 +207,51 @@ export const mergeMembers = (lists: RawMember[][]): RawMember[] => {
   return order.map((key) => groups.get(key)!);
 };
 
-const parseJsonLoose = (text: string): unknown => {
-  try {
-    return JSON.parse(text);
-  } catch {
-    const match = text.match(/\{[\s\S]*\}|\[[\s\S]*\]/);
-    if (match) {
-      try {
-        return JSON.parse(match[0]);
-      } catch {
-        return [];
-      }
-    }
-    return [];
-  }
-};
+// Structured Outputs로 응답 JSON 형식을 보장 — 느슨한 파싱 불필요.
+const PartySchema = z.object({
+  party: z.array(
+    z.object({
+      species: z.string(),
+      ability: z.string(),
+      item: z.string(),
+      nature: z.string(),
+      moves: z.array(z.string()),
+      points: z.object({
+        H: z.number(),
+        A: z.number(),
+        B: z.number(),
+        C: z.number(),
+        D: z.number(),
+        S: z.number(),
+      }),
+    })
+  ),
+});
 
 export const extractPartyFromImage = async (base64: string): Promise<RawMember[]> => {
-  let response: Response;
   try {
-    response = await fetch(`${OLLAMA_URL}/api/chat`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: OLLAMA_MODEL,
-        format: "json",
-        stream: false,
-        options: { num_predict: 4000, temperature: 0 },
-        messages: [{ role: "user", content: PROMPT, images: [base64] }],
-      }),
+    const response = await anthropic.messages.parse({
+      model: ANTHROPIC_MODEL,
+      max_tokens: 4000,
+      messages: [
+        {
+          role: "user",
+          content: [
+            { type: "image", source: { type: "base64", media_type: "image/jpeg", data: base64 } },
+            { type: "text", text: PROMPT },
+          ],
+        },
+      ],
+      output_config: { format: zodOutputFormat(PartySchema) },
     });
-  } catch {
-    throw new Error(`로컬 비전 서버(Ollama)에 연결 못 함 — ollama 실행 + '${OLLAMA_MODEL}' pull 확인`);
+    return response.parsed_output?.party ?? [];
+  } catch (error) {
+    if (error instanceof Anthropic.AuthenticationError) {
+      throw new Error("Claude API 인증 실패 — ANTHROPIC_API_KEY 환경변수 확인");
+    }
+    if (error instanceof Anthropic.RateLimitError) {
+      throw new Error("Claude API 한도 초과 — 잠시 후 재시도");
+    }
+    throw error;
   }
-  if (!response.ok) {
-    throw new Error(`Ollama 오류 ${response.status} (모델 '${OLLAMA_MODEL}' 확인)`);
-  }
-  const data = (await response.json()) as { message?: { content?: string; thinking?: string } };
-  const text = data.message?.content?.trim() || data.message?.thinking?.trim() || "[]";
-  const parsed = parseJsonLoose(text);
-  if (Array.isArray(parsed)) {
-    return parsed as RawMember[];
-  }
-  return ((parsed as { party?: RawMember[] }).party ?? []) as RawMember[];
 };

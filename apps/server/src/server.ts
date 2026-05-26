@@ -15,16 +15,13 @@ export const buildServer = (): FastifyInstance => {
 
   app.get("/health", async () => ({ ok: true }));
 
-  // 파티 화면 이미지(여러 장 가능) → 로컬 비전(Ollama) → 종족 기준 병합 → 검증된 파티(빌더 형식)
+  // 파티 화면 이미지(여러 장 가능) → Claude 비전 → 종족 기준 병합 → 검증된 파티(빌더 형식)
   app.post("/import-party", async (request) => {
     const body = ImportPartyBody.parse(request.body);
     const sources = body.images ?? (body.image ? [body.image] : []);
     const images = sources.map((source) => source.replace(/^data:image\/[a-zA-Z+]+;base64,/, ""));
-    // Ollama는 모델 하나를 직렬 처리하므로 순차로 보낸다(동시 요청 시 연결 끊김).
-    const lists: Awaited<ReturnType<typeof extractPartyFromImage>>[] = [];
-    for (const image of images) {
-      lists.push(await extractPartyFromImage(image));
-    }
+    // Claude API는 동시 요청 가능 — 여러 장 병렬 처리해 응답 시간 단축.
+    const lists = await Promise.all(images.map((image) => extractPartyFromImage(image)));
     return buildImportResult(mergeMembers(lists));
   });
 
