@@ -1,5 +1,4 @@
 import { type Weather } from "@pokedex-agent/pokedex-core";
-import { useState } from "react";
 
 import { cn } from "@/common/lib/cn";
 import { Button } from "@/common/ui/Button";
@@ -7,9 +6,9 @@ import { Card } from "@/common/ui/Card";
 import { Field } from "@/common/ui/Field";
 import { NumberField } from "@/common/ui/NumberField";
 import { Select } from "@/common/ui/Select";
+import { useBattleAdvice } from "@/features/advisor/model/useBattleAdvice";
 import { AdvisorPanel } from "@/features/advisor/ui/AdvisorPanel";
-import { ExportButton } from "@/features/claude-bridge/ui/ExportButton";
-import { PasteSidePanel } from "@/features/claude-bridge/ui/PasteSidePanel";
+import { AnalysisResult } from "@/features/advisor/ui/AnalysisResult";
 import { PokemonDatalist } from "@/features/pokemon-picker/ui/PokemonDatalist";
 import { PokemonIcon } from "@/features/pokemon-picker/ui/PokemonIcon";
 import { PokemonPicker } from "@/features/pokemon-picker/ui/PokemonPicker";
@@ -24,7 +23,7 @@ const WEATHERS: Weather[] = ["맑음", "비", "모래바람", "눈"];
 export const BattlePage = () => {
   const members = usePartyStore((state) => state.members);
   const battle = useBattleStore();
-  const [panelOpen, setPanelOpen] = useState(false);
+  const advise = useBattleAdvice();
 
   const myParty = buildParty(members);
   const activeIndex = Math.min(battle.myActiveIndex, Math.max(0, myParty.length - 1));
@@ -44,12 +43,11 @@ export const BattlePage = () => {
     <section className="flex flex-col gap-4">
       <header className="flex flex-wrap items-center justify-between gap-2">
         <h1 className="text-xl font-bold">배틀</h1>
-        <div className="flex gap-2">
-          {state && <ExportButton task="battle-decision" payload={{ state }} label="지금 뭐 할까?" />}
-          <Button variant="ghost" onClick={() => setPanelOpen(true)}>
-            Claude 답변 붙여넣기
+        {state && (
+          <Button onClick={() => advise.mutate(state)} disabled={advise.isPending}>
+            {advise.isPending ? "추천 중..." : "지금 뭐 할까?"}
           </Button>
-        </div>
+        )}
       </header>
 
       <Card className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -160,8 +158,16 @@ export const BattlePage = () => {
         />
       )}
 
+      {advise.isError && (
+        <Card>
+          <p className="text-sm text-rose-400">
+            {advise.error instanceof Error ? advise.error.message : "추천 실패"}
+          </p>
+        </Card>
+      )}
+      {advise.data && <AnalysisResult result={advise.data} />}
+
       <PokemonDatalist />
-      <PasteSidePanel open={panelOpen} onClose={() => setPanelOpen(false)} />
     </section>
   );
 };

@@ -1,21 +1,16 @@
 import { findPokemon, TYPE_NAMES } from "@pokedex-agent/pokedex-core";
-import { useState } from "react";
 
 import { cn } from "@/common/lib/cn";
-import { Button } from "@/common/ui/Button";
 import { Card } from "@/common/ui/Card";
 import { Field } from "@/common/ui/Field";
 import { Input } from "@/common/ui/Input";
 import { Select } from "@/common/ui/Select";
-import { CopyButton } from "@/features/claude-bridge/ui/CopyButton";
-import { PasteSidePanel } from "@/features/claude-bridge/ui/PasteSidePanel";
 import { PokemonIcon } from "@/features/pokemon-picker/ui/PokemonIcon";
 
 import {
   ALL_GENERATIONS,
   ALL_TYPES,
   baseStatTotal,
-  buildSpeciesMarkdown,
   filterDex,
   weaknessTable,
 } from "../lib/search";
@@ -45,7 +40,6 @@ const TypeBadges = ({ types }: { types: ReadonlyArray<string> }) => (
 export const DexPage = () => {
   const { query, type, generation, selectedNo, setQuery, setType, setGeneration, select } =
     useDexStore();
-  const [panelOpen, setPanelOpen] = useState(false);
 
   const results = filterDex({ query, type, generation });
   const selected = selectedNo === null ? undefined : findPokemon(selectedNo);
@@ -54,17 +48,6 @@ export const DexPage = () => {
     <section className="flex flex-col gap-4">
       <header className="flex flex-wrap items-center justify-between gap-2">
         <h1 className="text-xl font-bold">도감</h1>
-        {selected && (
-          <div className="flex gap-2">
-            <CopyButton
-              label="이 종족 운용법"
-              buildText={() => buildSpeciesMarkdown(selected)}
-            />
-            <Button variant="ghost" onClick={() => setPanelOpen(true)}>
-              Claude 답변 붙여넣기
-            </Button>
-          </div>
-        )}
       </header>
 
       <div className="grid gap-3 sm:grid-cols-3">
@@ -152,7 +135,6 @@ export const DexPage = () => {
         ))}
       </div>
 
-      <PasteSidePanel open={panelOpen} onClose={() => setPanelOpen(false)} />
     </section>
   );
 };

@@ -89,24 +89,3 @@ export const computeCalc = (
   };
 };
 
-export const buildMatchupMarkdown = (
-  attacker: AttackerInput,
-  defender: DefenderInput,
-  result: CalcResult
-): string =>
-  [
-    "## 작업: 데미지 매치업 분석",
-    "",
-    `- 공격: ${attacker.species} (${attacker.category}, ${attacker.moveType} ${attacker.movePower}위력)`,
-    `  실공격 ${result.attackStat}${attacker.terastalized ? `, 테라 ${attacker.teraType}` : ""}` +
-      `${attacker.critical ? ", 급소" : ""}${attacker.burned ? ", 화상" : ""}`,
-    `- 방어: ${defender.species} (HP ${result.defenderHp}, 실방어 ${result.defenseStat})`,
-    "",
-    `- 데미지: ${result.damage.min}~${result.damage.max} ` +
-      `(${result.minPercent.toFixed(1)}%~${result.maxPercent.toFixed(1)}%), 상성 ${result.damage.effectiveness}배`,
-    `- 확정 ${Number.isFinite(result.guaranteedHits) ? `${result.guaranteedHits}타` : "확정타 없음"}`,
-    "",
-    "## 요청",
-    "- 이 매치업의 의미와 운용을 한국 SV 커뮤니티 어휘로 분석",
-    "- 응답 마지막에 표준 JSON 코드블록을 반드시 포함",
-  ].join("\n");

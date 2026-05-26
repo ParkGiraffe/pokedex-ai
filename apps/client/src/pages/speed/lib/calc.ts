@@ -49,21 +49,3 @@ export const compareSpeed = (
   };
 };
 
-export const buildSpeedMarkdown = (
-  left: SpeedSide,
-  right: SpeedSide,
-  comparison: SpeedComparison,
-  trickRoom: boolean
-): string =>
-  [
-    "## 작업: 스피드 상황 분석",
-    "",
-    `- 좌: ${left.species} 실스피드 ${comparison.left}`,
-    `- 우: ${right.species} 실스피드 ${comparison.right}`,
-    `- 트릭룸: ${trickRoom ? "활성" : "비활성"}`,
-    `- 선공: ${comparison.faster === "tie" ? "동률" : comparison.faster === "left" ? left.species : right.species}`,
-    "",
-    "## 요청",
-    "- 이 스피드 라인의 의미(빗치기, 스카프 견제 등)를 한국 SV 어휘로 분석",
-    "- 응답 마지막에 표준 JSON 코드블록을 반드시 포함",
-  ].join("\n");

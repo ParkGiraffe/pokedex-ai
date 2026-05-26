@@ -48,17 +48,3 @@ export const baseStatTotal = (entry: PokedexEntry): number => {
   return H + A + B + C + D + S;
 };
 
-export const buildSpeciesMarkdown = (entry: PokedexEntry): string => {
-  const weak = weaknessTable(entry.types).filter((w) => w.multiplier > 1);
-  return [
-    "## 작업: 종족 운용법 분석",
-    "",
-    `- 종족: ${entry.ko} (#${entry.no}, ${entry.types.join("/")})`,
-    `- 종족값: H${entry.base.H}/A${entry.base.A}/B${entry.base.B}/C${entry.base.C}/D${entry.base.D}/S${entry.base.S} (합 ${baseStatTotal(entry)})`,
-    `- 약점: ${weak.map((w) => `${w.type} ${w.multiplier}배`).join(", ") || "없음"}`,
-    "",
-    "## 요청",
-    "- 9세대 SV 싱글에서 이 종족의 운용법, 추천 배분, 견제 라인을 한국 SV 어휘로 분석",
-    "- 응답 마지막에 표준 JSON 코드블록을 반드시 포함",
-  ].join("\n");
-};

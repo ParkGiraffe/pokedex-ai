@@ -1,11 +1,10 @@
 import { findPokemon, matchup, type BattleState } from "@pokedex-agent/pokedex-core";
-import { useState } from "react";
 
 import { cn } from "@/common/lib/cn";
 import { Button } from "@/common/ui/Button";
 import { Card } from "@/common/ui/Card";
-import { ExportButton } from "@/features/claude-bridge/ui/ExportButton";
-import { PasteSidePanel } from "@/features/claude-bridge/ui/PasteSidePanel";
+import { useMatchupLeadrec } from "@/features/advisor/model/useMatchupLeadrec";
+import { AnalysisResult } from "@/features/advisor/ui/AnalysisResult";
 import { PokemonDatalist } from "@/features/pokemon-picker/ui/PokemonDatalist";
 import { PokemonIcon } from "@/features/pokemon-picker/ui/PokemonIcon";
 import { PokemonPicker } from "@/features/pokemon-picker/ui/PokemonPicker";
@@ -24,7 +23,7 @@ const verdictClass = (verdict: matchup.MatchupVerdict): string =>
 export const MatchupPage = () => {
   const members = usePartyStore((state) => state.members);
   const { opponents, setOpponent, addOpponent, removeOpponent } = useMatchupStore();
-  const [panelOpen, setPanelOpen] = useState(false);
+  const advise = useMatchupLeadrec();
 
   const myParty = buildParty(members);
   const validOpponents = opponents.filter((name) => findPokemon(name));
@@ -43,12 +42,12 @@ export const MatchupPage = () => {
     <section className="flex flex-col gap-4">
       <header className="flex flex-wrap items-center justify-between gap-2">
         <h1 className="text-xl font-bold">매치업</h1>
-        <div className="flex gap-2">
-          <ExportButton task="matchup-leadrec" payload={{ state }} label="선두 추천 요청" />
-          <Button variant="ghost" onClick={() => setPanelOpen(true)}>
-            Claude 답변 붙여넣기
-          </Button>
-        </div>
+        <Button
+          onClick={() => advise.mutate(state)}
+          disabled={advise.isPending || myParty.length === 0 || validOpponents.length === 0}
+        >
+          {advise.isPending ? "추천 중..." : "선두 추천 요청"}
+        </Button>
       </header>
 
       <Card className="flex flex-col gap-3">
@@ -147,8 +146,16 @@ export const MatchupPage = () => {
         </>
       )}
 
+      {advise.isError && (
+        <Card>
+          <p className="text-sm text-rose-400">
+            {advise.error instanceof Error ? advise.error.message : "추천 실패"}
+          </p>
+        </Card>
+      )}
+      {advise.data && <AnalysisResult result={advise.data} />}
+
       <PokemonDatalist />
-      <PasteSidePanel open={panelOpen} onClose={() => setPanelOpen(false)} />
     </section>
   );
 };

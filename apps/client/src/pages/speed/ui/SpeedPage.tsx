@@ -1,19 +1,15 @@
 import { NATURE_NAMES } from "@pokedex-agent/pokedex-core";
-import { useState } from "react";
 
 import { cn } from "@/common/lib/cn";
-import { Button } from "@/common/ui/Button";
 import { Card } from "@/common/ui/Card";
 import { Field } from "@/common/ui/Field";
 import { NumberField } from "@/common/ui/NumberField";
 import { Select } from "@/common/ui/Select";
-import { CopyButton } from "@/features/claude-bridge/ui/CopyButton";
-import { PasteSidePanel } from "@/features/claude-bridge/ui/PasteSidePanel";
 import { PokemonDatalist } from "@/features/pokemon-picker/ui/PokemonDatalist";
 import { PokemonIcon } from "@/features/pokemon-picker/ui/PokemonIcon";
 import { PokemonPicker } from "@/features/pokemon-picker/ui/PokemonPicker";
 
-import { buildSpeedMarkdown, compareSpeed, computeSpeed } from "../lib/calc";
+import { compareSpeed, computeSpeed } from "../lib/calc";
 import { type SpeedSide, useSpeedStore } from "../model/store";
 
 type SideCardProps = {
@@ -87,7 +83,6 @@ const SideCard = ({ title, accent, side, onChange }: SideCardProps) => {
 
 export const SpeedPage = () => {
   const { left, right, trickRoom, setLeft, setRight, setTrickRoom } = useSpeedStore();
-  const [panelOpen, setPanelOpen] = useState(false);
   const comparison = compareSpeed(left, right, trickRoom);
 
   const fasterLabel =
@@ -101,16 +96,6 @@ export const SpeedPage = () => {
     <section className="flex flex-col gap-4">
       <header className="flex flex-wrap items-center justify-between gap-2">
         <h1 className="text-xl font-bold">스피드</h1>
-        <div className="flex gap-2">
-          <CopyButton
-            label="스피드 상황 분석"
-            disabled={!comparison}
-            buildText={() => (comparison ? buildSpeedMarkdown(left, right, comparison, trickRoom) : "")}
-          />
-          <Button variant="ghost" onClick={() => setPanelOpen(true)}>
-            Claude 답변 붙여넣기
-          </Button>
-        </div>
       </header>
 
       <label className="flex w-fit items-center gap-1.5 text-sm">
@@ -134,7 +119,6 @@ export const SpeedPage = () => {
       </Card>
 
       <PokemonDatalist />
-      <PasteSidePanel open={panelOpen} onClose={() => setPanelOpen(false)} />
     </section>
   );
 };

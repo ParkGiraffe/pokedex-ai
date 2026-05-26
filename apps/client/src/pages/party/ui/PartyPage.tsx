@@ -8,8 +8,8 @@ import { Field } from "@/common/ui/Field";
 import { Input } from "@/common/ui/Input";
 import { NumberField } from "@/common/ui/NumberField";
 import { Select } from "@/common/ui/Select";
-import { ExportButton } from "@/features/claude-bridge/ui/ExportButton";
-import { PasteSidePanel } from "@/features/claude-bridge/ui/PasteSidePanel";
+import { useAnalyzeParty } from "@/features/advisor/model/useAnalyzeParty";
+import { AnalysisResult } from "@/features/advisor/ui/AnalysisResult";
 import { PokemonDatalist } from "@/features/pokemon-picker/ui/PokemonDatalist";
 import { PokemonIcon } from "@/features/pokemon-picker/ui/PokemonIcon";
 import { PokemonPicker } from "@/features/pokemon-picker/ui/PokemonPicker";
@@ -119,8 +119,8 @@ const PartySlot = ({ index, draft, onChange, onRemove }: SlotProps) => {
 
 export const PartyPage = () => {
   const { members, addMember, removeMember, updateMember } = usePartyStore();
-  const [panelOpen, setPanelOpen] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
+  const analyze = useAnalyzeParty();
 
   const party = buildParty(members);
   const summary = analysis.analyzeParty(party);
@@ -137,12 +137,11 @@ export const PartyPage = () => {
       <header className="flex flex-wrap items-center justify-between gap-2">
         <h1 className="text-xl font-bold">파티빌더</h1>
         <div className="flex gap-2">
-          <ExportButton task="party-analysis" payload={{ party }} label="이 파티 분석" />
+          <Button onClick={() => analyze.mutate(party)} disabled={analyze.isPending}>
+            {analyze.isPending ? "분석 중..." : "이 파티 분석"}
+          </Button>
           <Button variant="secondary" onClick={() => setImportOpen(true)}>
             파티 가져오기
-          </Button>
-          <Button variant="ghost" onClick={() => setPanelOpen(true)}>
-            Claude 답변 붙여넣기
           </Button>
         </div>
       </header>
@@ -199,9 +198,17 @@ export const PartyPage = () => {
         </Button>
       )}
 
+      {analyze.isError && (
+        <Card>
+          <p className="text-sm text-rose-400">
+            {analyze.error instanceof Error ? analyze.error.message : "분석 실패"}
+          </p>
+        </Card>
+      )}
+      {analyze.data && <AnalysisResult result={analyze.data} />}
+
       <PokemonDatalist />
       <PartyImportPanel open={importOpen} onClose={() => setImportOpen(false)} />
-      <PasteSidePanel open={panelOpen} onClose={() => setPanelOpen(false)} />
     </section>
   );
 };

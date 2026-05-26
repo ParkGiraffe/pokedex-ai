@@ -1,19 +1,15 @@
 import { NATURE_NAMES, TYPE_NAMES } from "@pokedex-agent/pokedex-core";
-import { useState } from "react";
 
 import { cn } from "@/common/lib/cn";
-import { Button } from "@/common/ui/Button";
 import { Card } from "@/common/ui/Card";
 import { Field } from "@/common/ui/Field";
 import { NumberField } from "@/common/ui/NumberField";
 import { Select } from "@/common/ui/Select";
-import { CopyButton } from "@/features/claude-bridge/ui/CopyButton";
-import { PasteSidePanel } from "@/features/claude-bridge/ui/PasteSidePanel";
 import { PokemonDatalist } from "@/features/pokemon-picker/ui/PokemonDatalist";
 import { PokemonIcon } from "@/features/pokemon-picker/ui/PokemonIcon";
 import { PokemonPicker } from "@/features/pokemon-picker/ui/PokemonPicker";
 
-import { buildMatchupMarkdown, computeCalc } from "../lib/calc";
+import { computeCalc } from "../lib/calc";
 import { useCalculatorStore } from "../model/store";
 
 const ITEM_OPTIONS = [
@@ -44,25 +40,12 @@ const RollBar = ({ rolls, max }: { rolls: number[]; max: number }) => (
 
 export const CalculatorPage = () => {
   const { attacker, defender, setAttacker, setDefender } = useCalculatorStore();
-  const [panelOpen, setPanelOpen] = useState(false);
   const result = computeCalc(attacker, defender);
 
   return (
     <section className="flex flex-col gap-4">
       <header className="flex flex-wrap items-center justify-between gap-2">
         <h1 className="text-xl font-bold">계산기</h1>
-        <div className="flex gap-2">
-          <CopyButton
-            label="이 매치업 분석"
-            disabled={!result}
-            buildText={() =>
-              result ? buildMatchupMarkdown(attacker, defender, result) : ""
-            }
-          />
-          <Button variant="ghost" onClick={() => setPanelOpen(true)}>
-            Claude 답변 붙여넣기
-          </Button>
-        </div>
       </header>
 
       <div className="grid gap-4 md:grid-cols-2">
@@ -302,7 +285,6 @@ export const CalculatorPage = () => {
       </Card>
 
       <PokemonDatalist />
-      <PasteSidePanel open={panelOpen} onClose={() => setPanelOpen(false)} />
     </section>
   );
 };
