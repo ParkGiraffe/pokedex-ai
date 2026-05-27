@@ -136,6 +136,7 @@ export const BattlePage = () => {
                   <th className="p-1">타입</th>
                   <th className="p-1">데미지</th>
                   <th className="p-1">KO 확률</th>
+                  <th className="p-1">타수</th>
                 </tr>
               </thead>
               <tbody>
@@ -157,6 +158,18 @@ export const BattlePage = () => {
                       )}
                     >
                       {option.damaging ? `${Math.round(option.koChance * 100)}%` : "-"}
+                    </td>
+                    <td
+                      className={cn(
+                        "p-1 text-center text-xs",
+                        option.guaranteedHits === 1
+                          ? "text-rose-400"
+                          : option.possibleHits === 1
+                            ? "text-amber-400"
+                            : "text-neutral-400"
+                      )}
+                    >
+                      {option.hitsText || "-"}
                     </td>
                   </tr>
                 ))}

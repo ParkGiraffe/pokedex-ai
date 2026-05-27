@@ -11,12 +11,30 @@ export type MoveOption = {
   power: number | null;
   min: number;
   max: number;
-  koChance: number; // 0..1, 16롤 중 KO 비율
+  koChance: number; // 0..1, 16롤 중 1HKO 비율
   damaging: boolean;
+  // 한국 SV 데미지 표기: 최소 데미지 기준 확정 N타, 최대 데미지 기준 난수 N타.
+  // 같은 값이면 "확정 N타", 다르면 "난수 N타~확정 M타".
+  guaranteedHits: number | null; // min damage 기준 N타 KO. min=0이면 null.
+  possibleHits: number | null; // max damage 기준 최소 N타 KO.
+  hitsText: string; // 표시용: "확정 1타" | "난수 2타~확정 3타" | "" (변화기)
 };
 
 // 상대 방어·HP는 0투자 중립을 가정한다 (보수적, 응답에서 가정 명시).
 const OPPONENT_NATURE = "노력";
+
+// 데미지 범위와 현재 HP로 한국 SV 표준 "확정 N타 / 난수 N타" 표기를 만든다.
+// guaranteedHits = ceil(HP / min) — 최소 데미지로도 N타에 무조건 KO
+// possibleHits   = ceil(HP / max) — 최대 데미지로 N타에 KO 가능
+const hitsToKO = (min: number, max: number, hp: number) => {
+  if (min <= 0 || max <= 0 || hp <= 0) {
+    return { guaranteed: null, possible: null, text: "" };
+  }
+  const guaranteed = Math.ceil(hp / min);
+  const possible = Math.ceil(hp / max);
+  const text = guaranteed === possible ? `확정 ${guaranteed}타` : `난수 ${possible}타~확정 ${guaranteed}타`;
+  return { guaranteed, possible, text };
+};
 
 export type MoveOptionsContext = {
   mega?: MegaForm; // 메가 활성 시 종족값·타입·자속을 메가 폼으로 swap한다.
@@ -59,6 +77,9 @@ export const moveOptions = (
         max: 0,
         koChance: 0,
         damaging: false,
+        guaranteedHits: null,
+        possibleHits: null,
+        hitsText: "",
       };
     }
 
@@ -95,6 +116,7 @@ export const moveOptions = (
     });
 
     const koRolls = result.rolls.filter((roll) => roll >= currentHp).length;
+    const hits = hitsToKO(result.min, result.max, currentHp);
 
     return {
       move: moveName,
@@ -105,6 +127,9 @@ export const moveOptions = (
       max: result.max,
       koChance: koRolls / result.rolls.length,
       damaging: true,
+      guaranteedHits: hits.guaranteed,
+      possibleHits: hits.possible,
+      hitsText: hits.text,
     };
   });
 };
