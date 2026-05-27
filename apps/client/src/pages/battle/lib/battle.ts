@@ -1,7 +1,6 @@
 import {
   type BattleState,
   decision,
-  findMegaByItem,
   findMegasBySpecies,
   findPokemon,
   type MegaForm,
@@ -33,35 +32,31 @@ export type BattleInput = {
   weather: Weather | "";
   trickRoom: boolean;
   turn: number;
-  megaActive: boolean;
-  // 상대 메가 폼 슬러그(없으면 일반). 종족이 X/Y 둘 다 가능하면 사용자가 셀렉트로 선택한다.
+  // 메가 폼 슬러그. "" = 비메가. 종족이 메가 가능하면 토글로 자동(1개) 또는 select(X/Y).
+  myMegaForm: string;
   opponentMegaForm: string;
 };
 
-// 내 액티브가 메가스톤을 들었을 때만 메가 폼을 적용 가능하다고 본다.
-export const activeMega = (input: BattleInput): MegaForm | undefined => {
+// 내 액티브 종족의 가능한 메가 폼 목록.
+export const activeMegaOptions = (input: BattleInput): MegaForm[] => {
   const myActive = input.myParty[input.myActiveIndex];
-  return myActive?.item ? findMegaByItem(myActive.item) : undefined;
+  return myActive ? findMegasBySpecies(myActive.species) : [];
 };
 
 // 상대 종족의 가능한 메가 폼 목록.
 export const opponentMegaOptions = (input: BattleInput): MegaForm[] =>
   findMegasBySpecies(input.opponentSpecies);
 
-const resolveOpponentMega = (input: BattleInput): MegaForm | undefined => {
-  if (!input.opponentMegaForm) {
-    return undefined;
-  }
-  return opponentMegaOptions(input).find((mega) => mega.form === input.opponentMegaForm);
-};
+const resolveMega = (options: MegaForm[], slug: string): MegaForm | undefined =>
+  slug ? options.find((mega) => mega.form === slug) : undefined;
 
 export const battleOptions = (input: BattleInput): decision.MoveOption[] | undefined => {
   const myActive = input.myParty[input.myActiveIndex];
   if (!myActive) {
     return undefined;
   }
-  const mega = input.megaActive ? activeMega(input) : undefined;
-  const opponentMega = resolveOpponentMega(input);
+  const mega = resolveMega(activeMegaOptions(input), input.myMegaForm);
+  const opponentMega = resolveMega(opponentMegaOptions(input), input.opponentMegaForm);
   return decision.moveOptions(myActive, input.opponentSpecies, input.opponentHpPercent, {
     mega,
     opponentMega,

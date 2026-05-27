@@ -15,7 +15,7 @@ import { PokemonPicker } from "@/features/pokemon-picker/ui/PokemonPicker";
 import { buildParty } from "@/pages/party/lib/party";
 import { usePartyStore } from "@/pages/party/model/store";
 
-import { activeMega, battleOptions, buildBattleState, opponentMegaOptions } from "../lib/battle";
+import { activeMegaOptions, battleOptions, buildBattleState, opponentMegaOptions } from "../lib/battle";
 import { useBattleStore } from "../model/store";
 
 const WEATHERS: Weather[] = ["맑음", "비", "모래바람", "눈"];
@@ -35,12 +35,12 @@ export const BattlePage = () => {
     weather: battle.weather,
     trickRoom: battle.trickRoom,
     turn: battle.turn,
-    megaActive: battle.megaActive,
+    myMegaForm: battle.myMegaForm,
     opponentMegaForm: battle.opponentMegaForm,
   };
-  const availableMega = activeMega(input);
-  const activeMegaForm = battle.megaActive ? availableMega : undefined;
+  const myMegas = activeMegaOptions(input);
   const opponentMegas = opponentMegaOptions(input);
+  const activeMyMega = myMegas.find((mega) => mega.form === battle.myMegaForm);
   const activeOpponentMega = opponentMegas.find((mega) => mega.form === battle.opponentMegaForm);
   const options = battleOptions(input);
   const state = buildBattleState(input);
@@ -108,9 +108,9 @@ export const BattlePage = () => {
 
           <div className="flex items-center gap-2 text-sm text-neutral-300">
             <PokemonIcon species={myParty[activeIndex]?.species ?? ""} />
-            {activeMegaForm && (
+            {activeMyMega && (
               <span className="rounded bg-amber-900 px-1.5 py-0.5 text-xs font-medium text-amber-200">
-                {activeMegaForm.ko}
+                {activeMyMega.ko}
               </span>
             )}
             <span className="text-neutral-500">vs</span>
@@ -126,15 +126,32 @@ export const BattlePage = () => {
           </div>
 
           <div className="flex flex-wrap items-center gap-3 text-sm">
-            {availableMega && (
+            {myMegas.length === 1 && (
               <label className="flex items-center gap-1.5">
                 <input
                   type="checkbox"
-                  checked={battle.megaActive}
-                  onChange={(event) => battle.setMegaActive(event.currentTarget.checked)}
+                  checked={battle.myMegaForm === myMegas[0]!.form}
+                  onChange={(event) =>
+                    battle.setMyMegaForm(event.currentTarget.checked ? myMegas[0]!.form : "")
+                  }
                 />
-                내 메가진화 ({availableMega.ko})
+                내 메가진화 ({myMegas[0]!.ko})
               </label>
+            )}
+            {myMegas.length > 1 && (
+              <Field label="내 메가">
+                <Select
+                  value={battle.myMegaForm}
+                  onChange={(event) => battle.setMyMegaForm(event.currentTarget.value)}
+                >
+                  <option value="">비메가</option>
+                  {myMegas.map((mega) => (
+                    <option key={mega.form} value={mega.form}>
+                      {mega.ko}
+                    </option>
+                  ))}
+                </Select>
+              </Field>
             )}
             {opponentMegas.length === 1 && (
               <label className="flex items-center gap-1.5">

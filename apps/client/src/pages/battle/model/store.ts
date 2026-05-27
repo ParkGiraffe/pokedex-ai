@@ -8,15 +8,15 @@ type BattleTrackerState = {
   weather: Weather | "";
   trickRoom: boolean;
   turn: number;
-  megaActive: boolean;
-  opponentMegaForm: string; // 빈 문자열이면 비메가, 그 외엔 메가 폼 슬러그(scizor-mega 등)
+  myMegaForm: string; // 내 액티브 메가 폼 슬러그. "" = 비메가.
+  opponentMegaForm: string; // 상대 메가 폼 슬러그. "" = 비메가.
   setMyActiveIndex: (index: number) => void;
   setOpponentSpecies: (species: string) => void;
   setOpponentHpPercent: (hpPercent: number) => void;
   setWeather: (weather: Weather | "") => void;
   setTrickRoom: (trickRoom: boolean) => void;
   setTurn: (turn: number) => void;
-  setMegaActive: (active: boolean) => void;
+  setMyMegaForm: (form: string) => void;
   setOpponentMegaForm: (form: string) => void;
 };
 
@@ -28,14 +28,14 @@ export const useBattleStore = create<BattleTrackerState>((set) => ({
   weather: "",
   trickRoom: false,
   turn: 1,
-  megaActive: false,
+  myMegaForm: "",
   opponentMegaForm: "",
-  setMyActiveIndex: (myActiveIndex) => set({ myActiveIndex, megaActive: false }),
+  setMyActiveIndex: (myActiveIndex) => set({ myActiveIndex, myMegaForm: "" }),
   setOpponentSpecies: (opponentSpecies) => set({ opponentSpecies, opponentMegaForm: "" }),
   setOpponentHpPercent: (opponentHpPercent) => set({ opponentHpPercent }),
   setWeather: (weather) => set({ weather }),
   setTrickRoom: (trickRoom) => set({ trickRoom }),
   setTurn: (turn) => set({ turn }),
-  setMegaActive: (megaActive) => set({ megaActive }),
+  setMyMegaForm: (myMegaForm) => set({ myMegaForm }),
   setOpponentMegaForm: (opponentMegaForm) => set({ opponentMegaForm }),
 }));
