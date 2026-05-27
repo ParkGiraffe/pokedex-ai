@@ -39,14 +39,13 @@ const rosterList = (rosterRaw as unknown as {
   pokemon: Array<{ id: number; megaForm: string; regionForm: string }>;
 }).pokemon;
 
-// pkmnchamps의 EV(sps)는 0~32 포인트이고 총합이 66(= SV 508EV 예산)이다.
-// 따라서 1포인트 = 508/66 EV로 환산한다(스탯당 252 상한).
+// pkmnchamps의 EV(sps)는 0~32 노력 포인트다. 우리도 같은 포챔스 단위를 그대로 쓴다.
 const toEvs = (sps?: StatPoints): EvSpread => {
   const evs: EvSpread = {};
   for (const key of STAT_KEYS) {
     const point = sps?.[key];
     if (point) {
-      evs[key] = Math.min(252, Math.round((point * 508) / 66));
+      evs[key] = Math.min(32, Math.max(0, Math.round(point)));
     }
   }
   return evs;

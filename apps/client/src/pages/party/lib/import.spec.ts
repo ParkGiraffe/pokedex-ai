@@ -11,7 +11,7 @@ describe("parsePartyImport", () => {
         item: "기합의띠",
         nature: "고집",
         moves: ["지진", "역린"],
-        evs: { A: 252, S: 252, H: 4 },
+        evs: { A: 32, S: 32, H: 1 },
       },
     ]);
     const [member] = parsePartyImport(json);

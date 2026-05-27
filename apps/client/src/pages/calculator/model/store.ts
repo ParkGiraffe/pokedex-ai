@@ -40,7 +40,7 @@ const DEFAULT_ATTACKER: AttackerInput = {
   species: "한카리아스",
   level: 50,
   category: "물리",
-  ev: 252,
+  ev: 32,
   nature: "고집",
   rank: 0,
   moveType: "땅",

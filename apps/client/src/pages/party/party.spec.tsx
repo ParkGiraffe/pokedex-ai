@@ -14,7 +14,7 @@ const validDraft: MemberDraft = {
   nature: "고집",
   teraType: "땅",
   moves: ["지진", "역린", "스톤에지", "불꽃엄니"],
-  evs: { H: 0, A: 252, B: 0, C: 0, D: 4, S: 252 },
+  evs: { H: 0, A: 32, B: 0, C: 0, D: 1, S: 32 },
 };
 
 describe("파티빌더 페이지", () => {

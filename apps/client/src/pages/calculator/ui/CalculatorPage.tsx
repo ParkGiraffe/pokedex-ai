@@ -99,8 +99,8 @@ export const CalculatorPage = () => {
               <NumberField
                 value={attacker.ev}
                 min={0}
-                max={252}
-                step={4}
+                max={32}
+                step={1}
                 onValueChange={(value) => setAttacker({ ev: value })}
               />
             </Field>
@@ -215,8 +215,8 @@ export const CalculatorPage = () => {
               <NumberField
                 value={defender.hpEv}
                 min={0}
-                max={252}
-                step={4}
+                max={32}
+                step={1}
                 onValueChange={(value) => setDefender({ hpEv: value })}
               />
             </Field>
@@ -224,8 +224,8 @@ export const CalculatorPage = () => {
               <NumberField
                 value={defender.defEv}
                 min={0}
-                max={252}
-                step={4}
+                max={32}
+                step={1}
                 onValueChange={(value) => setDefender({ defEv: value })}
               />
             </Field>

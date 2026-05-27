@@ -10,7 +10,7 @@ const member = {
   nature: "고집",
   teraType: "땅",
   moves: ["지진", "역린", "", ""],
-  evs: { H: 0, A: 252, B: 0, C: 0, D: 4, S: 252 },
+  evs: { H: 0, A: 32, B: 0, C: 0, D: 1, S: 32 },
   ivs: { H: 31, A: 31, B: 31, C: 31, D: 31, S: 31 },
 } as unknown as Parameters<typeof toAdviceMon>[0];
 

@@ -27,7 +27,8 @@ export const NATURE_NAMES = [
 export const NatureName = z.enum(NATURE_NAMES);
 export type NatureName = z.infer<typeof NatureName>;
 
-const StatNumber = z.number().int().min(0).max(252);
+// 챔피언스 시스템: 노력 포인트 0~32 (각 스탯). 본가 EV 0~252 시스템은 사용하지 않는다.
+const StatNumber = z.number().int().min(0).max(32);
 
 export const StatBlock = z.object({
   H: StatNumber,

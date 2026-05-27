@@ -35,7 +35,7 @@ const SideCard = ({ title, accent, side, onChange }: SideCardProps) => {
       </Field>
       <div className="grid grid-cols-2 gap-3">
         <Field label="스피드 노력치">
-          <NumberField value={side.ev} min={0} max={252} step={4} onValueChange={(value) => onChange({ ev: value })} />
+          <NumberField value={side.ev} min={0} max={32} step={1} onValueChange={(value) => onChange({ ev: value })} />
         </Field>
         <Field label="성격">
           <Select

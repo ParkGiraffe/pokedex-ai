@@ -26,7 +26,7 @@ type SpeedState = {
 const makeSide = (species: string, nature: NatureName): SpeedSide => ({
   species,
   level: 50,
-  ev: 252,
+  ev: 32,
   nature,
   rank: 0,
   itemMultiplier: 1,

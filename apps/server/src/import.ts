@@ -47,13 +47,13 @@ export type ImportResult = { party: ImportMember[]; warnings: string[] };
 
 const STAT_KEYS = ["H", "A", "B", "C", "D", "S"] as const;
 
-// 챔피언스 노력 포인트(0~32)를 EV(0~252)로 변환. 32포인트 = 252 EV 풀투자.
+// 챔피언스 노력 포인트(0~32) 그대로. 본가 EV 변환은 폐기됨.
 const toEv = (point: unknown): number => {
   const value = Number(point);
   if (!Number.isFinite(value)) {
     return 0;
   }
-  return Math.min(252, Math.max(0, Math.round((value * 252) / 32)));
+  return Math.min(32, Math.max(0, Math.round(value)));
 };
 
 // --- 우리 데이터 사전 (OCR 오독 교정 + 도구/기술 재분류용) ---

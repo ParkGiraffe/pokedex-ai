@@ -18,7 +18,7 @@ export type PairwiseScore = {
 const bestStab = (attackerTypes: ReadonlyArray<TypeName>, defenderTypes: ReadonlyArray<TypeName>): number =>
   Math.max(...attackerTypes.map((type) => typeEffectiveness(type, defenderTypes)));
 
-// 내 픽은 실투자 스피드, 상대는 최대 투자(252·+성격·31)를 가정해 보수적으로 본다.
+// 내 픽은 실투자 스피드, 상대는 최대 투자(32포인트·+성격·31)를 가정해 보수적으로 본다.
 const myActualSpeed = (member: PartyMember, baseSpeed: number): number =>
   actualStat({
     stat: "S",
@@ -30,7 +30,7 @@ const myActualSpeed = (member: PartyMember, baseSpeed: number): number =>
   });
 
 const opponentMaxSpeed = (baseSpeed: number, level: number): number =>
-  actualStat({ stat: "S", base: baseSpeed, iv: 31, ev: 252, level, nature: "겁쟁이" });
+  actualStat({ stat: "S", base: baseSpeed, iv: 31, ev: 32, level, nature: "겁쟁이" });
 
 export const pairwise = (
   myMember: PartyMember,

@@ -17,7 +17,7 @@ const STAT_KEYS: Array<keyof StatBlock> = ["H", "A", "B", "C", "D", "S"];
 
 const evValue = (raw: unknown): number => {
   const value = Number(raw);
-  return Number.isFinite(value) ? Math.max(0, Math.min(252, Math.round(value))) : 0;
+  return Number.isFinite(value) ? Math.max(0, Math.min(32, Math.round(value))) : 0;
 };
 
 // 파티 JSON(슬롯 배열) → 파티빌더 드래프트. 누락 필드는 기본값으로 채운다.

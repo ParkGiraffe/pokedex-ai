@@ -38,7 +38,8 @@ const natureMultiplier = (stat: Stat, nature: NatureName): number => {
 };
 
 export const actualStat = ({ stat, base, iv, ev, level, nature }: ActualStatInput): number => {
-  const evComponent = Math.floor(ev / 4);
+  // ev는 챔피언스 노력 포인트(0~32). 본가 공식의 evComponent(0~63)와 매핑하면 ev * 2다.
+  const evComponent = ev * 2;
   if (stat === "H") {
     if (base === 1) return 1; // 껍질몬: HP 종족값 1은 항상 1로 고정
     return Math.floor(((2 * base + iv + evComponent) * level) / 100) + level + 10;

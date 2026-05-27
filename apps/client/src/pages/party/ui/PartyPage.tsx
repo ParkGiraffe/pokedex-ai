@@ -102,9 +102,9 @@ const PartySlot = ({ index, draft, onChange, onRemove }: SlotProps) => {
               <NumberField
                 value={draft.evs[key]}
                 min={0}
-                max={252}
-                step={4}
-                onValueChange={(value) => onChange({ evs: { ...draft.evs, [key]: value } })}
+                max={32}
+                step={1}
+                onValueChange={(point) => onChange({ evs: { ...draft.evs, [key]: point } })}
                 className="px-1 text-center"
               />
             </label>
