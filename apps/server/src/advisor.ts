@@ -9,10 +9,11 @@ import {
   serializeForClaude,
 } from "@pokedex-agent/pokedex-core";
 
-// 추천 시스템 모델은 작업 특성에 맞춤. 파티 분석은 빠른 응답 우선(Haiku),
-// 매치업·배틀은 분석 깊이 우선(Sonnet). OCR(import.ts)은 별도로 Opus 유지.
+// 추천 시스템 모델은 한국 SV 어휘 정확도 우선으로 모두 Sonnet 4.6 사용.
+// (Haiku는 종족·도구·기술 이름을 fabricate하는 사례가 잦았음.)
+// OCR(import.ts)은 별도로 Opus 유지.
 const MODEL_BY_TASK: Record<ExportTask, string> = {
-  "party-analysis": process.env.ADVISOR_MODEL_PARTY ?? "claude-haiku-4-5",
+  "party-analysis": process.env.ADVISOR_MODEL_PARTY ?? "claude-sonnet-4-6",
   "matchup-leadrec": process.env.ADVISOR_MODEL_MATCHUP ?? "claude-sonnet-4-6",
   "battle-decision": process.env.ADVISOR_MODEL_BATTLE ?? "claude-sonnet-4-6",
 };
@@ -22,6 +23,7 @@ const SYSTEM = [
   "포켓몬 챔피언스 싱글배틀 분석가. 한국 SV 커뮤니티 어휘 (영어 직역 금지).",
   "응답은 details 2~4개로 압축, 파티 전체 관점. 포켓몬별 분산 금지.",
   "details.kind는 strength·weakness 위주. 근거(상성·수치) 포함, 단정형 금지. task 필드는 호출자 값.",
+  "고유명사(포켓몬 종족·도구·기술·특성)는 절대 만들어내지 마라. 입력에 등장하지 않은 이름이나 확신 없는 한국 명칭을 출력하지 말 것. 필요하면 슬롯 번호('1번', '2번 슬롯')로만 가리켜라.",
 ].join("\n");
 
 const request = async (task: ExportTask, payload: { party?: Party; state?: BattleState }): Promise<ClaudeResponse> => {

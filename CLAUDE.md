@@ -26,7 +26,7 @@
 
 ## 운영 원칙
 
-- **모델 선택은 작업 특성에 맞춤.** 이미지 OCR(`/import-party`)은 Opus 4.7 (정확도). 파티 분석(`/analyze-party`)은 Haiku 4.5 (응답 속도). 매치업·배틀(`/matchup-leadrec`, `/battle-advice`)은 Sonnet 4.6 (분석 깊이). 임의 격하 금지지만 작업별 권장 모델은 위와 같다.
+- **모델 선택은 작업 특성에 맞춤.** 이미지 OCR(`/import-party`)은 Opus 4.7 (정확도). 추천 시스템(`/analyze-party`, `/matchup-leadrec`, `/battle-advice`)은 Sonnet 4.6 (한국 SV 어휘 정확도 — Haiku는 종족·도구·기술 이름을 fabricate하는 사례가 잦았음). 임의 격하 금지지만 작업별 권장 모델은 위와 같다.
 - **AI 추천은 서버가 Anthropic API로 직접 호출한다.** `serializeForClaude`로 프롬프트 본문을 만들고 `ClaudeResponseSchema`로 구조화 응답을 받는다. 클립보드 paste 왕복 UX는 폐기됨.
 - **새 패키지 도입 전 사용자 승인.** 임의로 의존성 추가하지 않는다.
 - **데이터는 항상 PokeAPI 최신본에서 가져온다.** 한 글자도 손으로 입력하지 않는다.
