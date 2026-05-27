@@ -1,6 +1,7 @@
 import { pokedexByKo } from "./data";
 import { typeEffectiveness } from "./formula/matchup";
 import { actualStat } from "./formula/stat";
+import { findMove } from "./lookup";
 import type { MegaForm } from "./megas";
 import type { Party, PartyMember, TypeName } from "./types";
 
@@ -16,8 +17,46 @@ export type PairwiseScore = {
   verdict: MatchupVerdict;
 };
 
-const bestStab = (attackerTypes: ReadonlyArray<TypeName>, defenderTypes: ReadonlyArray<TypeName>): number =>
-  Math.max(...attackerTypes.map((type) => typeEffectiveness(type, defenderTypes)));
+// 내 픽의 4기술 중 변화기를 뺀 위력기에 (위력/100) × 자속 × 상성을 적용해
+// 가장 큰 점수를 반환한다. 4기술 다 변화기면 0 (실질적으로 데미지 못 줌).
+// 자속 80위력 1배 ≈ 1.2, 자속 100위력 2배 ≈ 3.0이 기준 스케일.
+const offensiveScoreByMoves = (
+  member: PartyMember,
+  attackerTypes: ReadonlyArray<TypeName>,
+  defenderTypes: ReadonlyArray<TypeName>
+): number => {
+  let best = 0;
+  for (const moveName of member.moves) {
+    const move = findMove(moveName);
+    if (!move || move.category === "변화" || move.power === null || move.power <= 0) {
+      continue;
+    }
+    const moveType = move.type as TypeName;
+    const stab = attackerTypes.includes(moveType) ? 1.5 : 1;
+    const eff = typeEffectiveness(moveType, defenderTypes);
+    const score = (move.power * stab * eff) / 100;
+    if (score > best) {
+      best = score;
+    }
+  }
+  return best;
+};
+
+// 상대 기술셋을 모르므로 자속 80위력 1배 가정으로 보수적 추정.
+const defensiveRiskByStab = (
+  attackerTypes: ReadonlyArray<TypeName>,
+  defenderTypes: ReadonlyArray<TypeName>
+): number => {
+  let best = 0;
+  for (const type of attackerTypes) {
+    const eff = typeEffectiveness(type, defenderTypes);
+    const score = (80 * 1.5 * eff) / 100; // 자속 80위력 가정
+    if (score > best) {
+      best = score;
+    }
+  }
+  return best;
+};
 
 // 내 픽은 실투자 스피드, 상대는 최대 투자(32포인트·+성격·31)를 가정해 보수적으로 본다.
 const myActualSpeed = (member: PartyMember, baseSpeed: number): number =>
@@ -64,8 +103,8 @@ export const pairwise = (
   const speedAdvantage: SpeedVerdict =
     mySpeed > opponentSpeed ? "win" : mySpeed < opponentSpeed ? "lose" : "tie";
 
-  const offensivePressure = bestStab(myEntry.types, opponentEntry.types);
-  const defensiveRisk = bestStab(opponentEntry.types, myEntry.types);
+  const offensivePressure = offensiveScoreByMoves(myMember, myEntry.types, opponentEntry.types);
+  const defensiveRisk = defensiveRiskByStab(opponentEntry.types, myEntry.types);
   const speedBias = speedAdvantage === "win" ? 0.5 : speedAdvantage === "lose" ? -0.5 : 0;
   const raw = offensivePressure - defensiveRisk + speedBias;
   const verdict: MatchupVerdict = raw > 0.5 ? "유리" : raw < -0.5 ? "불리" : "호각";
@@ -121,6 +160,9 @@ export type Coverage = {
   total: number;
 };
 
+// 위력 가중 모델: 자속 100위력 2배 ≈ 3.0이 "강하게 압박" 기준. 1.5 이상이면 카운터 가능.
+const COUNTER_THRESHOLD = 1.5;
+
 export const coverage = (
   party: Party,
   opponents: ReadonlyArray<string>,
@@ -129,7 +171,7 @@ export const coverage = (
   const covered = opponents.filter((opponent) =>
     party.some((member) => {
       const pair = pairwise(member, opponent, context);
-      return pair !== undefined && pair.offensivePressure >= 2;
+      return pair !== undefined && pair.offensivePressure >= COUNTER_THRESHOLD;
     })
   ).length;
   return { covered, total: opponents.length };
