@@ -53,8 +53,7 @@ export type IvBlock = z.infer<typeof IvBlock>;
 
 export const PERFECT_IVS: IvBlock = { H: 31, A: 31, B: 31, C: 31, D: 31, S: 31 };
 
-const evSum = (b: StatBlock) => b.H + b.A + b.B + b.C + b.D + b.S;
-
+// 챔피언스 시스템: 각 스탯 0~32 노력 포인트(= 0~252 EV) 한도만 강제, 합계 제한 없음.
 export const PartyMemberObject = z.object({
   species: z.string().min(1),
   level: z.number().int().min(1).max(100).default(50),
@@ -67,10 +66,7 @@ export const PartyMemberObject = z.object({
   ivs: IvBlock.default(PERFECT_IVS),
 });
 
-export const PartyMember = PartyMemberObject.refine((m) => evSum(m.evs) <= 510, {
-  message: "노력치 합계는 510을 넘을 수 없다",
-  path: ["evs"],
-});
+export const PartyMember = PartyMemberObject;
 export type PartyMember = z.infer<typeof PartyMember>;
 
 export const Party = z.array(PartyMember).min(1).max(6);

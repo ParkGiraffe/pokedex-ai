@@ -93,7 +93,7 @@ const PartySlot = ({ index, draft, onChange, onRemove }: SlotProps) => {
       <div>
         <div className="mb-1 flex items-center justify-between text-xs text-neutral-400">
           <span>노력치</span>
-          <span className={cn(evSum > 510 && "text-rose-400")}>합계 {evSum}/510</span>
+          <span>합계 {evSum}</span>
         </div>
         <div className="grid grid-cols-6 gap-1">
           {EV_KEYS.map((key) => (
