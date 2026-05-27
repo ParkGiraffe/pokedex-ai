@@ -15,7 +15,7 @@ import { PokemonPicker } from "@/features/pokemon-picker/ui/PokemonPicker";
 import { buildParty } from "@/pages/party/lib/party";
 import { usePartyStore } from "@/pages/party/model/store";
 
-import { battleOptions, buildBattleState } from "../lib/battle";
+import { activeMega, battleOptions, buildBattleState } from "../lib/battle";
 import { useBattleStore } from "../model/store";
 
 const WEATHERS: Weather[] = ["맑음", "비", "모래바람", "눈"];
@@ -35,7 +35,10 @@ export const BattlePage = () => {
     weather: battle.weather,
     trickRoom: battle.trickRoom,
     turn: battle.turn,
+    megaActive: battle.megaActive,
   };
+  const availableMega = activeMega(input);
+  const activeMegaForm = battle.megaActive ? availableMega : undefined;
   const options = battleOptions(input);
   const state = buildBattleState(input);
 
@@ -102,12 +105,28 @@ export const BattlePage = () => {
 
           <div className="flex items-center gap-2 text-sm text-neutral-300">
             <PokemonIcon species={myParty[activeIndex]?.species ?? ""} />
+            {activeMegaForm && (
+              <span className="rounded bg-amber-900 px-1.5 py-0.5 text-xs font-medium text-amber-200">
+                {activeMegaForm.ko}
+              </span>
+            )}
             <span className="text-neutral-500">vs</span>
             <PokemonIcon species={battle.opponentSpecies} />
             <span>
               {battle.opponentSpecies} HP {battle.opponentHpPercent}%
             </span>
           </div>
+
+          {availableMega && (
+            <label className="flex items-center gap-1.5 text-sm">
+              <input
+                type="checkbox"
+                checked={battle.megaActive}
+                onChange={(event) => battle.setMegaActive(event.currentTarget.checked)}
+              />
+              메가진화 ({availableMega.ko})
+            </label>
+          )}
 
           {options ? (
             <table className="w-full border-collapse text-sm">

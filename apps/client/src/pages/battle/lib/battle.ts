@@ -1,6 +1,7 @@
 import {
   type BattleState,
   decision,
+  findMegaByItem,
   findPokemon,
   type Party,
   type PartyMember,
@@ -30,6 +31,13 @@ export type BattleInput = {
   weather: Weather | "";
   trickRoom: boolean;
   turn: number;
+  megaActive: boolean;
+};
+
+// 액티브가 메가스톤을 들었을 때만 메가 폼을 적용 가능하다고 본다.
+export const activeMega = (input: BattleInput) => {
+  const myActive = input.myParty[input.myActiveIndex];
+  return myActive?.item ? findMegaByItem(myActive.item) : undefined;
 };
 
 export const battleOptions = (input: BattleInput): decision.MoveOption[] | undefined => {
@@ -37,7 +45,8 @@ export const battleOptions = (input: BattleInput): decision.MoveOption[] | undef
   if (!myActive) {
     return undefined;
   }
-  return decision.moveOptions(myActive, input.opponentSpecies, input.opponentHpPercent);
+  const mega = input.megaActive ? activeMega(input) : undefined;
+  return decision.moveOptions(myActive, input.opponentSpecies, input.opponentHpPercent, { mega });
 };
 
 export const buildBattleState = (input: BattleInput): BattleState | undefined => {

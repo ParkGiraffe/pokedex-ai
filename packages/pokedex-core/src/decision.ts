@@ -1,6 +1,7 @@
 import { type DamageCategory, calculateDamage } from "./formula/damage";
 import { actualStat } from "./formula/stat";
 import { findMove, findPokemon } from "./lookup";
+import type { MegaForm } from "./megas";
 import type { PartyMember, TypeName } from "./types";
 
 export type MoveOption = {
@@ -17,16 +18,24 @@ export type MoveOption = {
 // 상대 방어·HP는 0투자 중립을 가정한다 (보수적, 응답에서 가정 명시).
 const OPPONENT_NATURE = "노력";
 
+export type MoveOptionsContext = {
+  mega?: MegaForm; // 메가 활성 시 종족값·타입·자속을 메가 폼으로 swap한다.
+};
+
 export const moveOptions = (
   myActive: PartyMember,
   opponentSpecies: string,
-  opponentHpPercent = 100
+  opponentHpPercent = 100,
+  context: MoveOptionsContext = {}
 ): MoveOption[] | undefined => {
-  const myEntry = findPokemon(myActive.species);
+  const baseEntry = findPokemon(myActive.species);
   const opponentEntry = findPokemon(opponentSpecies);
-  if (!myEntry || !opponentEntry) {
+  if (!baseEntry || !opponentEntry) {
     return undefined;
   }
+  const myEntry = context.mega
+    ? { ...baseEntry, base: context.mega.base, types: context.mega.types }
+    : baseEntry;
 
   const opponentHp = actualStat({
     stat: "H",
