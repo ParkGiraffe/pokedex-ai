@@ -17,8 +17,27 @@ export type PairwiseScore = {
   verdict: MatchupVerdict;
 };
 
+// 자속 폴백 위력. 기술셋이 비거나 매칭 실패한 픽, 상대 등에 자속 100위력으로 추정.
+const FALLBACK_STAB_POWER = 100;
+
+// 자속 100위력 가정으로 (자속 × 상성) 점수를 만든다 — 디펜시브 추정과 오펜시브 폴백에 공유.
+const stabFallbackScore = (
+  attackerTypes: ReadonlyArray<TypeName>,
+  defenderTypes: ReadonlyArray<TypeName>
+): number => {
+  let best = 0;
+  for (const type of attackerTypes) {
+    const eff = typeEffectiveness(type, defenderTypes);
+    const score = (FALLBACK_STAB_POWER * 1.5 * eff) / 100;
+    if (score > best) {
+      best = score;
+    }
+  }
+  return best;
+};
+
 // 내 픽의 4기술 중 변화기를 뺀 위력기에 (위력/100) × 자속 × 상성을 적용해
-// 가장 큰 점수를 반환한다. 4기술 다 변화기면 0 (실질적으로 데미지 못 줌).
+// 가장 큰 점수를 반환한다. 위력기가 없거나 모두 매칭 실패하면 자속 폴백으로 추정.
 // 자속 80위력 1배 ≈ 1.2, 자속 100위력 2배 ≈ 3.0이 기준 스케일.
 const offensiveScoreByMoves = (
   member: PartyMember,
@@ -39,24 +58,12 @@ const offensiveScoreByMoves = (
       best = score;
     }
   }
-  return best;
+  // 위력기가 0이면 자속 100위력 폴백 (4기술 다 변화기·기술명 매칭 실패 케이스).
+  return best > 0 ? best : stabFallbackScore(attackerTypes, defenderTypes);
 };
 
-// 상대 기술셋을 모르므로 자속 80위력 1배 가정으로 보수적 추정.
-const defensiveRiskByStab = (
-  attackerTypes: ReadonlyArray<TypeName>,
-  defenderTypes: ReadonlyArray<TypeName>
-): number => {
-  let best = 0;
-  for (const type of attackerTypes) {
-    const eff = typeEffectiveness(type, defenderTypes);
-    const score = (80 * 1.5 * eff) / 100; // 자속 80위력 가정
-    if (score > best) {
-      best = score;
-    }
-  }
-  return best;
-};
+// 상대 기술셋을 모르므로 자속 100위력 가정으로 추정 (이전 80은 과보수였다).
+const defensiveRiskByStab = stabFallbackScore;
 
 // 내 픽은 실투자 스피드, 상대는 최대 투자(32포인트·+성격·31)를 가정해 보수적으로 본다.
 const myActualSpeed = (member: PartyMember, baseSpeed: number): number =>
