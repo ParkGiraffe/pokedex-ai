@@ -75,7 +75,7 @@ export const PartyImportPanel = ({ open, onClose }: PartyImportPanelProps) => {
   return (
     <Sheet open={open} title="파티 가져오기" onClose={onClose}>
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-neutral-300">파티 화면 이미지로 분석 (로컬 비전)</label>
+        <label className="text-sm font-medium text-neutral-300">파티 화면 이미지로 분석</label>
         <p className="text-xs text-neutral-500">
           능력(기술) 화면과 스테이터스(EV) 화면을 모두 추가한 뒤 분석하면 기술·EV가 합쳐진다.
         </p>
@@ -114,7 +114,7 @@ export const PartyImportPanel = ({ open, onClose }: PartyImportPanelProps) => {
         )}
 
         <Button variant="secondary" onClick={handleAnalyze} disabled={files.length === 0 || importParty.isPending}>
-          {importParty.isPending ? "분석 중... (로컬 모델)" : `이미지 ${files.length}장 분석`}
+          {importParty.isPending ? "분석 중..." : `이미지 ${files.length}장 분석`}
         </Button>
         {importParty.isError && (
           <p className="text-xs text-rose-400">
