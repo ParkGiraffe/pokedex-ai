@@ -26,50 +26,6 @@ export const requestMatchupLeadrec = (state: BattleState): Promise<ClaudeRespons
 export const requestBattleAdvice = (state: BattleState): Promise<ClaudeResponse> =>
   postJson("/battle-advice", { state }, "배틀 추천 실패");
 
-export type AdviceMon = {
-  species: string;
-  moves: string[];
-  level?: number;
-  item?: string;
-  ability?: string;
-  nature?: string;
-  evs?: Partial<Record<"hp" | "atk" | "def" | "spa" | "spd" | "spe", number>>;
-  mega?: boolean;
-  megaForme?: "X" | "Y";
-};
-
-export type MoveOption = {
-  move: string;
-  min: number;
-  max: number;
-  koChance: number;
-  koText: string;
-  desc: string;
-};
-
-export type SwitchOption = { pick: string; matchup: { verdict: string; faster: string } };
-
-export type DecideResult = {
-  moveOptions: MoveOption[];
-  switchOptions: SwitchOption[];
-  recommendation: string;
-  summary: string;
-};
-
-export type DecideBody = { active: AdviceMon; opponentSpecies: string; bench: AdviceMon[] };
-
-export const requestDecision = async (body: DecideBody): Promise<DecideResult> => {
-  const response = await fetch(`${BASE}/decide`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-  if (!response.ok) {
-    throw new Error(`어드바이저 서버 오류 (${response.status})`);
-  }
-  return response.json() as Promise<DecideResult>;
-};
-
 export type ImportMember = {
   species: string;
   ability: string;

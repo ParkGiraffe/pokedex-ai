@@ -7,7 +7,6 @@ import { Field } from "@/common/ui/Field";
 import { NumberField } from "@/common/ui/NumberField";
 import { Select } from "@/common/ui/Select";
 import { useBattleAdvice } from "@/features/advisor/model/useBattleAdvice";
-import { AdvisorPanel } from "@/features/advisor/ui/AdvisorPanel";
 import { AnalysisResult } from "@/features/advisor/ui/AnalysisResult";
 import { PokemonDatalist } from "@/features/pokemon-picker/ui/PokemonDatalist";
 import { PokemonIcon } from "@/features/pokemon-picker/ui/PokemonIcon";
@@ -15,8 +14,9 @@ import { PokemonPicker } from "@/features/pokemon-picker/ui/PokemonPicker";
 import { buildParty } from "@/pages/party/lib/party";
 import { usePartyStore } from "@/pages/party/model/store";
 
-import { activeMegaOptions, battleOptions, buildBattleState, opponentMegaOptions } from "../lib/battle";
+import { activeMegaOptions, battleAdvice, battleOptions, buildBattleState, opponentMegaOptions } from "../lib/battle";
 import { type RankBlock, useBattleStore } from "../model/store";
+import { AdvisorPanel } from "./AdvisorPanel";
 
 const WEATHERS: Weather[] = ["맑음", "비", "모래바람", "눈"];
 const STATUS_OPTIONS: StatusCondition[] = ["화상", "독", "맹독", "마비", "잠듦", "얼음"];
@@ -49,6 +49,7 @@ export const BattlePage = () => {
   const activeMyMega = myMegas.find((mega) => mega.form === battle.myMegaForm);
   const activeOpponentMega = opponentMegas.find((mega) => mega.form === battle.opponentMegaForm);
   const options = battleOptions(input);
+  const advice = battleAdvice(input);
   const state = buildBattleState(input);
 
   return (
@@ -313,13 +314,7 @@ export const BattlePage = () => {
         </Card>
       )}
 
-      {myParty.length > 0 && (
-        <AdvisorPanel
-          active={myParty[activeIndex]}
-          opponentSpecies={battle.opponentSpecies}
-          bench={myParty.filter((_, index) => index !== activeIndex)}
-        />
-      )}
+      {myParty.length > 0 && <AdvisorPanel advice={advice} />}
 
       {advise.isError && (
         <Card>
