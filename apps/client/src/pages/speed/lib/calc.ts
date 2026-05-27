@@ -1,4 +1,4 @@
-import { findPokemon, formula } from "@pokedex-agent/pokedex-core";
+import { findMegasBySpecies, findPokemon, formula } from "@pokedex-agent/pokedex-core";
 
 import { type SpeedSide } from "../model/store";
 
@@ -7,9 +7,14 @@ export const computeSpeed = (side: SpeedSide): number | undefined => {
   if (!entry) {
     return undefined;
   }
+  // 메가 폼이 선택돼 있으면 메가 base.S로 계산한다.
+  const mega = side.megaForm
+    ? findMegasBySpecies(side.species).find((m) => m.form === side.megaForm)
+    : undefined;
+  const baseSpeed = mega ? mega.base.S : entry.base.S;
   const raw = formula.actualStat({
     stat: "S",
-    base: entry.base.S,
+    base: baseSpeed,
     iv: 31,
     ev: side.ev,
     level: side.level,

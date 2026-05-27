@@ -1,4 +1,4 @@
-import { NATURE_NAMES } from "@pokedex-agent/pokedex-core";
+import { findMegasBySpecies, NATURE_NAMES } from "@pokedex-agent/pokedex-core";
 
 import { cn } from "@/common/lib/cn";
 import { Card } from "@/common/ui/Card";
@@ -33,6 +33,37 @@ const SideCard = ({ title, accent, side, onChange }: SideCardProps) => {
           <PokemonPicker value={side.species} invalid={speed === undefined} onSelect={(name) => onChange({ species: name })} />
         </div>
       </Field>
+      {(() => {
+        const megas = findMegasBySpecies(side.species);
+        if (megas.length === 0) {
+          return null;
+        }
+        if (megas.length === 1) {
+          const only = megas[0]!;
+          return (
+            <label className="flex items-center gap-1.5 text-sm">
+              <input
+                type="checkbox"
+                checked={side.megaForm === only.form}
+                onChange={(event) => onChange({ megaForm: event.currentTarget.checked ? only.form : "" })}
+              />
+              메가진화 ({only.ko})
+            </label>
+          );
+        }
+        return (
+          <Field label="메가진화">
+            <Select value={side.megaForm} onChange={(event) => onChange({ megaForm: event.currentTarget.value })}>
+              <option value="">비메가</option>
+              {megas.map((mega) => (
+                <option key={mega.form} value={mega.form}>
+                  {mega.ko}
+                </option>
+              ))}
+            </Select>
+          </Field>
+        );
+      })()}
       <div className="grid grid-cols-2 gap-3">
         <Field label="스피드 노력치">
           <NumberField value={side.ev} min={0} max={32} step={1} onValueChange={(value) => onChange({ ev: value })} />

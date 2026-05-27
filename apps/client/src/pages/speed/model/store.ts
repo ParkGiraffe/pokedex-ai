@@ -12,6 +12,7 @@ export type SpeedSide = {
   paralyzed: boolean;
   stickyWeb: boolean;
   tailwind: boolean;
+  megaForm: string; // 메가 폼 슬러그. "" = 비메가.
 };
 
 type SpeedState = {
@@ -34,13 +35,29 @@ const makeSide = (species: string, nature: NatureName): SpeedSide => ({
   paralyzed: false,
   stickyWeb: false,
   tailwind: false,
+  megaForm: "",
 });
 
 export const useSpeedStore = create<SpeedState>((set) => ({
   left: makeSide("한카리아스", "겁쟁이"),
   right: makeSide("리자몽", "겁쟁이"),
   trickRoom: false,
-  setLeft: (patch) => set((state) => ({ left: { ...state.left, ...patch } })),
-  setRight: (patch) => set((state) => ({ right: { ...state.right, ...patch } })),
+  setLeft: (patch) =>
+    set((state) => {
+      const next = { ...state.left, ...patch };
+      // 종족 교체 시 메가 매핑 자동 해제.
+      if (patch.species !== undefined && patch.species !== state.left.species) {
+        next.megaForm = "";
+      }
+      return { left: next };
+    }),
+  setRight: (patch) =>
+    set((state) => {
+      const next = { ...state.right, ...patch };
+      if (patch.species !== undefined && patch.species !== state.right.species) {
+        next.megaForm = "";
+      }
+      return { right: next };
+    }),
   setTrickRoom: (trickRoom) => set({ trickRoom }),
 }));
