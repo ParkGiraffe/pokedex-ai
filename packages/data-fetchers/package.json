@@ -16,6 +16,7 @@
     "fetch:usage": "tsx src/fetch-usage.ts",
     "fetch:champions": "tsx src/fetch-champions.ts",
     "fetch:champions-items": "tsx src/fetch-champions-items.ts",
+    "fetch:megas": "tsx src/fetch-megas.ts",
     "fetch:all": "tsx src/fetch-all.ts"
   },
   "dependencies": {
