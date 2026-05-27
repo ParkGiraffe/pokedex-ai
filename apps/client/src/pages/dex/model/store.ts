@@ -7,20 +7,25 @@ type DexState = {
   query: string;
   type: TypeName | typeof ALL_TYPES;
   generation: number;
+  page: number;
   selectedNo: number | null;
   setQuery: (query: string) => void;
   setType: (type: TypeName | typeof ALL_TYPES) => void;
   setGeneration: (generation: number) => void;
+  setPage: (page: number) => void;
   select: (no: number | null) => void;
 };
 
+// filter 바뀌면 페이지를 1로 리셋한다. select는 페이지 위치를 보존한다.
 export const useDexStore = create<DexState>((set) => ({
   query: "",
   type: ALL_TYPES,
   generation: ALL_GENERATIONS,
+  page: 1,
   selectedNo: 1,
-  setQuery: (query) => set({ query }),
-  setType: (type) => set({ type }),
-  setGeneration: (generation) => set({ generation }),
+  setQuery: (query) => set({ query, page: 1 }),
+  setType: (type) => set({ type, page: 1 }),
+  setGeneration: (generation) => set({ generation, page: 1 }),
+  setPage: (page) => set({ page }),
   select: (selectedNo) => set({ selectedNo }),
 }));

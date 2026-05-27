@@ -1,6 +1,7 @@
 import { findPokemon, TYPE_NAMES } from "@pokedex-agent/pokedex-core";
 
 import { cn } from "@/common/lib/cn";
+import { Button } from "@/common/ui/Button";
 import { Card } from "@/common/ui/Card";
 import { Field } from "@/common/ui/Field";
 import { Input } from "@/common/ui/Input";
@@ -16,7 +17,7 @@ import {
 } from "../lib/search";
 import { useDexStore } from "../model/store";
 
-const RESULT_LIMIT = 60;
+const PAGE_SIZE = 20;
 const GENERATIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 const multiplierClass = (multiplier: number): string => {
@@ -38,11 +39,15 @@ const TypeBadges = ({ types }: { types: ReadonlyArray<string> }) => (
 );
 
 export const DexPage = () => {
-  const { query, type, generation, selectedNo, setQuery, setType, setGeneration, select } =
+  const { query, type, generation, page, selectedNo, setQuery, setType, setGeneration, setPage, select } =
     useDexStore();
 
   const results = filterDex({ query, type, generation });
   const selected = selectedNo === null ? undefined : findPokemon(selectedNo);
+  const totalPages = Math.max(1, Math.ceil(results.length / PAGE_SIZE));
+  const safePage = Math.min(page, totalPages);
+  const startIndex = (safePage - 1) * PAGE_SIZE;
+  const pageEntries = results.slice(startIndex, startIndex + PAGE_SIZE);
 
   return (
     <section className="flex flex-col gap-4">
@@ -109,11 +114,13 @@ export const DexPage = () => {
       )}
 
       <p className="text-xs text-neutral-500">
-        {results.length}마리 중 {Math.min(results.length, RESULT_LIMIT)} 표시
+        {results.length === 0
+          ? "결과 없음"
+          : `${results.length}마리 중 ${startIndex + 1}~${Math.min(results.length, startIndex + PAGE_SIZE)} 표시 (페이지 ${safePage}/${totalPages})`}
       </p>
 
       <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-        {results.slice(0, RESULT_LIMIT).map((entry) => (
+        {pageEntries.map((entry) => (
           <button
             key={entry.no}
             type="button"
@@ -135,6 +142,25 @@ export const DexPage = () => {
         ))}
       </div>
 
+      {totalPages > 1 && (
+        <div className="flex flex-wrap items-center justify-center gap-2 text-sm">
+          <Button variant="secondary" disabled={safePage === 1} onClick={() => setPage(1)}>
+            처음
+          </Button>
+          <Button variant="secondary" disabled={safePage === 1} onClick={() => setPage(safePage - 1)}>
+            이전
+          </Button>
+          <span className="text-neutral-400">
+            {safePage} / {totalPages}
+          </span>
+          <Button variant="secondary" disabled={safePage === totalPages} onClick={() => setPage(safePage + 1)}>
+            다음
+          </Button>
+          <Button variant="secondary" disabled={safePage === totalPages} onClick={() => setPage(totalPages)}>
+            끝
+          </Button>
+        </div>
+      )}
     </section>
   );
 };
