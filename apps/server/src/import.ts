@@ -13,7 +13,7 @@ const PROMPT = [
   "포켓몬 챔피언스 팀 화면 이미지다. 먼저 이 화면이 어떤 종류인지 판단하라.",
   "(가) 기술(예: 지진, 칼춤, 방어)이 보이는 '능력' 화면 → 각 포켓몬의 species, ability(특성), item(도구), moves(기술 4개)를 채우고 points는 전부 0.",
   "(나) 능력치 막대와 숫자(HP/공격/방어/특수공격/특수방어/스피드)가 보이는 '스테이터스' 화면 → 각 포켓몬의 species, points, natureUp, natureDown을 채워라. ability·item은 빈 문자열, moves는 빈 배열(스탯 이름을 기술로 착각하지 마라).",
-  "(나) points: 각 스탯 옆 '작은' 숫자가 노력 포인트(0~32)다.",
+  "(나) points: 각 스탯 옆 '작은' 숫자가 노력 포인트다. 각 스탯 0~32 사이, 6스탯 합은 최대 66 (66 포인트 = 508 EV 풀투자). 한 포켓몬의 6포인트 합이 66을 넘으면 잘못 읽은 것 — 가장 작은 숫자를 다시 검토하라(특히 '0'을 '32'로 오인하지 말 것).",
   "(나) natureUp/natureDown: 성격으로 보정된 스탯의 라벨 옆에 빨간색 위 화살표(↑, ▲)가 있으면 그 스탯이 natureUp, 파란색 아래 화살표(↓, ▼)가 있으면 natureDown. 둘 다 없으면 '' (빈 문자열). 값은 정확히 '공격' | '방어' | '특수공격' | '특수방어' | '스피드' 중 하나(HP는 성격 보정 대상 아님).",
   "(나) 화살표 규칙: 게임 메커니즘상 ↑와 ↓는 항상 쌍으로 등장한다 — 보정 성격이면 둘 다 있고, 무보정 성격이면 둘 다 없다. 한쪽만 인식되면 ① 누락된 화살표를 다시 검토하거나 ② 이 포켓몬은 무보정 성격(둘 다 '')으로 단정하라. 한쪽만 채워서 반환하지 마라.",
   "(나) ↓(아래 화살표)는 파란색이라 어두운 UI에 묻힐 수 있으니 특히 주의해서 확인하라.",
@@ -188,6 +188,10 @@ export const buildImportResult = (raw: RawMember[]): ImportResult => {
     const evs = { H: 0, A: 0, B: 0, C: 0, D: 0, S: 0 };
     for (const key of STAT_KEYS) {
       evs[key] = toEv(member.points?.[key]);
+    }
+    const evSum = STAT_KEYS.reduce((sum, key) => sum + evs[key], 0);
+    if (evSum > 510) {
+      warnings.push(`${slot}번 노력치 합 ${evSum} (510 초과) — 노력 포인트 인식 오류 가능성`);
     }
 
     // 성격: 스테이터스 화면의 ↑/↓ 화살표(natureUp/natureDown)로 결정적 역산.
