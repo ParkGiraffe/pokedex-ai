@@ -37,7 +37,8 @@ const hitsToKO = (min: number, max: number, hp: number) => {
 };
 
 export type MoveOptionsContext = {
-  mega?: MegaForm; // 메가 활성 시 종족값·타입·자속을 메가 폼으로 swap한다.
+  mega?: MegaForm; // 내 액티브 메가 활성 시 종족값·타입·자속을 메가 폼으로 swap한다.
+  opponentMega?: MegaForm; // 상대 메가 활성 시 상대 종족값·타입을 swap한다.
 };
 
 export const moveOptions = (
@@ -47,13 +48,16 @@ export const moveOptions = (
   context: MoveOptionsContext = {}
 ): MoveOption[] | undefined => {
   const baseEntry = findPokemon(myActive.species);
-  const opponentEntry = findPokemon(opponentSpecies);
-  if (!baseEntry || !opponentEntry) {
+  const opponentBaseEntry = findPokemon(opponentSpecies);
+  if (!baseEntry || !opponentBaseEntry) {
     return undefined;
   }
   const myEntry = context.mega
     ? { ...baseEntry, base: context.mega.base, types: context.mega.types }
     : baseEntry;
+  const opponentEntry = context.opponentMega
+    ? { ...opponentBaseEntry, base: context.opponentMega.base, types: context.opponentMega.types }
+    : opponentBaseEntry;
 
   const opponentHp = actualStat({
     stat: "H",
