@@ -272,9 +272,7 @@ export const CalculatorPage = () => {
                   result.maxPercent >= 100 ? "text-rose-400" : "text-neutral-300"
                 )}
               >
-                {Number.isFinite(result.guaranteedHits)
-                  ? `확정 ${result.guaranteedHits}타`
-                  : "데미지 없음"}
+                {result.hitsText || "데미지 없음"}
               </span>
             </div>
             <RollBar rolls={result.damage.rolls} max={result.damage.max} />
