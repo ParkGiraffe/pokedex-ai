@@ -1,6 +1,7 @@
 import { pokedexByKo } from "./data";
 import { typeEffectiveness } from "./formula/matchup";
 import { actualStat } from "./formula/stat";
+import type { MegaForm } from "./megas";
 import type { Party, PartyMember, TypeName } from "./types";
 
 export type SpeedVerdict = "win" | "lose" | "tie";
@@ -32,15 +33,31 @@ const myActualSpeed = (member: PartyMember, baseSpeed: number): number =>
 const opponentMaxSpeed = (baseSpeed: number, level: number): number =>
   actualStat({ stat: "S", base: baseSpeed, iv: 31, ev: 32, level, nature: "겁쟁이" });
 
+// 메가 폼 종족값·타입으로 swap한 도감 항목을 반환한다.
+const applyMega = <T extends { base: { S: number }; types: ReadonlyArray<TypeName> }>(
+  entry: T,
+  mega: MegaForm | undefined
+): T => (mega ? { ...entry, base: { ...entry.base, ...mega.base }, types: mega.types } : entry);
+
+export type MatchupContext = {
+  // 내 픽 종족명 → 적용할 메가 폼. 같은 종족 두 마리는 같은 메가가 적용된다.
+  myMegaByPick?: ReadonlyMap<string, MegaForm>;
+  // 상대 종족명 → 적용할 메가 폼.
+  opponentMegaBySpecies?: ReadonlyMap<string, MegaForm>;
+};
+
 export const pairwise = (
   myMember: PartyMember,
-  opponentSpecies: string
+  opponentSpecies: string,
+  context: MatchupContext = {}
 ): PairwiseScore | undefined => {
-  const myEntry = pokedexByKo.get(myMember.species);
-  const opponentEntry = pokedexByKo.get(opponentSpecies);
-  if (!myEntry || !opponentEntry) {
+  const myBase = pokedexByKo.get(myMember.species);
+  const opponentBase = pokedexByKo.get(opponentSpecies);
+  if (!myBase || !opponentBase) {
     return undefined;
   }
+  const myEntry = applyMega(myBase, context.myMegaByPick?.get(myMember.species));
+  const opponentEntry = applyMega(opponentBase, context.opponentMegaBySpecies?.get(opponentSpecies));
 
   const mySpeed = myActualSpeed(myMember, myEntry.base.S);
   const opponentSpeed = opponentMaxSpeed(opponentEntry.base.S, myMember.level);
@@ -65,8 +82,9 @@ export const pairwise = (
 
 export const speedAdvantage = (
   myMember: PartyMember,
-  opponentSpecies: string
-): SpeedVerdict | undefined => pairwise(myMember, opponentSpecies)?.speedAdvantage;
+  opponentSpecies: string,
+  context: MatchupContext = {}
+): SpeedVerdict | undefined => pairwise(myMember, opponentSpecies, context)?.speedAdvantage;
 
 export type LeadScore = {
   myPick: string;
@@ -79,9 +97,13 @@ export type LeadScore = {
 const verdictValue = (verdict: MatchupVerdict): number =>
   verdict === "유리" ? 1 : verdict === "불리" ? -1 : 0;
 
-export const leadScore = (myMember: PartyMember, opponents: ReadonlyArray<string>): LeadScore => {
+export const leadScore = (
+  myMember: PartyMember,
+  opponents: ReadonlyArray<string>,
+  context: MatchupContext = {}
+): LeadScore => {
   const pairs = opponents
-    .map((opponent) => pairwise(myMember, opponent))
+    .map((opponent) => pairwise(myMember, opponent, context))
     .filter((pair): pair is PairwiseScore => pair !== undefined);
   const total = pairs.reduce((sum, pair) => sum + verdictValue(pair.verdict), 0);
   const finalScore = pairs.length > 0 ? Math.round(((total / pairs.length + 1) / 2) * 100) : 50;
@@ -99,15 +121,25 @@ export type Coverage = {
   total: number;
 };
 
-export const coverage = (party: Party, opponents: ReadonlyArray<string>): Coverage => {
+export const coverage = (
+  party: Party,
+  opponents: ReadonlyArray<string>,
+  context: MatchupContext = {}
+): Coverage => {
   const covered = opponents.filter((opponent) =>
     party.some((member) => {
-      const pair = pairwise(member, opponent);
+      const pair = pairwise(member, opponent, context);
       return pair !== undefined && pair.offensivePressure >= 2;
     })
   ).length;
   return { covered, total: opponents.length };
 };
 
-export const leadBoard = (party: Party, opponents: ReadonlyArray<string>): LeadScore[] =>
-  party.map((member) => leadScore(member, opponents)).sort((a, b) => b.finalScore - a.finalScore);
+export const leadBoard = (
+  party: Party,
+  opponents: ReadonlyArray<string>,
+  context: MatchupContext = {}
+): LeadScore[] =>
+  party
+    .map((member) => leadScore(member, opponents, context))
+    .sort((a, b) => b.finalScore - a.finalScore);

@@ -1,8 +1,9 @@
-import { findPokemon, matchup, type BattleState } from "@pokedex-agent/pokedex-core";
+import { findMegasBySpecies, findPokemon, matchup, type BattleState, type MegaForm } from "@pokedex-agent/pokedex-core";
 
 import { cn } from "@/common/lib/cn";
 import { Button } from "@/common/ui/Button";
 import { Card } from "@/common/ui/Card";
+import { Select } from "@/common/ui/Select";
 import { useMatchupLeadrec } from "@/features/advisor/model/useMatchupLeadrec";
 import { AnalysisResult } from "@/features/advisor/ui/AnalysisResult";
 import { PokemonDatalist } from "@/features/pokemon-picker/ui/PokemonDatalist";
@@ -13,6 +14,62 @@ import { usePartyStore } from "@/pages/party/model/store";
 
 import { MAX_OPPONENTS, useMatchupStore } from "../model/store";
 
+// 종족명 → 메가 폼 슬러그 매핑을 Map<species, MegaForm>으로 해석한다 (matchup context용).
+const resolveMegaContext = (
+  speciesList: ReadonlyArray<string>,
+  formBySpecies: Record<string, string>
+): Map<string, MegaForm> => {
+  const result = new Map<string, MegaForm>();
+  for (const species of speciesList) {
+    const slug = formBySpecies[species];
+    if (!slug) {
+      continue;
+    }
+    const mega = findMegasBySpecies(species).find((m) => m.form === slug);
+    if (mega) {
+      result.set(species, mega);
+    }
+  }
+  return result;
+};
+
+type MegaControlProps = {
+  species: string;
+  value: string;
+  onChange: (form: string) => void;
+};
+
+// 종족이 메가 가능 시 1개면 토글, 2개(X/Y)면 select. 메가 폼 한국어 라벨을 표시한다.
+const MegaControl = ({ species, value, onChange }: MegaControlProps) => {
+  const options = findMegasBySpecies(species);
+  if (options.length === 0) {
+    return null;
+  }
+  if (options.length === 1) {
+    const only = options[0]!;
+    return (
+      <label className="flex items-center gap-1 text-xs text-neutral-300">
+        <input
+          type="checkbox"
+          checked={value === only.form}
+          onChange={(event) => onChange(event.currentTarget.checked ? only.form : "")}
+        />
+        {only.ko}
+      </label>
+    );
+  }
+  return (
+    <Select value={value} onChange={(event) => onChange(event.currentTarget.value)} className="text-xs">
+      <option value="">비메가</option>
+      {options.map((mega) => (
+        <option key={mega.form} value={mega.form}>
+          {mega.ko}
+        </option>
+      ))}
+    </Select>
+  );
+};
+
 const verdictClass = (verdict: matchup.MatchupVerdict): string =>
   verdict === "유리"
     ? "bg-emerald-900 text-emerald-300"
@@ -22,13 +79,25 @@ const verdictClass = (verdict: matchup.MatchupVerdict): string =>
 
 export const MatchupPage = () => {
   const members = usePartyStore((state) => state.members);
-  const { opponents, setOpponent, addOpponent, removeOpponent } = useMatchupStore();
+  const {
+    opponents,
+    myMegaForms,
+    opponentMegaForms,
+    setOpponent,
+    addOpponent,
+    removeOpponent,
+    setMyMegaForm,
+    setOpponentMegaForm,
+  } = useMatchupStore();
   const advise = useMatchupLeadrec();
 
   const myParty = buildParty(members);
   const validOpponents = opponents.filter((name) => findPokemon(name));
-  const board = matchup.leadBoard(myParty, validOpponents);
-  const cover = matchup.coverage(myParty, validOpponents);
+  const myMegaByPick = resolveMegaContext(myParty.map((m) => m.species), myMegaForms);
+  const opponentMegaBySpecies = resolveMegaContext(validOpponents, opponentMegaForms);
+  const matchupContext = { myMegaByPick, opponentMegaBySpecies };
+  const board = matchup.leadBoard(myParty, validOpponents, matchupContext);
+  const cover = matchup.coverage(myParty, validOpponents, matchupContext);
 
   const state: BattleState = {
     my: myParty,
@@ -95,7 +164,14 @@ export const MatchupPage = () => {
                   <th className="p-1 text-left text-neutral-500">내 픽 \ 상대</th>
                   {validOpponents.map((opponent) => (
                     <th key={opponent} className="p-1 text-neutral-400">
-                      {opponent}
+                      <span className="flex flex-col items-center gap-0.5">
+                        <span>{opponent}</span>
+                        <MegaControl
+                          species={opponent}
+                          value={opponentMegaForms[opponent] ?? ""}
+                          onChange={(form) => setOpponentMegaForm(opponent, form)}
+                        />
+                      </span>
                     </th>
                   ))}
                 </tr>
@@ -104,13 +180,20 @@ export const MatchupPage = () => {
                 {myParty.map((member, rowIndex) => (
                   <tr key={`${member.species}-${rowIndex}`}>
                     <td className="p-1 font-medium text-neutral-200">
-                      <span className="flex items-center gap-1">
-                        <PokemonIcon species={member.species} className="h-8 w-8" />
-                        {member.species}
+                      <span className="flex flex-col gap-0.5">
+                        <span className="flex items-center gap-1">
+                          <PokemonIcon species={member.species} className="h-8 w-8" />
+                          {member.species}
+                        </span>
+                        <MegaControl
+                          species={member.species}
+                          value={myMegaForms[member.species] ?? ""}
+                          onChange={(form) => setMyMegaForm(member.species, form)}
+                        />
                       </span>
                     </td>
                     {validOpponents.map((opponent) => {
-                      const score = matchup.pairwise(member, opponent);
+                      const score = matchup.pairwise(member, opponent, matchupContext);
                       return (
                         <td key={opponent} className="p-1 text-center">
                           {score && (
