@@ -23,16 +23,17 @@ export type MoveOption = {
 // 상대 방어·HP는 0투자 중립을 가정한다 (보수적, 응답에서 가정 명시).
 const OPPONENT_NATURE = "노력";
 
-// 데미지 범위와 현재 HP로 한국 SV 표준 "확정 N타 / 난수 N타" 표기를 만든다.
-// guaranteedHits = ceil(HP / min) — 최소 데미지로도 N타에 무조건 KO
-// possibleHits   = ceil(HP / max) — 최대 데미지로 N타에 KO 가능
+// 데미지 범위와 현재 HP로 "확정 N타" 또는 "난수 N타" 단일 표기를 만든다.
+// guaranteedHits = ceil(HP / min) — 운이 가장 나빠도 보장되는 KO 타수
+// possibleHits   = ceil(HP / max) — 운이 가장 좋으면 도달 가능한 KO 타수
+// 두 값이 같으면 "확정 N타", 다르면 "난수 N타" (possible 기준, 운 좋으면 N타에 떨어진다).
 const hitsToKO = (min: number, max: number, hp: number) => {
   if (min <= 0 || max <= 0 || hp <= 0) {
     return { guaranteed: null, possible: null, text: "" };
   }
   const guaranteed = Math.ceil(hp / min);
   const possible = Math.ceil(hp / max);
-  const text = guaranteed === possible ? `확정 ${guaranteed}타` : `난수 ${possible}타~확정 ${guaranteed}타`;
+  const text = guaranteed === possible ? `확정 ${guaranteed}타` : `난수 ${possible}타`;
   return { guaranteed, possible, text };
 };
 
