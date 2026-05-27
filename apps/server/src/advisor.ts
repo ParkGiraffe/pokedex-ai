@@ -9,25 +9,27 @@ import {
   serializeForClaude,
 } from "@pokedex-agent/pokedex-core";
 
-// 추천 시스템 전용 모델 — 응답 속도 우선 Sonnet. OCR(import.ts)은 별도로 Opus 유지.
-const ADVISOR_MODEL = process.env.ADVISOR_MODEL ?? "claude-sonnet-4-6";
+// 추천 시스템 모델은 작업 특성에 맞춤. 파티 분석은 빠른 응답 우선(Haiku),
+// 매치업·배틀은 분석 깊이 우선(Sonnet). OCR(import.ts)은 별도로 Opus 유지.
+const MODEL_BY_TASK: Record<ExportTask, string> = {
+  "party-analysis": process.env.ADVISOR_MODEL_PARTY ?? "claude-haiku-4-5",
+  "matchup-leadrec": process.env.ADVISOR_MODEL_MATCHUP ?? "claude-sonnet-4-6",
+  "battle-decision": process.env.ADVISOR_MODEL_BATTLE ?? "claude-sonnet-4-6",
+};
 const anthropic = new Anthropic();
 
 const SYSTEM = [
-  "포켓몬 챔피언스 싱글배틀 분석가다.",
-  "한국 SV 커뮤니티 어휘를 사용한다 — 영어 직역(메이저 위협·티어 리스트 등)은 금지.",
-  "근거(상성·수치·메타)와 함께 추천하고 단정형 표현(확실히 패배 등)은 쓰지 말 것.",
-  "응답은 짧고 압축적으로: details는 파티 전체 관점 2~4개만 (포켓몬별로 한 마디씩 나열 금지). 한 카드에 들어갈 분량.",
-  "details.kind는 strength·weakness 위주, target은 '파티 전체' 또는 핵심 슬롯 번호 한정.",
-  "응답의 task 필드는 호출자가 지정한 값으로 정확히 채운다.",
+  "포켓몬 챔피언스 싱글배틀 분석가. 한국 SV 커뮤니티 어휘 (영어 직역 금지).",
+  "응답은 details 2~4개로 압축, 파티 전체 관점. 포켓몬별 분산 금지.",
+  "details.kind는 strength·weakness 위주. 근거(상성·수치) 포함, 단정형 금지. task 필드는 호출자 값.",
 ].join("\n");
 
 const request = async (task: ExportTask, payload: { party?: Party; state?: BattleState }): Promise<ClaudeResponse> => {
   const body = serializeForClaude(task, payload);
   try {
     const response = await anthropic.messages.parse({
-      model: ADVISOR_MODEL,
-      max_tokens: 2000,
+      model: MODEL_BY_TASK[task],
+      max_tokens: 1500,
       system: SYSTEM,
       messages: [{ role: "user", content: body }],
       output_config: { format: zodOutputFormat(ClaudeResponseSchema) },

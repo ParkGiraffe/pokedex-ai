@@ -139,29 +139,23 @@ export const serializeForClaude = (
 ): string => {
   const header = TASK_HEADERS[task];
   let body = "";
-  let dataBlock: unknown = {};
 
   if (task === "party-analysis") {
-    if (!payload.party) throw new Error("party-analysis는 party가 필요하다");
+    if (!payload.party) {
+      throw new Error("party-analysis는 party가 필요하다");
+    }
     body = partyAnalysisBody(payload.party);
-    dataBlock = { task, party: payload.party };
   } else if (task === "battle-decision") {
-    if (!payload.state) throw new Error("battle-decision은 state가 필요하다");
+    if (!payload.state) {
+      throw new Error("battle-decision은 state가 필요하다");
+    }
     body = battleDecisionBody(payload.state);
-    dataBlock = { task, state: payload.state };
   } else {
-    if (!payload.state) throw new Error("matchup-leadrec은 state가 필요하다");
+    if (!payload.state) {
+      throw new Error("matchup-leadrec은 state가 필요하다");
+    }
     body = matchupLeadBody(payload.state);
-    dataBlock = { task, state: payload.state };
   }
 
-  return [
-    header,
-    body,
-    "",
-    "## 원본 데이터 (참조용)",
-    "```json",
-    JSON.stringify(dataBlock, null, 2),
-    "```",
-  ].join("\n");
+  return [header, body].join("\n");
 };
