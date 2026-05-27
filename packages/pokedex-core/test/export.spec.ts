@@ -59,7 +59,7 @@ describe("Claude paste 직렬화", () => {
       turn: 1,
     };
     const text = serializeForClaude("matchup-leadrec", { state });
-    expect(text).toContain("매치업 점수");
+    expect(text).toContain("결정론 순위");
     expect(text).toContain("커버리지");
     expect(text).toContain("라이츄");
   });

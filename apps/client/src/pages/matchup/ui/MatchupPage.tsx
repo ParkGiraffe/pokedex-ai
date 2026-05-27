@@ -5,7 +5,6 @@ import { Button } from "@/common/ui/Button";
 import { Card } from "@/common/ui/Card";
 import { Select } from "@/common/ui/Select";
 import { useMatchupLeadrec } from "@/features/advisor/model/useMatchupLeadrec";
-import { AnalysisResult } from "@/features/advisor/ui/AnalysisResult";
 import { PokemonDatalist } from "@/features/pokemon-picker/ui/PokemonDatalist";
 import { PokemonIcon } from "@/features/pokemon-picker/ui/PokemonIcon";
 import { PokemonPicker } from "@/features/pokemon-picker/ui/PokemonPicker";
@@ -13,6 +12,7 @@ import { buildParty } from "@/pages/party/lib/party";
 import { usePartyStore } from "@/pages/party/model/store";
 
 import { MAX_OPPONENTS, useMatchupStore } from "../model/store";
+import { type LeadRank, LeadrecResult } from "./LeadrecResult";
 
 // 종족명 → 메가 폼 슬러그 매핑을 Map<species, MegaForm>으로 해석한다 (matchup context용).
 const resolveMegaContext = (
@@ -83,11 +83,13 @@ export const MatchupPage = () => {
     opponents,
     myMegaForms,
     opponentMegaForms,
+    selectedSpecies,
     setOpponent,
     addOpponent,
     removeOpponent,
     setMyMegaForm,
     setOpponentMegaForm,
+    setSelectedSpecies,
   } = useMatchupStore();
   const advise = useMatchupLeadrec();
 
@@ -98,9 +100,31 @@ export const MatchupPage = () => {
   const matchupContext = { myMegaByPick, opponentMegaBySpecies };
   const board = matchup.leadBoard(myParty, validOpponents, matchupContext);
   const cover = matchup.coverage(myParty, validOpponents, matchupContext);
+  const lineups = matchup.lineupBoard(myParty, validOpponents, matchupContext);
+  const autoPicks = lineups[0]?.picks ?? [];
+
+  // 사용자가 한 번이라도 체크박스를 건드렸으면 그 값을 그대로 보여준다(3마리가 아니어도).
+  // 완전히 빈 상태일 때만 자동 추천(lineupBoard 1위)을 적용해서 디폴트로 채운다.
+  const effectiveSelection = selectedSpecies.length > 0 ? selectedSpecies : autoPicks;
+  const selectedParty = myParty.filter((member) => effectiveSelection.includes(member.species));
+  const selectedBoard = matchup.leadBoard(selectedParty, validOpponents, matchupContext);
+  const isReady = selectedParty.length === matchup.LINEUP_SIZE;
+
+  // 선출 3마리 안에서 leadScore 내림차순으로 1·2·3순위. 모델은 이 순서를 뒤집을 수 없다.
+  const leadRanks: LeadRank[] = selectedBoard.map((entry, index) => ({
+    pick: entry.myPick,
+    rank: index + 1,
+  }));
+
+  const handleToggleSelected = (species: string) => {
+    const next = effectiveSelection.includes(species)
+      ? effectiveSelection.filter((value) => value !== species)
+      : [...effectiveSelection, species];
+    setSelectedSpecies(next);
+  };
 
   const state: BattleState = {
-    my: myParty,
+    my: selectedParty,
     opponent: { revealed: validOpponents.map((species) => ({ species })), field: [] },
     myField: [],
     trickRoom: false,
@@ -111,12 +135,6 @@ export const MatchupPage = () => {
     <section className="flex flex-col gap-4">
       <header className="flex flex-wrap items-center justify-between gap-2">
         <h1 className="text-xl font-bold">매치업</h1>
-        <Button
-          onClick={() => advise.mutate(state)}
-          disabled={advise.isPending || myParty.length === 0 || validOpponents.length === 0}
-        >
-          {advise.isPending ? "추천 중..." : "선두 추천 요청"}
-        </Button>
       </header>
 
       <Card className="flex flex-col gap-3">
@@ -210,6 +228,62 @@ export const MatchupPage = () => {
             </table>
           </Card>
 
+          <Card className="flex flex-col gap-3">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <h2 className="text-sm font-semibold text-neutral-300">
+                선출 ({selectedParty.length}/{matchup.LINEUP_SIZE})
+              </h2>
+              {selectedSpecies.length > 0 && (
+                <Button
+                  variant="secondary"
+                  className="text-xs"
+                  onClick={() => setSelectedSpecies([])}
+                >
+                  자동 추천으로 복귀
+                </Button>
+              )}
+            </div>
+            <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
+              {myParty.map((member) => {
+                const selected = effectiveSelection.includes(member.species);
+                return (
+                  <button
+                    key={member.species}
+                    type="button"
+                    onClick={() => handleToggleSelected(member.species)}
+                    className={cn(
+                      "flex flex-col items-center gap-1 rounded border px-2 py-1.5 transition",
+                      selected
+                        ? "border-emerald-500 bg-emerald-900/30"
+                        : "border-neutral-700 bg-neutral-900 hover:border-neutral-500"
+                    )}
+                  >
+                    <PokemonIcon species={member.species} className="h-9 w-9" />
+                    <span className="text-xs text-neutral-200">{member.species}</span>
+                  </button>
+                );
+              })}
+            </div>
+            <p className="text-xs text-neutral-500">
+              자동 추천: {autoPicks.length > 0 ? `${autoPicks.join(", ")} (${lineups[0]?.finalScore ?? 0}점)` : "(불가)"}
+            </p>
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              {!isReady ? (
+                <p className="text-xs text-amber-400">
+                  정확히 {matchup.LINEUP_SIZE}마리를 골라야 추천을 요청할 수 있다.
+                </p>
+              ) : (
+                <span />
+              )}
+              <Button
+                onClick={() => advise.mutate(state)}
+                disabled={advise.isPending || !isReady || validOpponents.length === 0}
+              >
+                {advise.isPending ? "추천 중..." : "선두 추천 요청"}
+              </Button>
+            </div>
+          </Card>
+
           <Card>
             <h2 className="mb-2 text-sm font-semibold text-neutral-300">선두 추천 점수 (참고용)</h2>
             <ul className="flex flex-col gap-1 text-sm">
@@ -236,7 +310,7 @@ export const MatchupPage = () => {
           </p>
         </Card>
       )}
-      {advise.data && <AnalysisResult result={advise.data} />}
+      {advise.data && <LeadrecResult result={advise.data} ranks={leadRanks} />}
 
       <PokemonDatalist />
     </section>

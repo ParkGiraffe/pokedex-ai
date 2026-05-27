@@ -106,29 +106,32 @@ const matchupLeadBody = (state: BattleState): string => {
   const opponents = state.opponent.revealed
     .map((member) => member.species)
     .filter((species): species is string => Boolean(species));
+  // state.my는 호출자가 이미 선출한 3마리만 담아 전달한다. leadBoard는 그 안에서 1·2·3순위를 결정.
   const board = leadBoard(state.my, opponents);
   const cover = coverage(state.my, opponents);
-  const boardLines = board.map((lead) => {
+  const boardLines = board.map((lead, index) => {
     const detail = lead.pairs.map((pair) => `${pair.opponent} ${pair.verdict}`).join(", ");
-    return `- ${lead.myPick}: ${lead.finalScore}점 (유리 ${lead.favorable}/불리 ${lead.unfavorable})${detail ? ` — ${detail}` : ""}`;
+    return `- ${index + 1}순위 ${lead.myPick}: ${lead.finalScore}점 (유리 ${lead.favorable}/불리 ${lead.unfavorable})${detail ? ` — ${detail}` : ""}`;
   });
 
   return [
     "",
-    "## 내 파티",
+    "## 선출 3마리",
     state.my.map(formatMember).join("\n"),
     "",
     "## 상대 공개분",
     opponents.length === 0 ? "(공개된 정보 없음)" : opponents.join(", "),
     "",
-    "## 매치업 점수 (참고용, 타입·스피드 기반 결정론 계산)",
+    "## 결정론 순위 (모델이 뒤집지 말 것)",
     `- 상대 커버리지: ${cover.covered}/${cover.total}`,
     ...(boardLines.length > 0 ? boardLines : ["- (상대 공개분 없음)"]),
     "",
     "## 요청",
-    "- 선두로 낼 후보의 우선순위와 각 선택의 근거",
-    "- 상대의 예상 응수 (가능성 높은 순)",
-    "- 위 점수는 참고용이니 점수만으로 단정하지 말고 메타·빌드 의도와 합쳐 추천",
+    "- summary는 한 줄로 1·2·3순위만 적어라. 예: '1순위 누리레느, 2순위 한카리아스, 3순위 킬라플로르'. 풀이·근거·만연체 금지",
+    "- 순위는 위 결정론 계산을 그대로 따른다. 다른 순서로 뒤집지 말 것",
+    "- details는 픽별로 작성. 각 entry의 target은 픽 종족명만(예: '누리레느'). '(선두 1순위)' 같은 접미어·괄호 금지",
+    "- 각 details.text는 한 문장 한 포인트만. 같은 픽 같은 kind에 포인트가 여럿이면 entry를 여러 개로 쪼개라",
+    "- kind=strength는 장점, weakness는 단점, warning은 주의, recommendation은 운용 팁(선두 뒤 교체 타이밍 등)에 사용",
     "- 응답 마지막에 표준 JSON 코드블록을 반드시 포함",
   ].join("\n");
 };

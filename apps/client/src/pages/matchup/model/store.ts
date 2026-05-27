@@ -9,11 +9,14 @@ type MatchupState = {
   opponents: string[];
   myMegaForms: MegaMap;
   opponentMegaForms: MegaMap;
+  // 사용자가 명시적으로 선택한 선출 3마리 종족. 비어 있으면 자동 추천(lineupBoard 1위)이 적용된다.
+  selectedSpecies: string[];
   setOpponent: (index: number, name: string) => void;
   addOpponent: () => void;
   removeOpponent: (index: number) => void;
   setMyMegaForm: (species: string, form: string) => void;
   setOpponentMegaForm: (species: string, form: string) => void;
+  setSelectedSpecies: (species: string[]) => void;
 };
 
 const withForm = (map: MegaMap, species: string, form: string): MegaMap => {
@@ -31,6 +34,7 @@ export const useMatchupStore = create<MatchupState>((set) => ({
   opponents: ["리자몽"],
   myMegaForms: {},
   opponentMegaForms: {},
+  selectedSpecies: [],
   setOpponent: (index, name) =>
     set((state) => {
       const prev = state.opponents[index] ?? "";
@@ -55,4 +59,5 @@ export const useMatchupStore = create<MatchupState>((set) => ({
     set((state) => ({ myMegaForms: withForm(state.myMegaForms, species, form) })),
   setOpponentMegaForm: (species, form) =>
     set((state) => ({ opponentMegaForms: withForm(state.opponentMegaForms, species, form) })),
+  setSelectedSpecies: (species) => set({ selectedSpecies: species }),
 }));

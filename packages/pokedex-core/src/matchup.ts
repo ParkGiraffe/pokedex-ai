@@ -192,3 +192,54 @@ export const leadBoard = (
   party
     .map((member) => leadScore(member, opponents, context))
     .sort((a, b) => b.finalScore - a.finalScore);
+
+const combinations = <T>(items: ReadonlyArray<T>, size: number): T[][] => {
+  if (size === 0) {
+    return [[]];
+  }
+  if (items.length < size) {
+    return [];
+  }
+  const [head, ...rest] = items;
+  return [
+    ...combinations(rest, size - 1).map((combo) => [head!, ...combo]),
+    ...combinations(rest, size),
+  ];
+};
+
+export type LineupScore = {
+  picks: ReadonlyArray<string>;
+  leadAvg: number;
+  coveredCount: number;
+  totalCount: number;
+  finalScore: number;
+};
+
+// 챔피언스 싱글은 6마리 중 3마리 선출. 모든 조합(C(6,3)=20)을 점수화한다.
+// finalScore = leadScore 평균 + 커버리지 비율 × 30. 약점 분산은 후속 단계에서 추가 예정.
+export const LINEUP_SIZE = 3;
+
+export const lineupBoard = (
+  party: Party,
+  opponents: ReadonlyArray<string>,
+  context: MatchupContext = {}
+): LineupScore[] => {
+  if (party.length < LINEUP_SIZE) {
+    return [];
+  }
+  return combinations(party, LINEUP_SIZE)
+    .map((combo) => {
+      const leadScores = combo.map((member) => leadScore(member, opponents, context).finalScore);
+      const leadAvg = leadScores.reduce((sum, score) => sum + score, 0) / leadScores.length;
+      const cov = coverage(combo, opponents, context);
+      const covRatio = cov.total > 0 ? cov.covered / cov.total : 0;
+      return {
+        picks: combo.map((member) => member.species),
+        leadAvg: Math.round(leadAvg),
+        coveredCount: cov.covered,
+        totalCount: cov.total,
+        finalScore: Math.round(leadAvg + covRatio * 30),
+      };
+    })
+    .sort((a, b) => b.finalScore - a.finalScore);
+};
