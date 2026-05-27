@@ -2,10 +2,6 @@ import { findPokemon, formula, type TypeName } from "@pokedex-agent/pokedex-core
 
 import { type AttackerInput, type DefenderInput } from "../model/store";
 
-const rankMultiplier = (rank: number): number => (rank >= 0 ? (2 + rank) / 2 : 2 / (2 - rank));
-
-const applyRank = (stat: number, rank: number): number => Math.floor(stat * rankMultiplier(rank));
-
 export type CalcResult = {
   damage: formula.DamageResult;
   defenderHp: number;
@@ -37,7 +33,7 @@ export const computeCalc = (
     level: attacker.level,
     nature: attacker.nature,
   });
-  const attackStat = applyRank(rawAttack, attacker.rank);
+  const attackStat = formula.applyRank(rawAttack, attacker.rank);
 
   const defenseKey = attacker.category === "물리" ? "B" : "D";
   const rawDefense = formula.actualStat({
@@ -48,7 +44,7 @@ export const computeCalc = (
     level: defender.level,
     nature: defender.nature,
   });
-  const defenseStat = applyRank(rawDefense, defender.rank);
+  const defenseStat = formula.applyRank(rawDefense, defender.rank);
 
   const defenderHp = formula.actualStat({
     stat: "H",

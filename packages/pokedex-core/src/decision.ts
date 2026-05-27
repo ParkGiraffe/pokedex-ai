@@ -1,8 +1,8 @@
 import { type DamageCategory, calculateDamage } from "./formula/damage";
-import { actualStat } from "./formula/stat";
+import { actualStat, applyRank } from "./formula/stat";
 import { findMove, findPokemon } from "./lookup";
 import type { MegaForm } from "./megas";
-import type { PartyMember, TypeName } from "./types";
+import type { PartyMember, StatusCondition, TypeName } from "./types";
 
 export type MoveOption = {
   move: string;
@@ -37,9 +37,14 @@ const hitsToKO = (min: number, max: number, hp: number) => {
   return { guaranteed, possible, text };
 };
 
+export type StatRanks = Partial<Record<"A" | "B" | "C" | "D" | "S", number>>;
+
 export type MoveOptionsContext = {
   mega?: MegaForm; // 내 액티브 메가 활성 시 종족값·타입·자속을 메가 폼으로 swap한다.
   opponentMega?: MegaForm; // 상대 메가 활성 시 상대 종족값·타입을 swap한다.
+  myRanks?: StatRanks; // 내 액티브 랭크업/다운 (-6..+6). 미지정 시 0.
+  opponentRanks?: StatRanks; // 상대 랭크업/다운.
+  myStatus?: StatusCondition | ""; // 화상 시 물리 공격 ÷2. 마비는 스피드 영향이라 데미지엔 무관.
 };
 
 export const moveOptions = (
@@ -91,7 +96,7 @@ export const moveOptions = (
     const physical = move.category === "물리";
     const attackKey = physical ? "A" : "C";
     const defenseKey = physical ? "B" : "D";
-    const attack = actualStat({
+    const rawAttack = actualStat({
       stat: attackKey,
       base: myEntry.base[attackKey],
       iv: myActive.ivs[attackKey],
@@ -99,7 +104,7 @@ export const moveOptions = (
       level: myActive.level,
       nature: myActive.nature,
     });
-    const defense = actualStat({
+    const rawDefense = actualStat({
       stat: defenseKey,
       base: opponentEntry.base[defenseKey],
       iv: 31,
@@ -107,6 +112,8 @@ export const moveOptions = (
       level: myActive.level,
       nature: OPPONENT_NATURE,
     });
+    const attack = applyRank(rawAttack, context.myRanks?.[attackKey] ?? 0);
+    const defense = applyRank(rawDefense, context.opponentRanks?.[defenseKey] ?? 0);
 
     const result = calculateDamage({
       level: myActive.level,
@@ -118,6 +125,7 @@ export const moveOptions = (
       defenderTypes: opponentEntry.types,
       moveType: move.type as TypeName,
       attackerTerastalized: false,
+      burned: context.myStatus === "화상",
     });
 
     const koRolls = result.rolls.filter((roll) => roll >= currentHp).length;

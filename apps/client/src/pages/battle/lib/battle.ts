@@ -7,8 +7,11 @@ import {
   type Party,
   type PartyMember,
   PERFECT_IVS,
+  type StatusCondition,
   type Weather,
 } from "@pokedex-agent/pokedex-core";
+
+import { type RankBlock } from "../model/store";
 
 const DEFAULT_RANKS = { A: 0, B: 0, C: 0, D: 0, S: 0, accuracy: 0, evasion: 0 };
 
@@ -35,6 +38,11 @@ export type BattleInput = {
   // 메가 폼 슬러그. "" = 비메가. 종족이 메가 가능하면 토글로 자동(1개) 또는 select(X/Y).
   myMegaForm: string;
   opponentMegaForm: string;
+  // 랭크·상태는 데미지 계산에 직접 반영된다.
+  myRanks: RankBlock;
+  opponentRanks: RankBlock;
+  myStatus: StatusCondition | "";
+  opponentStatus: StatusCondition | "";
 };
 
 // 내 액티브 종족의 가능한 메가 폼 목록.
@@ -60,6 +68,9 @@ export const battleOptions = (input: BattleInput): decision.MoveOption[] | undef
   return decision.moveOptions(myActive, input.opponentSpecies, input.opponentHpPercent, {
     mega,
     opponentMega,
+    myRanks: input.myRanks,
+    opponentRanks: input.opponentRanks,
+    myStatus: input.myStatus,
   });
 };
 

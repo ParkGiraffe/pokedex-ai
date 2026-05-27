@@ -1,4 +1,4 @@
-import { type Weather } from "@pokedex-agent/pokedex-core";
+import { type StatusCondition, type Weather } from "@pokedex-agent/pokedex-core";
 
 import { cn } from "@/common/lib/cn";
 import { Button } from "@/common/ui/Button";
@@ -16,9 +16,11 @@ import { buildParty } from "@/pages/party/lib/party";
 import { usePartyStore } from "@/pages/party/model/store";
 
 import { activeMegaOptions, battleOptions, buildBattleState, opponentMegaOptions } from "../lib/battle";
-import { useBattleStore } from "../model/store";
+import { type RankBlock, useBattleStore } from "../model/store";
 
 const WEATHERS: Weather[] = ["맑음", "비", "모래바람", "눈"];
+const STATUS_OPTIONS: StatusCondition[] = ["화상", "독", "맹독", "마비", "잠듦", "얼음"];
+const RANK_KEYS: Array<keyof RankBlock> = ["A", "B", "C", "D", "S"];
 
 export const BattlePage = () => {
   const members = usePartyStore((state) => state.members);
@@ -37,6 +39,10 @@ export const BattlePage = () => {
     turn: battle.turn,
     myMegaForm: battle.myMegaForm,
     opponentMegaForm: battle.opponentMegaForm,
+    myRanks: battle.myRanks,
+    opponentRanks: battle.opponentRanks,
+    myStatus: battle.myStatus,
+    opponentStatus: battle.opponentStatus,
   };
   const myMegas = activeMegaOptions(input);
   const opponentMegas = opponentMegaOptions(input);
@@ -233,6 +239,77 @@ export const BattlePage = () => {
             <p className="text-sm text-neutral-400">상대 종족을 정확히 입력하라.</p>
           )}
           <p className="text-xs text-neutral-500">KO 확률은 16롤 기준, 상대 0투자 중립 가정이다.</p>
+        </Card>
+      )}
+
+      {myParty.length > 0 && (
+        <Card className="flex flex-col gap-3">
+          <h2 className="text-sm font-semibold text-neutral-300">랭크·상태</h2>
+          <div className="grid gap-3 md:grid-cols-2">
+            <div className="flex flex-col gap-2">
+              <span className="text-xs text-neutral-400">내 액티브</span>
+              <div className="grid grid-cols-5 gap-1">
+                {RANK_KEYS.map((key) => (
+                  <label key={key} className="flex flex-col items-center gap-0.5">
+                    <span className="text-[10px] text-neutral-500">{key}</span>
+                    <NumberField
+                      value={battle.myRanks[key]}
+                      min={-6}
+                      max={6}
+                      onValueChange={(value) => battle.setMyRank(key, value)}
+                      className="px-1 text-center"
+                    />
+                  </label>
+                ))}
+              </div>
+              <Field label="상태이상">
+                <Select
+                  value={battle.myStatus}
+                  onChange={(event) => battle.setMyStatus(event.currentTarget.value as StatusCondition | "")}
+                >
+                  <option value="">없음</option>
+                  {STATUS_OPTIONS.map((status) => (
+                    <option key={status} value={status}>
+                      {status}
+                    </option>
+                  ))}
+                </Select>
+              </Field>
+            </div>
+            <div className="flex flex-col gap-2">
+              <span className="text-xs text-neutral-400">상대</span>
+              <div className="grid grid-cols-5 gap-1">
+                {RANK_KEYS.map((key) => (
+                  <label key={key} className="flex flex-col items-center gap-0.5">
+                    <span className="text-[10px] text-neutral-500">{key}</span>
+                    <NumberField
+                      value={battle.opponentRanks[key]}
+                      min={-6}
+                      max={6}
+                      onValueChange={(value) => battle.setOpponentRank(key, value)}
+                      className="px-1 text-center"
+                    />
+                  </label>
+                ))}
+              </div>
+              <Field label="상태이상">
+                <Select
+                  value={battle.opponentStatus}
+                  onChange={(event) => battle.setOpponentStatus(event.currentTarget.value as StatusCondition | "")}
+                >
+                  <option value="">없음</option>
+                  {STATUS_OPTIONS.map((status) => (
+                    <option key={status} value={status}>
+                      {status}
+                    </option>
+                  ))}
+                </Select>
+              </Field>
+            </div>
+          </div>
+          <p className="text-xs text-neutral-500">
+            랭크: A/B/C/D/S 각 -6~+6. +1 = 1.5배, -1 ≈ 0.67배. 화상 = 물리 공격 ÷2.
+          </p>
         </Card>
       )}
 

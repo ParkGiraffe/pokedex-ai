@@ -48,6 +48,14 @@ export const actualStat = ({ stat, base, iv, ev, level, nature }: ActualStatInpu
   return Math.floor(before * natureMultiplier(stat, nature));
 };
 
+// 랭크 배율: +n = (2+n)/2, -n = 2/(2+n). HP는 랭크 적용 대상이 아니다.
+export const rankMultiplier = (rank: number): number =>
+  rank >= 0 ? (2 + rank) / 2 : 2 / (2 - rank);
+
+// 능력치 실수치에 랭크 배율을 적용한 값을 반환한다.
+export const applyRank = (stat: number, rank: number): number =>
+  Math.floor(stat * rankMultiplier(rank));
+
 export const actualStatBlock = (
   base: StatBlock,
   ev: StatBlock,
