@@ -1,6 +1,6 @@
 # pokedex-agent — Claude 컨텍스트 가이드
 
-박기린(op5321)의 개인 도구. 스마트누오(smartnuo.com) 클론 웹앱 + Claude Code 대화형 AI 분석.
+박기린(op5321)의 개인 도구. 포켓몬 챔피언스 싱글배틀 분석 웹앱 + Claude API 기반 AI 분석.
 대상 게임: 포켓몬스터 스칼렛/바이올렛(9세대 SV) 싱글배틀.
 
 새 Claude 세션이 시작되면 **이 파일 → 아래 4개 → docs/specs/ 최신본** 순서로 읽고 컨텍스트를 복원한다.
@@ -26,9 +26,8 @@
 
 ## 운영 원칙
 
-- **모든 모델 호출은 Opus를 사용한다.** Sonnet/Haiku로 자동 격하 금지.
-- **AI 에이전트 = Claude Code 대화형 (이 대화 자체).** 별도 LLM 백엔드를 만들지 않는다.
-- **웹앱 ↔ Claude 연결은 클립보드 양방향 paste.** 자동 IPC 금지 (Phase 5 별도 검토).
+- **모델 선택은 작업 특성에 맞춤.** 이미지 OCR(`/import-party`)은 Opus 4.7 (정확도). 추천 시스템(`/analyze-party`, `/matchup-leadrec`, `/battle-advice`)은 Sonnet 4.6 (한국 SV 어휘 정확도 — Haiku는 종족·도구·기술 이름을 fabricate하는 사례가 잦았음). 임의 격하 금지지만 작업별 권장 모델은 위와 같다.
+- **AI 추천은 서버가 Anthropic API로 직접 호출한다.** `serializeForClaude`로 프롬프트 본문을 만들고 `ClaudeResponseSchema`로 구조화 응답을 받는다. 클립보드 paste 왕복 UX는 폐기됨.
 - **새 패키지 도입 전 사용자 승인.** 임의로 의존성 추가하지 않는다.
 - **데이터는 항상 PokeAPI 최신본에서 가져온다.** 한 글자도 손으로 입력하지 않는다.
 
@@ -38,7 +37,7 @@
 pokedex-agent/
 ├── .claude/                  컨텍스트·하드룰·데이터 임시 위치
 ├── apps/
-│   └── client/               React + Vite 웹앱 (스마트누오 클론 UI)
+│   └── client/               React + Vite 웹앱
 ├── packages/
 │   ├── pokedex-core/         결정론적 도메인 라이브러리 (데이터·공식·타입)
 │   └── data-fetchers/        PokeAPI 수집 스크립트
@@ -58,7 +57,7 @@ pokedex-agent/
 | Phase | 산출물                                | spec | plan |
 |-------|-------------------------------------|------|------|
 | 0     | 데이터 파운데이션 + 공식 라이브러리         | `docs/specs/2026-05-21-foundation-design.md` | `docs/plans/2026-05-21-phase-0-foundation.md` |
-| 1     | 스마트누오 클론 UI (4페이지)              | `docs/specs/2026-05-21-phase-1-client-ui-outline.md` (윤곽) | Phase 0 완료 후 작성 |
+| 1     | 웹앱 UI (4페이지)              | `docs/specs/2026-05-21-phase-1-client-ui-outline.md` (윤곽) | Phase 0 완료 후 작성 |
 | 2     | 파티 분석 AI (정적)                      | `docs/specs/2026-05-21-phase-2-party-analysis-outline.md` (윤곽) | Phase 1 완료 후 작성 |
 | 3     | 매치업 추천 AI                          | `docs/specs/2026-05-21-phase-3-matchup-leadrec-outline.md` (윤곽) | Phase 2 완료 후 작성 |
 | 4     | 실시간 배틀 의사결정 AI                   | `docs/specs/2026-05-21-phase-4-battle-decision-outline.md` (윤곽) | Phase 3 완료 후 작성 |

@@ -1,0 +1,2303 @@
+{
+  "source": "PokeAPI v2",
+  "generated_at_utc": "2026-05-21T00:00:00Z",
+  "count": 328,
+  "items": [
+    {
+      "id": 55,
+      "ko": "이펙트가드",
+      "en": "guard-spec",
+      "category": "stat-boosts",
+      "flavor_ko": null
+    },
+    {
+      "id": 56,
+      "ko": "크리티컬커터",
+      "en": "dire-hit",
+      "category": "stat-boosts",
+      "flavor_ko": null
+    },
+    {
+      "id": 57,
+      "ko": "플러스파워",
+      "en": "x-attack",
+      "category": "stat-boosts",
+      "flavor_ko": null
+    },
+    {
+      "id": 58,
+      "ko": "디펜드업",
+      "en": "x-defense",
+      "category": "stat-boosts",
+      "flavor_ko": null
+    },
+    {
+      "id": 59,
+      "ko": "스피드업",
+      "en": "x-speed",
+      "category": "stat-boosts",
+      "flavor_ko": null
+    },
+    {
+      "id": 60,
+      "ko": "잘-맞히기",
+      "en": "x-accuracy",
+      "category": "stat-boosts",
+      "flavor_ko": null
+    },
+    {
+      "id": 61,
+      "ko": "스페셜업",
+      "en": "x-sp-atk",
+      "category": "stat-boosts",
+      "flavor_ko": null
+    },
+    {
+      "id": 62,
+      "ko": "스페셜가드",
+      "en": "x-sp-def",
+      "category": "stat-boosts",
+      "flavor_ko": null
+    },
+    {
+      "id": 86,
+      "ko": "작은버섯",
+      "en": "tiny-mushroom",
+      "category": "loot",
+      "flavor_ko": null
+    },
+    {
+      "id": 87,
+      "ko": "큰버섯",
+      "en": "big-mushroom",
+      "category": "loot",
+      "flavor_ko": null
+    },
+    {
+      "id": 88,
+      "ko": "진주",
+      "en": "pearl",
+      "category": "loot",
+      "flavor_ko": null
+    },
+    {
+      "id": 89,
+      "ko": "큰진주",
+      "en": "big-pearl",
+      "category": "loot",
+      "flavor_ko": null
+    },
+    {
+      "id": 90,
+      "ko": "별의모래",
+      "en": "stardust",
+      "category": "loot",
+      "flavor_ko": null
+    },
+    {
+      "id": 91,
+      "ko": "별의조각",
+      "en": "star-piece",
+      "category": "loot",
+      "flavor_ko": null
+    },
+    {
+      "id": 92,
+      "ko": "금구슬",
+      "en": "nugget",
+      "category": "loot",
+      "flavor_ko": null
+    },
+    {
+      "id": 106,
+      "ko": "귀중한뼈",
+      "en": "rare-bone",
+      "category": "loot",
+      "flavor_ko": null
+    },
+    {
+      "id": 112,
+      "ko": "금강옥",
+      "en": "adamant-orb",
+      "category": "species-specific",
+      "flavor_ko": null
+    },
+    {
+      "id": 113,
+      "ko": "백옥",
+      "en": "lustrous-orb",
+      "category": "species-specific",
+      "flavor_ko": null
+    },
+    {
+      "id": 136,
+      "ko": "무화열매",
+      "en": "figy-berry",
+      "category": "picky-healing",
+      "flavor_ko": null
+    },
+    {
+      "id": 137,
+      "ko": "위키열매",
+      "en": "wiki-berry",
+      "category": "picky-healing",
+      "flavor_ko": null
+    },
+    {
+      "id": 138,
+      "ko": "마고열매",
+      "en": "mago-berry",
+      "category": "picky-healing",
+      "flavor_ko": null
+    },
+    {
+      "id": 139,
+      "ko": "아바열매",
+      "en": "aguav-berry",
+      "category": "picky-healing",
+      "flavor_ko": null
+    },
+    {
+      "id": 140,
+      "ko": "파야열매",
+      "en": "iapapa-berry",
+      "category": "picky-healing",
+      "flavor_ko": null
+    },
+    {
+      "id": 161,
+      "ko": "오카열매",
+      "en": "occa-berry",
+      "category": "type-protection",
+      "flavor_ko": null
+    },
+    {
+      "id": 162,
+      "ko": "꼬시개열매",
+      "en": "passho-berry",
+      "category": "type-protection",
+      "flavor_ko": null
+    },
+    {
+      "id": 163,
+      "ko": "초나열매",
+      "en": "wacan-berry",
+      "category": "type-protection",
+      "flavor_ko": null
+    },
+    {
+      "id": 164,
+      "ko": "린드열매",
+      "en": "rindo-berry",
+      "category": "type-protection",
+      "flavor_ko": null
+    },
+    {
+      "id": 165,
+      "ko": "플카열매",
+      "en": "yache-berry",
+      "category": "type-protection",
+      "flavor_ko": null
+    },
+    {
+      "id": 166,
+      "ko": "로플열매",
+      "en": "chople-berry",
+      "category": "type-protection",
+      "flavor_ko": null
+    },
+    {
+      "id": 167,
+      "ko": "으름열매",
+      "en": "kebia-berry",
+      "category": "type-protection",
+      "flavor_ko": null
+    },
+    {
+      "id": 168,
+      "ko": "슈캐열매",
+      "en": "shuca-berry",
+      "category": "type-protection",
+      "flavor_ko": null
+    },
+    {
+      "id": 169,
+      "ko": "바코열매",
+      "en": "coba-berry",
+      "category": "type-protection",
+      "flavor_ko": null
+    },
+    {
+      "id": 170,
+      "ko": "야파열매",
+      "en": "payapa-berry",
+      "category": "type-protection",
+      "flavor_ko": null
+    },
+    {
+      "id": 171,
+      "ko": "리체열매",
+      "en": "tanga-berry",
+      "category": "type-protection",
+      "flavor_ko": null
+    },
+    {
+      "id": 172,
+      "ko": "루미열매",
+      "en": "charti-berry",
+      "category": "type-protection",
+      "flavor_ko": null
+    },
+    {
+      "id": 173,
+      "ko": "수불열매",
+      "en": "kasib-berry",
+      "category": "type-protection",
+      "flavor_ko": null
+    },
+    {
+      "id": 174,
+      "ko": "하반열매",
+      "en": "haban-berry",
+      "category": "type-protection",
+      "flavor_ko": null
+    },
+    {
+      "id": 175,
+      "ko": "마코열매",
+      "en": "colbur-berry",
+      "category": "type-protection",
+      "flavor_ko": null
+    },
+    {
+      "id": 176,
+      "ko": "바리비열매",
+      "en": "babiri-berry",
+      "category": "type-protection",
+      "flavor_ko": null
+    },
+    {
+      "id": 177,
+      "ko": "카리열매",
+      "en": "chilan-berry",
+      "category": "type-protection",
+      "flavor_ko": null
+    },
+    {
+      "id": 178,
+      "ko": "치리열매",
+      "en": "liechi-berry",
+      "category": "in-a-pinch",
+      "flavor_ko": null
+    },
+    {
+      "id": 179,
+      "ko": "용아열매",
+      "en": "ganlon-berry",
+      "category": "in-a-pinch",
+      "flavor_ko": null
+    },
+    {
+      "id": 180,
+      "ko": "캄라열매",
+      "en": "salac-berry",
+      "category": "in-a-pinch",
+      "flavor_ko": null
+    },
+    {
+      "id": 181,
+      "ko": "야타비열매",
+      "en": "petaya-berry",
+      "category": "in-a-pinch",
+      "flavor_ko": null
+    },
+    {
+      "id": 182,
+      "ko": "규살열매",
+      "en": "apicot-berry",
+      "category": "in-a-pinch",
+      "flavor_ko": null
+    },
+    {
+      "id": 183,
+      "ko": "랑사열매",
+      "en": "lansat-berry",
+      "category": "in-a-pinch",
+      "flavor_ko": null
+    },
+    {
+      "id": 184,
+      "ko": "스타열매",
+      "en": "starf-berry",
+      "category": "in-a-pinch",
+      "flavor_ko": null
+    },
+    {
+      "id": 186,
+      "ko": "미클열매",
+      "en": "micle-berry",
+      "category": "in-a-pinch",
+      "flavor_ko": null
+    },
+    {
+      "id": 187,
+      "ko": "애슈열매",
+      "en": "custap-berry",
+      "category": "in-a-pinch",
+      "flavor_ko": null
+    },
+    {
+      "id": 190,
+      "ko": "반짝가루",
+      "en": "bright-powder",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 191,
+      "ko": "하양허브",
+      "en": "white-herb",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 192,
+      "ko": "교정깁스",
+      "en": "macho-brace",
+      "category": "effort-training",
+      "flavor_ko": null
+    },
+    {
+      "id": 193,
+      "ko": "학습장치",
+      "en": "exp-share",
+      "category": "training",
+      "flavor_ko": null
+    },
+    {
+      "id": 194,
+      "ko": "선제공격손톱",
+      "en": "quick-claw",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 195,
+      "ko": "평온의방울",
+      "en": "soothe-bell",
+      "category": "training",
+      "flavor_ko": null
+    },
+    {
+      "id": 196,
+      "ko": "멘탈허브",
+      "en": "mental-herb",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 197,
+      "ko": "구애머리띠",
+      "en": "choice-band",
+      "category": "choice",
+      "flavor_ko": null
+    },
+    {
+      "id": 198,
+      "ko": "왕의징표석",
+      "en": "kings-rock",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 199,
+      "ko": "은빛가루",
+      "en": "silver-powder",
+      "category": "type-enhancement",
+      "flavor_ko": null
+    },
+    {
+      "id": 200,
+      "ko": "부적금화",
+      "en": "amulet-coin",
+      "category": "training",
+      "flavor_ko": null
+    },
+    {
+      "id": 201,
+      "ko": "순결의부적",
+      "en": "cleanse-tag",
+      "category": "training",
+      "flavor_ko": null
+    },
+    {
+      "id": 202,
+      "ko": "마음의물방울",
+      "en": "soul-dew",
+      "category": "species-specific",
+      "flavor_ko": null
+    },
+    {
+      "id": 203,
+      "ko": "심해의이빨",
+      "en": "deep-sea-tooth",
+      "category": "species-specific",
+      "flavor_ko": null
+    },
+    {
+      "id": 204,
+      "ko": "심해의비늘",
+      "en": "deep-sea-scale",
+      "category": "species-specific",
+      "flavor_ko": null
+    },
+    {
+      "id": 205,
+      "ko": "연막탄",
+      "en": "smoke-ball",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 206,
+      "ko": "변함없는돌",
+      "en": "everstone",
+      "category": "training",
+      "flavor_ko": null
+    },
+    {
+      "id": 207,
+      "ko": "기합의머리띠",
+      "en": "focus-band",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 208,
+      "ko": "행복의알",
+      "en": "lucky-egg",
+      "category": "training",
+      "flavor_ko": null
+    },
+    {
+      "id": 209,
+      "ko": "초점렌즈",
+      "en": "scope-lens",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 210,
+      "ko": "금속코트",
+      "en": "metal-coat",
+      "category": "type-enhancement",
+      "flavor_ko": null
+    },
+    {
+      "id": 211,
+      "ko": "먹다남은음식",
+      "en": "leftovers",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 213,
+      "ko": "전기구슬",
+      "en": "light-ball",
+      "category": "species-specific",
+      "flavor_ko": null
+    },
+    {
+      "id": 214,
+      "ko": "부드러운모래",
+      "en": "soft-sand",
+      "category": "type-enhancement",
+      "flavor_ko": null
+    },
+    {
+      "id": 215,
+      "ko": "딱딱한돌",
+      "en": "hard-stone",
+      "category": "type-enhancement",
+      "flavor_ko": null
+    },
+    {
+      "id": 216,
+      "ko": "기적의씨",
+      "en": "miracle-seed",
+      "category": "type-enhancement",
+      "flavor_ko": null
+    },
+    {
+      "id": 217,
+      "ko": "검은안경",
+      "en": "black-glasses",
+      "category": "type-enhancement",
+      "flavor_ko": null
+    },
+    {
+      "id": 218,
+      "ko": "검은띠",
+      "en": "black-belt",
+      "category": "type-enhancement",
+      "flavor_ko": null
+    },
+    {
+      "id": 219,
+      "ko": "자석",
+      "en": "magnet",
+      "category": "type-enhancement",
+      "flavor_ko": null
+    },
+    {
+      "id": 220,
+      "ko": "신비의물방울",
+      "en": "mystic-water",
+      "category": "type-enhancement",
+      "flavor_ko": null
+    },
+    {
+      "id": 221,
+      "ko": "예리한부리",
+      "en": "sharp-beak",
+      "category": "type-enhancement",
+      "flavor_ko": null
+    },
+    {
+      "id": 222,
+      "ko": "독바늘",
+      "en": "poison-barb",
+      "category": "type-enhancement",
+      "flavor_ko": null
+    },
+    {
+      "id": 223,
+      "ko": "녹지않는얼음",
+      "en": "never-melt-ice",
+      "category": "type-enhancement",
+      "flavor_ko": null
+    },
+    {
+      "id": 224,
+      "ko": "저주의부적",
+      "en": "spell-tag",
+      "category": "type-enhancement",
+      "flavor_ko": null
+    },
+    {
+      "id": 225,
+      "ko": "휘어진스푼",
+      "en": "twisted-spoon",
+      "category": "type-enhancement",
+      "flavor_ko": null
+    },
+    {
+      "id": 226,
+      "ko": "목탄",
+      "en": "charcoal",
+      "category": "type-enhancement",
+      "flavor_ko": null
+    },
+    {
+      "id": 227,
+      "ko": "용의이빨",
+      "en": "dragon-fang",
+      "category": "type-enhancement",
+      "flavor_ko": null
+    },
+    {
+      "id": 228,
+      "ko": "실크스카프",
+      "en": "silk-scarf",
+      "category": "type-enhancement",
+      "flavor_ko": null
+    },
+    {
+      "id": 230,
+      "ko": "조개껍질방울",
+      "en": "shell-bell",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 231,
+      "ko": "바닷물향로",
+      "en": "sea-incense",
+      "category": "type-enhancement",
+      "flavor_ko": null
+    },
+    {
+      "id": 232,
+      "ko": "무사태평향로",
+      "en": "lax-incense",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 233,
+      "ko": "럭키펀치",
+      "en": "lucky-punch",
+      "category": "species-specific",
+      "flavor_ko": null
+    },
+    {
+      "id": 234,
+      "ko": "금속파우더",
+      "en": "metal-powder",
+      "category": "species-specific",
+      "flavor_ko": null
+    },
+    {
+      "id": 235,
+      "ko": "굵은뼈",
+      "en": "thick-club",
+      "category": "species-specific",
+      "flavor_ko": null
+    },
+    {
+      "id": 236,
+      "ko": "대파",
+      "en": "stick",
+      "category": "species-specific",
+      "flavor_ko": null
+    },
+    {
+      "id": 242,
+      "ko": "광각렌즈",
+      "en": "wide-lens",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 243,
+      "ko": "힘의머리띠",
+      "en": "muscle-band",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 244,
+      "ko": "박식안경",
+      "en": "wise-glasses",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 245,
+      "ko": "달인의띠",
+      "en": "expert-belt",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 246,
+      "ko": "빛의점토",
+      "en": "light-clay",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 247,
+      "ko": "생명의구슬",
+      "en": "life-orb",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 248,
+      "ko": "파워풀허브",
+      "en": "power-herb",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 249,
+      "ko": "맹독구슬",
+      "en": "toxic-orb",
+      "category": "bad-held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 250,
+      "ko": "화염구슬",
+      "en": "flame-orb",
+      "category": "bad-held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 251,
+      "ko": "스피드파우더",
+      "en": "quick-powder",
+      "category": "species-specific",
+      "flavor_ko": null
+    },
+    {
+      "id": 252,
+      "ko": "기합의띠",
+      "en": "focus-sash",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 253,
+      "ko": "포커스렌즈",
+      "en": "zoom-lens",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 254,
+      "ko": "메트로놈",
+      "en": "metronome",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 255,
+      "ko": "검은철구",
+      "en": "iron-ball",
+      "category": "bad-held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 256,
+      "ko": "느림보꼬리",
+      "en": "lagging-tail",
+      "category": "bad-held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 257,
+      "ko": "빨간실",
+      "en": "destiny-knot",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 258,
+      "ko": "검은진흙",
+      "en": "black-sludge",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 259,
+      "ko": "차가운바위",
+      "en": "icy-rock",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 260,
+      "ko": "보송보송바위",
+      "en": "smooth-rock",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 261,
+      "ko": "뜨거운바위",
+      "en": "heat-rock",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 262,
+      "ko": "축축한바위",
+      "en": "damp-rock",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 263,
+      "ko": "끈기갈고리손톱",
+      "en": "grip-claw",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 264,
+      "ko": "구애스카프",
+      "en": "choice-scarf",
+      "category": "choice",
+      "flavor_ko": null
+    },
+    {
+      "id": 265,
+      "ko": "끈적끈적바늘",
+      "en": "sticky-barb",
+      "category": "bad-held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 266,
+      "ko": "파워리스트",
+      "en": "power-bracer",
+      "category": "effort-training",
+      "flavor_ko": null
+    },
+    {
+      "id": 267,
+      "ko": "파워벨트",
+      "en": "power-belt",
+      "category": "effort-training",
+      "flavor_ko": null
+    },
+    {
+      "id": 268,
+      "ko": "파워렌즈",
+      "en": "power-lens",
+      "category": "effort-training",
+      "flavor_ko": null
+    },
+    {
+      "id": 269,
+      "ko": "파워밴드",
+      "en": "power-band",
+      "category": "effort-training",
+      "flavor_ko": null
+    },
+    {
+      "id": 270,
+      "ko": "파워앵클릿",
+      "en": "power-anklet",
+      "category": "effort-training",
+      "flavor_ko": null
+    },
+    {
+      "id": 271,
+      "ko": "파워웨이트",
+      "en": "power-weight",
+      "category": "effort-training",
+      "flavor_ko": null
+    },
+    {
+      "id": 272,
+      "ko": "아름다운허물",
+      "en": "shed-shell",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 273,
+      "ko": "큰뿌리",
+      "en": "big-root",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 274,
+      "ko": "구애안경",
+      "en": "choice-specs",
+      "category": "choice",
+      "flavor_ko": null
+    },
+    {
+      "id": 275,
+      "ko": "불구슬플레이트",
+      "en": "flame-plate",
+      "category": "plates",
+      "flavor_ko": null
+    },
+    {
+      "id": 276,
+      "ko": "물방울플레이트",
+      "en": "splash-plate",
+      "category": "plates",
+      "flavor_ko": null
+    },
+    {
+      "id": 277,
+      "ko": "우뢰플레이트",
+      "en": "zap-plate",
+      "category": "plates",
+      "flavor_ko": null
+    },
+    {
+      "id": 278,
+      "ko": "초록플레이트",
+      "en": "meadow-plate",
+      "category": "plates",
+      "flavor_ko": null
+    },
+    {
+      "id": 279,
+      "ko": "고드름플레이트",
+      "en": "icicle-plate",
+      "category": "plates",
+      "flavor_ko": null
+    },
+    {
+      "id": 280,
+      "ko": "주먹플레이트",
+      "en": "fist-plate",
+      "category": "plates",
+      "flavor_ko": null
+    },
+    {
+      "id": 281,
+      "ko": "맹독플레이트",
+      "en": "toxic-plate",
+      "category": "plates",
+      "flavor_ko": null
+    },
+    {
+      "id": 282,
+      "ko": "대지플레이트",
+      "en": "earth-plate",
+      "category": "plates",
+      "flavor_ko": null
+    },
+    {
+      "id": 283,
+      "ko": "푸른하늘플레이트",
+      "en": "sky-plate",
+      "category": "plates",
+      "flavor_ko": null
+    },
+    {
+      "id": 284,
+      "ko": "이상한플레이트",
+      "en": "mind-plate",
+      "category": "plates",
+      "flavor_ko": null
+    },
+    {
+      "id": 285,
+      "ko": "비단벌레플레이트",
+      "en": "insect-plate",
+      "category": "plates",
+      "flavor_ko": null
+    },
+    {
+      "id": 286,
+      "ko": "암석플레이트",
+      "en": "stone-plate",
+      "category": "plates",
+      "flavor_ko": null
+    },
+    {
+      "id": 287,
+      "ko": "원령플레이트",
+      "en": "spooky-plate",
+      "category": "plates",
+      "flavor_ko": null
+    },
+    {
+      "id": 288,
+      "ko": "용의플레이트",
+      "en": "draco-plate",
+      "category": "plates",
+      "flavor_ko": null
+    },
+    {
+      "id": 289,
+      "ko": "공포플레이트",
+      "en": "dread-plate",
+      "category": "plates",
+      "flavor_ko": null
+    },
+    {
+      "id": 290,
+      "ko": "강철플레이트",
+      "en": "iron-plate",
+      "category": "plates",
+      "flavor_ko": null
+    },
+    {
+      "id": 291,
+      "ko": "괴상한향로",
+      "en": "odd-incense",
+      "category": "type-enhancement",
+      "flavor_ko": null
+    },
+    {
+      "id": 292,
+      "ko": "암석향로",
+      "en": "rock-incense",
+      "category": "type-enhancement",
+      "flavor_ko": null
+    },
+    {
+      "id": 293,
+      "ko": "만복향로",
+      "en": "full-incense",
+      "category": "bad-held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 294,
+      "ko": "잔물결향로",
+      "en": "wave-incense",
+      "category": "type-enhancement",
+      "flavor_ko": null
+    },
+    {
+      "id": 295,
+      "ko": "꽃향로",
+      "en": "rose-incense",
+      "category": "type-enhancement",
+      "flavor_ko": null
+    },
+    {
+      "id": 296,
+      "ko": "행운의향로",
+      "en": "luck-incense",
+      "category": "training",
+      "flavor_ko": null
+    },
+    {
+      "id": 297,
+      "ko": "순결의향로",
+      "en": "pure-incense",
+      "category": "training",
+      "flavor_ko": null
+    },
+    {
+      "id": 303,
+      "ko": "예리한손톱",
+      "en": "razor-claw",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 304,
+      "ko": "예리한이빨",
+      "en": "razor-fang",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 442,
+      "ko": "백금옥",
+      "en": "griseous-orb",
+      "category": "species-specific",
+      "flavor_ko": null
+    },
+    {
+      "id": 563,
+      "ko": "아쿠아카세트",
+      "en": "douse-drive",
+      "category": "species-specific",
+      "flavor_ko": null
+    },
+    {
+      "id": 564,
+      "ko": "번개카세트",
+      "en": "shock-drive",
+      "category": "species-specific",
+      "flavor_ko": null
+    },
+    {
+      "id": 565,
+      "ko": "블레이즈카세트",
+      "en": "burn-drive",
+      "category": "species-specific",
+      "flavor_ko": null
+    },
+    {
+      "id": 566,
+      "ko": "프리즈카세트",
+      "en": "chill-drive",
+      "category": "species-specific",
+      "flavor_ko": null
+    },
+    {
+      "id": 568,
+      "ko": "첫메일",
+      "en": "greet-mail",
+      "category": "all-mail",
+      "flavor_ko": null
+    },
+    {
+      "id": 569,
+      "ko": "애호메일",
+      "en": "favored-mail",
+      "category": "all-mail",
+      "flavor_ko": null
+    },
+    {
+      "id": 570,
+      "ko": "권유메일",
+      "en": "rsvp-mail",
+      "category": "all-mail",
+      "flavor_ko": null
+    },
+    {
+      "id": 571,
+      "ko": "감사메일",
+      "en": "thanks-mail",
+      "category": "all-mail",
+      "flavor_ko": null
+    },
+    {
+      "id": 572,
+      "ko": "질문메일",
+      "en": "inquiry-mail",
+      "category": "all-mail",
+      "flavor_ko": null
+    },
+    {
+      "id": 573,
+      "ko": "추천메일",
+      "en": "like-mail",
+      "category": "all-mail",
+      "flavor_ko": null
+    },
+    {
+      "id": 574,
+      "ko": "답장메일",
+      "en": "reply-mail",
+      "category": "all-mail",
+      "flavor_ko": null
+    },
+    {
+      "id": 575,
+      "ko": "브리지메일S",
+      "en": "bridge-mail-s",
+      "category": "all-mail",
+      "flavor_ko": null
+    },
+    {
+      "id": 576,
+      "ko": "브리지메일M",
+      "en": "bridge-mail-d",
+      "category": "all-mail",
+      "flavor_ko": null
+    },
+    {
+      "id": 577,
+      "ko": "브리지메일C",
+      "en": "bridge-mail-t",
+      "category": "all-mail",
+      "flavor_ko": null
+    },
+    {
+      "id": 578,
+      "ko": "브리지메일V",
+      "en": "bridge-mail-v",
+      "category": "all-mail",
+      "flavor_ko": null
+    },
+    {
+      "id": 579,
+      "ko": "브리지메일W",
+      "en": "bridge-mail-m",
+      "category": "all-mail",
+      "flavor_ko": null
+    },
+    {
+      "id": 581,
+      "ko": "진화의휘석",
+      "en": "eviolite",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 582,
+      "ko": "가벼운돌",
+      "en": "float-stone",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 583,
+      "ko": "울퉁불퉁멧",
+      "en": "rocky-helmet",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 584,
+      "ko": "풍선",
+      "en": "air-balloon",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 585,
+      "ko": "레드카드",
+      "en": "red-card",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 586,
+      "ko": "겨냥표적",
+      "en": "ring-target",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 587,
+      "ko": "조임밴드",
+      "en": "binding-band",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 588,
+      "ko": "구근",
+      "en": "absorb-bulb",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 589,
+      "ko": "충전지",
+      "en": "cell-battery",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 590,
+      "ko": "탈출버튼",
+      "en": "eject-button",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 612,
+      "ko": "고운날개",
+      "en": "pretty-wing",
+      "category": "loot",
+      "flavor_ko": null
+    },
+    {
+      "id": 616,
+      "ko": "딜구슬",
+      "en": "pass-orb",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 621,
+      "ko": "향기버섯",
+      "en": "balm-mushroom",
+      "category": "loot",
+      "flavor_ko": null
+    },
+    {
+      "id": 622,
+      "ko": "큰금구슬",
+      "en": "big-nugget",
+      "category": "loot",
+      "flavor_ko": null
+    },
+    {
+      "id": 623,
+      "ko": "경단진주",
+      "en": "pearl-string",
+      "category": "loot",
+      "flavor_ko": null
+    },
+    {
+      "id": 624,
+      "ko": "혜성조각",
+      "en": "comet-shard",
+      "category": "loot",
+      "flavor_ko": null
+    },
+    {
+      "id": 625,
+      "ko": "고대의동화",
+      "en": "relic-copper",
+      "category": "loot",
+      "flavor_ko": null
+    },
+    {
+      "id": 626,
+      "ko": "고대의은화",
+      "en": "relic-silver",
+      "category": "loot",
+      "flavor_ko": null
+    },
+    {
+      "id": 627,
+      "ko": "고대의금화",
+      "en": "relic-gold",
+      "category": "loot",
+      "flavor_ko": null
+    },
+    {
+      "id": 628,
+      "ko": "고대의항아리",
+      "en": "relic-vase",
+      "category": "loot",
+      "flavor_ko": null
+    },
+    {
+      "id": 629,
+      "ko": "고대의팔찌",
+      "en": "relic-band",
+      "category": "loot",
+      "flavor_ko": null
+    },
+    {
+      "id": 630,
+      "ko": "고대의석상",
+      "en": "relic-statue",
+      "category": "loot",
+      "flavor_ko": null
+    },
+    {
+      "id": 631,
+      "ko": "고대의왕관",
+      "en": "relic-crown",
+      "category": "loot",
+      "flavor_ko": null
+    },
+    {
+      "id": 682,
+      "ko": "약점보험",
+      "en": "weakness-policy",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 683,
+      "ko": "돌격조끼",
+      "en": "assault-vest",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 684,
+      "ko": "정령플레이트",
+      "en": "pixie-plate",
+      "category": "plates",
+      "flavor_ko": null
+    },
+    {
+      "id": 688,
+      "ko": "빛이끼",
+      "en": "luminous-moss",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 689,
+      "ko": "눈덩이",
+      "en": "snowball",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 690,
+      "ko": "방진고글",
+      "en": "safety-goggles",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 695,
+      "ko": "팬텀나이트",
+      "en": "gengarite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 696,
+      "ko": "가디안나이트",
+      "en": "gardevoirite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 697,
+      "ko": "전룡나이트",
+      "en": "ampharosite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 698,
+      "ko": "이상해꽃나이트",
+      "en": "venusaurite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 699,
+      "ko": "리자몽나이트X",
+      "en": "charizardite-x",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 700,
+      "ko": "거북왕나이트",
+      "en": "blastoisinite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 701,
+      "ko": "뮤츠나이트X",
+      "en": "mewtwonite-x",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 702,
+      "ko": "뮤츠나이트Y",
+      "en": "mewtwonite-y",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 703,
+      "ko": "번치코나이트",
+      "en": "blazikenite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 704,
+      "ko": "요가램나이트",
+      "en": "medichamite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 705,
+      "ko": "헬가나이트",
+      "en": "houndoominite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 706,
+      "ko": "보스로라나이트",
+      "en": "aggronite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 707,
+      "ko": "다크펫나이트",
+      "en": "banettite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 708,
+      "ko": "마기라스나이트",
+      "en": "tyranitarite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 709,
+      "ko": "핫삼나이트",
+      "en": "scizorite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 710,
+      "ko": "쁘사이저나이트",
+      "en": "pinsirite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 711,
+      "ko": "프테라나이트",
+      "en": "aerodactylite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 712,
+      "ko": "루카리오나이트",
+      "en": "lucarionite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 713,
+      "ko": "눈설왕나이트",
+      "en": "abomasite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 714,
+      "ko": "캥카나이트",
+      "en": "kangaskhanite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 715,
+      "ko": "갸라도스나이트",
+      "en": "gyaradosite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 716,
+      "ko": "앱솔나이트",
+      "en": "absolite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 717,
+      "ko": "리자몽나이트Y",
+      "en": "charizardite-y",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 718,
+      "ko": "후디나이트",
+      "en": "alakazite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 719,
+      "ko": "헤라크로스나이트",
+      "en": "heracronite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 720,
+      "ko": "입치트나이트",
+      "en": "mawilite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 721,
+      "ko": "썬더볼트나이트",
+      "en": "manectite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 722,
+      "ko": "한카리아스나이트",
+      "en": "garchompite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 723,
+      "ko": "로셀열매",
+      "en": "roseli-berry",
+      "category": "type-protection",
+      "flavor_ko": null
+    },
+    {
+      "id": 726,
+      "ko": "바겐세일티켓",
+      "en": "discount-coupon",
+      "category": "loot",
+      "flavor_ko": null
+    },
+    {
+      "id": 727,
+      "ko": "이상한장식품",
+      "en": "strange-souvenir",
+      "category": "loot",
+      "flavor_ko": null
+    },
+    {
+      "id": 760,
+      "ko": "라티아스나이트",
+      "en": "latiasite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 761,
+      "ko": "라티오스나이트",
+      "en": "latiosite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 793,
+      "ko": "대짱이나이트",
+      "en": "swampertite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 794,
+      "ko": "나무킹나이트",
+      "en": "sceptilite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 795,
+      "ko": "깜까미나이트",
+      "en": "sablenite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 796,
+      "ko": "파비코리나이트",
+      "en": "altarianite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 797,
+      "ko": "엘레이드나이트",
+      "en": "galladite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 798,
+      "ko": "다부니나이트",
+      "en": "audinite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 799,
+      "ko": "메타그로스나이트",
+      "en": "metagrossite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 800,
+      "ko": "샤크니아나이트",
+      "en": "sharpedonite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 801,
+      "ko": "야도란나이트",
+      "en": "slowbronite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 802,
+      "ko": "강철톤나이트",
+      "en": "steelixite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 803,
+      "ko": "피죤투나이트",
+      "en": "pidgeotite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 804,
+      "ko": "얼음귀신나이트",
+      "en": "glalitite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 805,
+      "ko": "디안시나이트",
+      "en": "diancite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 808,
+      "ko": "폭타나이트",
+      "en": "cameruptite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 809,
+      "ko": "이어롭나이트",
+      "en": "lopunnite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 810,
+      "ko": "보만다나이트",
+      "en": "salamencite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 811,
+      "ko": "독침붕나이트",
+      "en": "beedrillite",
+      "category": "mega-stones",
+      "flavor_ko": null
+    },
+    {
+      "id": 817,
+      "ko": "노말Z",
+      "en": "normalium-z--held",
+      "category": "z-crystals",
+      "flavor_ko": null
+    },
+    {
+      "id": 818,
+      "ko": "불꽃Z",
+      "en": "firium-z--held",
+      "category": "z-crystals",
+      "flavor_ko": null
+    },
+    {
+      "id": 819,
+      "ko": "물Z",
+      "en": "waterium-z--held",
+      "category": "z-crystals",
+      "flavor_ko": null
+    },
+    {
+      "id": 820,
+      "ko": "전기Z",
+      "en": "electrium-z--held",
+      "category": "z-crystals",
+      "flavor_ko": null
+    },
+    {
+      "id": 821,
+      "ko": "풀Z",
+      "en": "grassium-z--held",
+      "category": "z-crystals",
+      "flavor_ko": null
+    },
+    {
+      "id": 822,
+      "ko": "얼음Z",
+      "en": "icium-z--held",
+      "category": "z-crystals",
+      "flavor_ko": null
+    },
+    {
+      "id": 823,
+      "ko": "격투Z",
+      "en": "fightinium-z--held",
+      "category": "z-crystals",
+      "flavor_ko": null
+    },
+    {
+      "id": 824,
+      "ko": "독Z",
+      "en": "poisonium-z--held",
+      "category": "z-crystals",
+      "flavor_ko": null
+    },
+    {
+      "id": 825,
+      "ko": "땅Z",
+      "en": "groundium-z--held",
+      "category": "z-crystals",
+      "flavor_ko": null
+    },
+    {
+      "id": 826,
+      "ko": "비행Z",
+      "en": "flyinium-z--held",
+      "category": "z-crystals",
+      "flavor_ko": null
+    },
+    {
+      "id": 827,
+      "ko": "에스퍼Z",
+      "en": "psychium-z--held",
+      "category": "z-crystals",
+      "flavor_ko": null
+    },
+    {
+      "id": 828,
+      "ko": "벌레Z",
+      "en": "buginium-z--held",
+      "category": "z-crystals",
+      "flavor_ko": null
+    },
+    {
+      "id": 829,
+      "ko": "바위Z",
+      "en": "rockium-z--held",
+      "category": "z-crystals",
+      "flavor_ko": null
+    },
+    {
+      "id": 830,
+      "ko": "고스트Z",
+      "en": "ghostium-z--held",
+      "category": "z-crystals",
+      "flavor_ko": null
+    },
+    {
+      "id": 831,
+      "ko": "드래곤Z",
+      "en": "dragonium-z--held",
+      "category": "z-crystals",
+      "flavor_ko": null
+    },
+    {
+      "id": 832,
+      "ko": "악Z",
+      "en": "darkinium-z--held",
+      "category": "z-crystals",
+      "flavor_ko": null
+    },
+    {
+      "id": 833,
+      "ko": "강철Z",
+      "en": "steelium-z--held",
+      "category": "z-crystals",
+      "flavor_ko": null
+    },
+    {
+      "id": 834,
+      "ko": "페어리Z",
+      "en": "fairium-z--held",
+      "category": "z-crystals",
+      "flavor_ko": null
+    },
+    {
+      "id": 835,
+      "ko": "피카츄Z",
+      "en": "pikanium-z--held",
+      "category": "z-crystals",
+      "flavor_ko": null
+    },
+    {
+      "id": 836,
+      "ko": "은왕관",
+      "en": "bottle-cap",
+      "category": "loot",
+      "flavor_ko": null
+    },
+    {
+      "id": 837,
+      "ko": "금왕관",
+      "en": "gold-bottle-cap",
+      "category": "loot",
+      "flavor_ko": null
+    },
+    {
+      "id": 839,
+      "ko": "모크나이퍼Z",
+      "en": "decidium-z--held",
+      "category": "z-crystals",
+      "flavor_ko": null
+    },
+    {
+      "id": 840,
+      "ko": "어흥염Z",
+      "en": "incinium-z--held",
+      "category": "z-crystals",
+      "flavor_ko": null
+    },
+    {
+      "id": 841,
+      "ko": "누리레느Z",
+      "en": "primarium-z--held",
+      "category": "z-crystals",
+      "flavor_ko": null
+    },
+    {
+      "id": 842,
+      "ko": "카푸Z",
+      "en": "tapunium-z--held",
+      "category": "z-crystals",
+      "flavor_ko": null
+    },
+    {
+      "id": 843,
+      "ko": "마샤도Z",
+      "en": "marshadium-z--held",
+      "category": "z-crystals",
+      "flavor_ko": null
+    },
+    {
+      "id": 844,
+      "ko": "알로라이Z",
+      "en": "aloraichium-z--held",
+      "category": "z-crystals",
+      "flavor_ko": null
+    },
+    {
+      "id": 845,
+      "ko": "잠만보Z",
+      "en": "snorlium-z--held",
+      "category": "z-crystals",
+      "flavor_ko": null
+    },
+    {
+      "id": 846,
+      "ko": "이브이Z",
+      "en": "eevium-z--held",
+      "category": "z-crystals",
+      "flavor_ko": null
+    },
+    {
+      "id": 847,
+      "ko": "뮤Z",
+      "en": "mewnium-z--held",
+      "category": "z-crystals",
+      "flavor_ko": null
+    },
+    {
+      "id": 877,
+      "ko": "지우피카Z",
+      "en": "pikashunium-z--held",
+      "category": "z-crystals",
+      "flavor_ko": null
+    },
+    {
+      "id": 883,
+      "ko": "주눅구슬",
+      "en": "adrenaline-orb",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 889,
+      "ko": "다홍꿀",
+      "en": "red-nectar",
+      "category": "species-specific",
+      "flavor_ko": null
+    },
+    {
+      "id": 890,
+      "ko": "진노랑꿀",
+      "en": "yellow-nectar",
+      "category": "species-specific",
+      "flavor_ko": null
+    },
+    {
+      "id": 891,
+      "ko": "연분홍꿀",
+      "en": "pink-nectar",
+      "category": "species-specific",
+      "flavor_ko": null
+    },
+    {
+      "id": 892,
+      "ko": "보라꿀",
+      "en": "purple-nectar",
+      "category": "species-specific",
+      "flavor_ko": null
+    },
+    {
+      "id": 896,
+      "ko": "그라운드코트",
+      "en": "terrain-extender",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 897,
+      "ko": "방호패드",
+      "en": "protective-pads",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 898,
+      "ko": "일렉트릭시드",
+      "en": "electric-seed",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 899,
+      "ko": "사이코시드",
+      "en": "psychic-seed",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 900,
+      "ko": "미스트시드",
+      "en": "misty-seed",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 901,
+      "ko": "그래스시드",
+      "en": "grassy-seed",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 902,
+      "ko": "파이팅메모리",
+      "en": "fighting-memory",
+      "category": "memories",
+      "flavor_ko": null
+    },
+    {
+      "id": 903,
+      "ko": "플라잉메모리",
+      "en": "flying-memory",
+      "category": "memories",
+      "flavor_ko": null
+    },
+    {
+      "id": 904,
+      "ko": "포이즌메모리",
+      "en": "poison-memory",
+      "category": "memories",
+      "flavor_ko": null
+    },
+    {
+      "id": 905,
+      "ko": "그라운드메모리",
+      "en": "ground-memory",
+      "category": "memories",
+      "flavor_ko": null
+    },
+    {
+      "id": 906,
+      "ko": "락메모리",
+      "en": "rock-memory",
+      "category": "memories",
+      "flavor_ko": null
+    },
+    {
+      "id": 907,
+      "ko": "버그메모리",
+      "en": "bug-memory",
+      "category": "memories",
+      "flavor_ko": null
+    },
+    {
+      "id": 908,
+      "ko": "고스트메모리",
+      "en": "ghost-memory",
+      "category": "memories",
+      "flavor_ko": null
+    },
+    {
+      "id": 909,
+      "ko": "스틸메모리",
+      "en": "steel-memory",
+      "category": "memories",
+      "flavor_ko": null
+    },
+    {
+      "id": 910,
+      "ko": "파이어메모리",
+      "en": "fire-memory",
+      "category": "memories",
+      "flavor_ko": null
+    },
+    {
+      "id": 911,
+      "ko": "워터메모리",
+      "en": "water-memory",
+      "category": "memories",
+      "flavor_ko": null
+    },
+    {
+      "id": 912,
+      "ko": "그래스메모리",
+      "en": "grass-memory",
+      "category": "memories",
+      "flavor_ko": null
+    },
+    {
+      "id": 913,
+      "ko": "일렉트릭메모리",
+      "en": "electric-memory",
+      "category": "memories",
+      "flavor_ko": null
+    },
+    {
+      "id": 914,
+      "ko": "사이킥메모리",
+      "en": "psychic-memory",
+      "category": "memories",
+      "flavor_ko": null
+    },
+    {
+      "id": 915,
+      "ko": "아이스메모리",
+      "en": "ice-memory",
+      "category": "memories",
+      "flavor_ko": null
+    },
+    {
+      "id": 916,
+      "ko": "드래곤메모리",
+      "en": "dragon-memory",
+      "category": "memories",
+      "flavor_ko": null
+    },
+    {
+      "id": 917,
+      "ko": "다크메모리",
+      "en": "dark-memory",
+      "category": "memories",
+      "flavor_ko": null
+    },
+    {
+      "id": 918,
+      "ko": "페어리메모리",
+      "en": "fairy-memory",
+      "category": "memories",
+      "flavor_ko": null
+    },
+    {
+      "id": 1024,
+      "ko": "늘어난용수철",
+      "en": "stretchy-spring",
+      "category": "loot",
+      "flavor_ko": null
+    },
+    {
+      "id": 1025,
+      "ko": "초크돌",
+      "en": "chalky-stone",
+      "category": "loot",
+      "flavor_ko": null
+    },
+    {
+      "id": 1026,
+      "ko": "유리구슬",
+      "en": "marble",
+      "category": "loot",
+      "flavor_ko": null
+    },
+    {
+      "id": 1027,
+      "ko": "한쪽귀고리",
+      "en": "lone-earring",
+      "category": "loot",
+      "flavor_ko": null
+    },
+    {
+      "id": 1028,
+      "ko": "바닷가유리",
+      "en": "beach-glass",
+      "category": "loot",
+      "flavor_ko": null
+    },
+    {
+      "id": 1029,
+      "ko": "금빛잎사귀",
+      "en": "gold-leaf",
+      "category": "loot",
+      "flavor_ko": null
+    },
+    {
+      "id": 1030,
+      "ko": "은빛잎사귀",
+      "en": "silver-leaf",
+      "category": "loot",
+      "flavor_ko": null
+    },
+    {
+      "id": 1031,
+      "ko": "반짝반짝경단",
+      "en": "polished-mud-ball",
+      "category": "loot",
+      "flavor_ko": null
+    },
+    {
+      "id": 1032,
+      "ko": "트로피컬조개껍질",
+      "en": "tropical-shell",
+      "category": "loot",
+      "flavor_ko": null
+    },
+    {
+      "id": 1033,
+      "ko": "나뭇잎편지",
+      "en": "leaf-letter--pikachu",
+      "category": "loot",
+      "flavor_ko": null
+    },
+    {
+      "id": 1034,
+      "ko": "나뭇잎편지",
+      "en": "leaf-letter--eevee",
+      "category": "loot",
+      "flavor_ko": null
+    },
+    {
+      "id": 1035,
+      "ko": "작은꽃다발",
+      "en": "small-bouquet",
+      "category": "loot",
+      "flavor_ko": null
+    },
+    {
+      "id": 1161,
+      "ko": "녹슨검",
+      "en": "rusted-sword",
+      "category": "species-specific",
+      "flavor_ko": null
+    },
+    {
+      "id": 1162,
+      "ko": "녹슨방패",
+      "en": "rusted-shield",
+      "category": "species-specific",
+      "flavor_ko": null
+    },
+    {
+      "id": 1176,
+      "ko": "목스프레이",
+      "en": "throat-spray",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 1177,
+      "ko": "탈출팩",
+      "en": "eject-pack",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 1178,
+      "ko": "통굽부츠",
+      "en": "heavy-duty-boots",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 1179,
+      "ko": "허탕보험",
+      "en": "blunder-policy",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 1180,
+      "ko": "룸서비스",
+      "en": "room-service",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 1181,
+      "ko": "만능우산",
+      "en": "utility-umbrella",
+      "category": "held-items",
+      "flavor_ko": null
+    },
+    {
+      "id": 1631,
+      "ko": "다이버섯",
+      "en": "max-mushrooms",
+      "category": "stat-boosts",
+      "flavor_ko": null
+    }
+  ]
+}
