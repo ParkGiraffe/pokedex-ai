@@ -21,7 +21,8 @@ export const NumberField = ({ value, onValueChange, min, max, step, className }:
       onValueChange(Number.isNaN(next) ? 0 : next);
     }}
     className={cn(
-      "h-9 w-full rounded-md border border-neutral-700 bg-neutral-900 px-3 text-sm text-neutral-100 focus:border-emerald-500 focus:outline-none",
+      "h-9 w-full rounded-md border border-border bg-input px-2 text-center text-sm text-foreground transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring",
+      "[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
       className
     )}
   />
