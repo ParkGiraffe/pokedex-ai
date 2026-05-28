@@ -173,6 +173,20 @@ export const BattlePage = () => {
 
             <div className="flex flex-col items-center justify-center gap-2 px-1">
               <span className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">vs</span>
+              {advice && (
+                <span
+                  className={cn(
+                    "whitespace-nowrap rounded-md px-2 py-0.5 text-xs font-medium",
+                    advice.firstMove === "선공"
+                      ? "bg-success/15 text-success"
+                      : advice.firstMove === "후공"
+                        ? "bg-destructive/15 text-destructive"
+                        : "bg-muted text-muted-foreground"
+                  )}
+                >
+                  {advice.firstMove === "동속" ? "동속 (50%)" : `내 ${advice.firstMove}`}
+                </span>
+              )}
               <div className="h-full w-px bg-border" />
             </div>
 
@@ -250,7 +264,9 @@ export const BattlePage = () => {
           ) : (
             <p className="text-sm text-muted-foreground">상대 포켓몬을 정확히 입력하라.</p>
           )}
-          <p className="text-xs text-muted-foreground">KO 확률은 16롤 기준, 상대 0투자 중립 가정이다.</p>
+          <p className="text-xs text-muted-foreground">
+            KO 확률은 16롤 기준. 데미지·선공 판정 모두 상대 노력치 0투자 중립 가정이다. 상대가 스피드·방어에 투자하면 결과가 달라질 수 있다.
+          </p>
         </Card>
       )}
 
