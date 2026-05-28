@@ -17,6 +17,9 @@ type BattleTrackerState = {
   opponentRanks: RankBlock; // 상대 랭크.
   myStatus: StatusCondition | ""; // 화상이면 물리 공격 ÷2, 마비면 스피드 ÷2.
   opponentStatus: StatusCondition | "";
+  // 배틀에 살아있는(교체 가능한) 내 포켓몬 종족. 빈 배열이면 파티 전체가 살아있는 것으로 본다.
+  // 기절 시 토글을 꺼서 액티브·교체 후보에서 제외한다 (1~6마리 자유).
+  rosterSpecies: string[];
   setMyActiveIndex: (index: number) => void;
   setOpponentSpecies: (species: string) => void;
   setOpponentHpPercent: (hpPercent: number) => void;
@@ -29,6 +32,7 @@ type BattleTrackerState = {
   setOpponentRank: (stat: keyof RankBlock, value: number) => void;
   setMyStatus: (status: StatusCondition | "") => void;
   setOpponentStatus: (status: StatusCondition | "") => void;
+  setRosterSpecies: (species: string[]) => void;
 };
 
 const clampRank = (value: number): number => Math.max(-6, Math.min(6, Math.round(value)));
@@ -47,6 +51,7 @@ export const useBattleStore = create<BattleTrackerState>((set) => ({
   opponentRanks: { ...ZERO_RANKS },
   myStatus: "",
   opponentStatus: "",
+  rosterSpecies: [],
   setMyActiveIndex: (myActiveIndex) =>
     set({ myActiveIndex, myMegaForm: "", myRanks: { ...ZERO_RANKS }, myStatus: "" }),
   setOpponentSpecies: (opponentSpecies) =>
@@ -63,4 +68,5 @@ export const useBattleStore = create<BattleTrackerState>((set) => ({
     set((state) => ({ opponentRanks: { ...state.opponentRanks, [stat]: clampRank(value) } })),
   setMyStatus: (myStatus) => set({ myStatus }),
   setOpponentStatus: (opponentStatus) => set({ opponentStatus }),
+  setRosterSpecies: (rosterSpecies) => set({ rosterSpecies }),
 }));

@@ -12,15 +12,22 @@ export const AdvisorPanel = ({ advice }: AdvisorPanelProps) => {
   if (!advice) {
     return (
       <Card>
-        <p className="text-sm text-neutral-400">상대 종족을 입력하면 추천이 표시된다.</p>
+        <p className="text-sm text-neutral-400">상대 포켓몬을 입력하면 추천이 표시된다.</p>
       </Card>
     );
   }
-  const { moveOptions, switchOptions, recommendation } = advice;
+  const { moveOptions, switchOptions, firstMove, recommendation } = advice;
+  const firstMoveClass =
+    firstMove === "선공" ? "text-success" : firstMove === "후공" ? "text-destructive" : "text-muted-foreground";
 
   return (
     <Card className="flex flex-col gap-3">
-      <h2 className="text-sm font-semibold text-neutral-300">추천</h2>
+      <div className="flex items-center gap-2">
+        <h2 className="text-sm font-semibold text-neutral-300">추천</h2>
+        <span className={cn("rounded-md bg-muted px-2 py-0.5 text-xs font-medium", firstMoveClass)}>
+          {firstMove}
+        </span>
+      </div>
       <p className="rounded bg-emerald-950 px-2 py-1.5 text-sm font-medium text-emerald-300">
         {recommendation}
       </p>

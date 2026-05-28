@@ -6,8 +6,11 @@ import { Card } from "@/common/ui/Card";
 import { Field } from "@/common/ui/Field";
 import { NumberField } from "@/common/ui/NumberField";
 import { Select } from "@/common/ui/Select";
+import { Badge } from "@/common/ui/Badge";
+import { Checkbox } from "@/common/ui/Checkbox";
 import { useBattleAdvice } from "@/features/advisor/model/useBattleAdvice";
 import { AnalysisResult } from "@/features/advisor/ui/AnalysisResult";
+import { MegaControl } from "@/features/pokemon-picker/ui/MegaControl";
 import { PokemonDatalist } from "@/features/pokemon-picker/ui/PokemonDatalist";
 import { PokemonIcon } from "@/features/pokemon-picker/ui/PokemonIcon";
 import { PokemonPicker } from "@/features/pokemon-picker/ui/PokemonPicker";
@@ -21,6 +24,13 @@ import { AdvisorPanel } from "./AdvisorPanel";
 const WEATHERS: Weather[] = ["맑음", "비", "모래바람", "눈"];
 const STATUS_OPTIONS: StatusCondition[] = ["화상", "독", "맹독", "마비", "잠듦", "얼음"];
 const RANK_KEYS: Array<keyof RankBlock> = ["A", "B", "C", "D", "S"];
+const RANK_LABELS: Record<keyof RankBlock, string> = {
+  A: "공격",
+  B: "방어",
+  C: "특공",
+  D: "특방",
+  S: "스피드",
+};
 
 export const BattlePage = () => {
   const members = usePartyStore((state) => state.members);
@@ -43,6 +53,7 @@ export const BattlePage = () => {
     opponentRanks: battle.opponentRanks,
     myStatus: battle.myStatus,
     opponentStatus: battle.opponentStatus,
+    rosterSpecies: battle.rosterSpecies,
   };
   const myMegas = activeMegaOptions(input);
   const opponentMegas = opponentMegaOptions(input);
@@ -51,6 +62,17 @@ export const BattlePage = () => {
   const options = battleOptions(input);
   const advice = battleAdvice(input);
   const state = buildBattleState(input);
+
+  // 살아있는 포켓몬 토글. 빈 배열이면 파티 전체가 생존 상태(디폴트). 1~6마리 자유.
+  const effectiveRoster =
+    battle.rosterSpecies.length > 0 ? battle.rosterSpecies : myParty.map((member) => member.species);
+  const handleToggleRoster = (species: string) => {
+    const next = effectiveRoster.includes(species)
+      ? effectiveRoster.filter((value) => value !== species)
+      : [...effectiveRoster, species];
+    battle.setRosterSpecies(next);
+  };
+  const rosterParty = myParty.filter((member) => effectiveRoster.includes(member.species));
 
   return (
     <section className="flex flex-col gap-4">
@@ -68,166 +90,154 @@ export const BattlePage = () => {
           <NumberField value={battle.turn} min={1} onValueChange={battle.setTurn} />
         </Field>
         <Field label="날씨">
-          <Select value={battle.weather} onChange={(event) => battle.setWeather(event.currentTarget.value as Weather | "")}>
-            <option value="">없음</option>
-            {WEATHERS.map((weather) => (
-              <option key={weather} value={weather}>
-                {weather}
-              </option>
-            ))}
-          </Select>
-        </Field>
-        <Field label="상대 종족">
-          <PokemonPicker value={battle.opponentSpecies} onSelect={(name) => battle.setOpponentSpecies(name)} />
-        </Field>
-        <Field label="상대 HP %">
-          <NumberField
-            value={battle.opponentHpPercent}
-            min={1}
-            max={100}
-            onValueChange={battle.setOpponentHpPercent}
+          <Select
+            value={battle.weather}
+            onValueChange={(value) => battle.setWeather(value as Weather | "")}
+            options={[
+              { value: "", label: "없음" },
+              ...WEATHERS.map((weather) => ({ value: weather, label: weather })),
+            ]}
           />
         </Field>
-        <label className="flex items-center gap-1.5 text-sm">
-          <input type="checkbox" checked={battle.trickRoom} onChange={(event) => battle.setTrickRoom(event.currentTarget.checked)} />
-          트릭룸
-        </label>
+        <Field label="상대 포켓몬">
+          <PokemonPicker value={battle.opponentSpecies} onSelect={(name) => battle.setOpponentSpecies(name)} />
+        </Field>
+        <Checkbox checked={battle.trickRoom} onCheckedChange={battle.setTrickRoom} label="트릭룸" />
       </Card>
+
+      {myParty.length > 0 && (
+        <Card className="flex flex-col gap-3">
+          <div className="flex items-center gap-2">
+            <h2 className="text-sm font-semibold">생존 포켓몬</h2>
+            <Badge variant="muted">{rosterParty.length}/{myParty.length}</Badge>
+          </div>
+          <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
+            {myParty.map((member) => {
+              const alive = effectiveRoster.includes(member.species);
+              return (
+                <button
+                  key={member.species}
+                  type="button"
+                  onClick={() => handleToggleRoster(member.species)}
+                  className={cn(
+                    "flex flex-col items-center gap-1.5 rounded-lg border px-2 py-3 transition",
+                    alive
+                      ? "border-primary/60 bg-primary/10"
+                      : "border-border bg-card opacity-40 hover:opacity-100"
+                  )}
+                >
+                  <PokemonIcon species={member.species} className="h-11 w-11" />
+                  <span className={cn("text-xs", alive ? "font-semibold text-foreground" : "text-muted-foreground")}>
+                    {member.species}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+          <p className="text-xs text-muted-foreground">기절한 포켓몬은 토글을 꺼서 액티브·교체 후보에서 제외</p>
+        </Card>
+      )}
 
       {myParty.length === 0 ? (
         <Card>
-          <p className="text-sm text-neutral-400">파티빌더에서 내 파티를 먼저 입력하라.</p>
+          <p className="text-sm text-muted-foreground">파티빌더에서 내 파티를 먼저 입력하라.</p>
         </Card>
       ) : (
-        <Card className="flex flex-col gap-3">
-          <Field label="내 액티브">
-            <Select
-              value={activeIndex}
-              onChange={(event) => battle.setMyActiveIndex(Number(event.currentTarget.value))}
-            >
-              {myParty.map((member, index) => (
-                <option key={`${member.species}-${index}`} value={index}>
-                  {member.species}
-                </option>
-              ))}
-            </Select>
-          </Field>
-
-          <div className="flex items-center gap-2 text-sm text-neutral-300">
-            <PokemonIcon species={myParty[activeIndex]?.species ?? ""} />
-            {activeMyMega && (
-              <span className="rounded bg-amber-900 px-1.5 py-0.5 text-xs font-medium text-amber-200">
-                {activeMyMega.ko}
-              </span>
-            )}
-            <span className="text-neutral-500">vs</span>
-            <PokemonIcon species={battle.opponentSpecies} />
-            {activeOpponentMega && (
-              <span className="rounded bg-amber-900 px-1.5 py-0.5 text-xs font-medium text-amber-200">
-                {activeOpponentMega.ko}
-              </span>
-            )}
-            <span>
-              {battle.opponentSpecies} HP {battle.opponentHpPercent}%
-            </span>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-3 text-sm">
-            {myMegas.length === 1 && (
-              <label className="flex items-center gap-1.5">
-                <input
-                  type="checkbox"
-                  checked={battle.myMegaForm === myMegas[0]!.form}
-                  onChange={(event) =>
-                    battle.setMyMegaForm(event.currentTarget.checked ? myMegas[0]!.form : "")
-                  }
-                />
-                내 메가진화 ({myMegas[0]!.ko})
-              </label>
-            )}
-            {myMegas.length > 1 && (
-              <Field label="내 메가">
+        <Card className="flex flex-col gap-4">
+          <div className="grid grid-cols-[1fr_auto_1fr] items-stretch gap-4">
+            <div className="flex flex-col items-center gap-3 px-2">
+              <Field label="전투 중인 포켓몬" className="w-full">
                 <Select
+                  value={String(activeIndex)}
+                  onValueChange={(value) => battle.setMyActiveIndex(Number(value))}
+                  options={myParty
+                    .map((member, index) => ({ member, index }))
+                    .filter(({ member }) => effectiveRoster.includes(member.species))
+                    .map(({ member, index }) => ({ value: String(index), label: member.species }))}
+                />
+              </Field>
+              <PokemonIcon species={myParty[activeIndex]?.species ?? ""} className="h-20 w-20" />
+              <span className="text-base font-semibold text-foreground">
+                {activeMyMega ? "메가 " : ""}
+                {myParty[activeIndex]?.species ?? ""}
+              </span>
+              {myMegas.length > 0 && myParty[activeIndex] && (
+                <MegaControl
+                  species={myParty[activeIndex]!.species}
                   value={battle.myMegaForm}
-                  onChange={(event) => battle.setMyMegaForm(event.currentTarget.value)}
-                >
-                  <option value="">비메가</option>
-                  {myMegas.map((mega) => (
-                    <option key={mega.form} value={mega.form}>
-                      {mega.ko}
-                    </option>
-                  ))}
-                </Select>
-              </Field>
-            )}
-            {opponentMegas.length === 1 && (
-              <label className="flex items-center gap-1.5">
-                <input
-                  type="checkbox"
-                  checked={battle.opponentMegaForm === opponentMegas[0]!.form}
-                  onChange={(event) =>
-                    battle.setOpponentMegaForm(event.currentTarget.checked ? opponentMegas[0]!.form : "")
-                  }
+                  onChange={battle.setMyMegaForm}
                 />
-                상대 메가진화 ({opponentMegas[0]!.ko})
-              </label>
-            )}
-            {opponentMegas.length > 1 && (
-              <Field label="상대 메가">
-                <Select
-                  value={battle.opponentMegaForm}
-                  onChange={(event) => battle.setOpponentMegaForm(event.currentTarget.value)}
-                >
-                  <option value="">비메가</option>
-                  {opponentMegas.map((mega) => (
-                    <option key={mega.form} value={mega.form}>
-                      {mega.ko}
-                    </option>
-                  ))}
-                </Select>
+              )}
+            </div>
+
+            <div className="flex flex-col items-center justify-center gap-2 px-1">
+              <span className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">vs</span>
+              <div className="h-full w-px bg-border" />
+            </div>
+
+            <div className="flex flex-col items-center gap-3 px-2">
+              <Field label="상대 HP %" className="w-full">
+                <NumberField
+                  value={battle.opponentHpPercent}
+                  min={1}
+                  max={100}
+                  onValueChange={battle.setOpponentHpPercent}
+                />
               </Field>
-            )}
+              <PokemonIcon species={battle.opponentSpecies} className="h-20 w-20" />
+              <span className="text-base font-semibold text-foreground">
+                {activeOpponentMega ? "메가 " : ""}
+                {battle.opponentSpecies || "?"}
+              </span>
+              {opponentMegas.length > 0 && (
+                <MegaControl
+                  species={battle.opponentSpecies}
+                  value={battle.opponentMegaForm}
+                  onChange={battle.setOpponentMegaForm}
+                />
+              )}
+            </div>
           </div>
 
           {options ? (
             <table className="w-full border-collapse text-sm">
               <thead>
-                <tr className="text-xs text-neutral-500">
-                  <th className="p-1 text-left">기술</th>
-                  <th className="p-1">타입</th>
-                  <th className="p-1">데미지</th>
-                  <th className="p-1">KO 확률</th>
-                  <th className="p-1">타수</th>
+                <tr className="border-b border-border text-xs text-muted-foreground">
+                  <th className="p-2 text-left font-medium">기술</th>
+                  <th className="p-2 font-medium">타입</th>
+                  <th className="p-2 font-medium">데미지</th>
+                  <th className="p-2 font-medium">KO 확률</th>
+                  <th className="p-2 font-medium">타수</th>
                 </tr>
               </thead>
               <tbody>
                 {options.map((option) => (
-                  <tr key={option.move} className="border-t border-neutral-800">
-                    <td className="p-1 font-medium text-neutral-200">{option.move}</td>
-                    <td className="p-1 text-center text-neutral-400">{option.type}</td>
-                    <td className="p-1 text-center text-neutral-300">
+                  <tr key={option.move} className="border-b border-border/40 last:border-b-0 hover:bg-muted/40">
+                    <td className="p-2 font-medium text-foreground">{option.move}</td>
+                    <td className="p-2 text-center text-muted-foreground">{option.type}</td>
+                    <td className="p-2 text-center text-foreground">
                       {option.damaging ? `${option.min}~${option.max}` : "변화기"}
                     </td>
                     <td
                       className={cn(
-                        "p-1 text-center font-medium",
+                        "p-2 text-center font-semibold",
                         option.koChance >= 1
-                          ? "text-rose-400"
+                          ? "text-destructive"
                           : option.koChance > 0
-                            ? "text-amber-400"
-                            : "text-neutral-500"
+                            ? "text-warning"
+                            : "text-muted-foreground"
                       )}
                     >
                       {option.damaging ? `${Math.round(option.koChance * 100)}%` : "-"}
                     </td>
                     <td
                       className={cn(
-                        "p-1 text-center text-xs",
+                        "p-2 text-center text-xs font-medium",
                         option.guaranteedHits === 1
-                          ? "text-rose-400"
+                          ? "text-destructive"
                           : option.possibleHits === 1
-                            ? "text-amber-400"
-                            : "text-neutral-400"
+                            ? "text-warning"
+                            : "text-muted-foreground"
                       )}
                     >
                       {option.hitsText || "-"}
@@ -237,9 +247,9 @@ export const BattlePage = () => {
               </tbody>
             </table>
           ) : (
-            <p className="text-sm text-neutral-400">상대 종족을 정확히 입력하라.</p>
+            <p className="text-sm text-muted-foreground">상대 포켓몬을 정확히 입력하라.</p>
           )}
-          <p className="text-xs text-neutral-500">KO 확률은 16롤 기준, 상대 0투자 중립 가정이다.</p>
+          <p className="text-xs text-muted-foreground">KO 확률은 16롤 기준, 상대 0투자 중립 가정이다.</p>
         </Card>
       )}
 
@@ -248,17 +258,16 @@ export const BattlePage = () => {
           <h2 className="text-sm font-semibold text-neutral-300">랭크·상태</h2>
           <div className="grid gap-3 md:grid-cols-2">
             <div className="flex flex-col gap-2">
-              <span className="text-xs text-neutral-400">내 액티브</span>
-              <div className="grid grid-cols-5 gap-1">
+              <span className="text-xs font-medium text-muted-foreground">전투 중인 포켓몬</span>
+              <div className="grid grid-cols-5 gap-2">
                 {RANK_KEYS.map((key) => (
-                  <label key={key} className="flex flex-col items-center gap-0.5">
-                    <span className="text-[10px] text-neutral-500">{key}</span>
+                  <label key={key} className="flex flex-col items-center gap-1">
+                    <span className="text-xs text-muted-foreground">{RANK_LABELS[key]}</span>
                     <NumberField
                       value={battle.myRanks[key]}
                       min={-6}
                       max={6}
                       onValueChange={(value) => battle.setMyRank(key, value)}
-                      className="px-1 text-center"
                     />
                   </label>
                 ))}
@@ -266,29 +275,25 @@ export const BattlePage = () => {
               <Field label="상태이상">
                 <Select
                   value={battle.myStatus}
-                  onChange={(event) => battle.setMyStatus(event.currentTarget.value as StatusCondition | "")}
-                >
-                  <option value="">없음</option>
-                  {STATUS_OPTIONS.map((status) => (
-                    <option key={status} value={status}>
-                      {status}
-                    </option>
-                  ))}
-                </Select>
+                  onValueChange={(value) => battle.setMyStatus(value as StatusCondition | "")}
+                  options={[
+                    { value: "", label: "없음" },
+                    ...STATUS_OPTIONS.map((status) => ({ value: status, label: status })),
+                  ]}
+                />
               </Field>
             </div>
             <div className="flex flex-col gap-2">
-              <span className="text-xs text-neutral-400">상대</span>
-              <div className="grid grid-cols-5 gap-1">
+              <span className="text-xs font-medium text-muted-foreground">상대</span>
+              <div className="grid grid-cols-5 gap-2">
                 {RANK_KEYS.map((key) => (
-                  <label key={key} className="flex flex-col items-center gap-0.5">
-                    <span className="text-[10px] text-neutral-500">{key}</span>
+                  <label key={key} className="flex flex-col items-center gap-1">
+                    <span className="text-xs text-muted-foreground">{RANK_LABELS[key]}</span>
                     <NumberField
                       value={battle.opponentRanks[key]}
                       min={-6}
                       max={6}
                       onValueChange={(value) => battle.setOpponentRank(key, value)}
-                      className="px-1 text-center"
                     />
                   </label>
                 ))}
@@ -296,20 +301,17 @@ export const BattlePage = () => {
               <Field label="상태이상">
                 <Select
                   value={battle.opponentStatus}
-                  onChange={(event) => battle.setOpponentStatus(event.currentTarget.value as StatusCondition | "")}
-                >
-                  <option value="">없음</option>
-                  {STATUS_OPTIONS.map((status) => (
-                    <option key={status} value={status}>
-                      {status}
-                    </option>
-                  ))}
-                </Select>
+                  onValueChange={(value) => battle.setOpponentStatus(value as StatusCondition | "")}
+                  options={[
+                    { value: "", label: "없음" },
+                    ...STATUS_OPTIONS.map((status) => ({ value: status, label: status })),
+                  ]}
+                />
               </Field>
             </div>
           </div>
-          <p className="text-xs text-neutral-500">
-            랭크: A/B/C/D/S 각 -6~+6. +1 = 1.5배, -1 ≈ 0.67배. 화상 = 물리 공격 ÷2.
+          <p className="text-xs text-muted-foreground">
+            랭크는 각 능력치 -6~+6. +1 = 1.5배, -1 ≈ 0.67배. 화상이면 물리 공격이 절반.
           </p>
         </Card>
       )}

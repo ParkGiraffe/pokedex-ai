@@ -103,6 +103,8 @@ export const FieldSlot = z.object({
   }),
   status: StatusCondition.optional(),
   terastalized: z.boolean().default(false),
+  // 메가 폼 슬러그. "" 또는 미지정이면 비메가. 데미지·스피드 계산에서 종족값·타입을 swap한다.
+  megaForm: z.string().optional(),
 });
 export type FieldSlot = z.infer<typeof FieldSlot>;
 

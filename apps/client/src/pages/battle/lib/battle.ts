@@ -3,6 +3,7 @@ import {
   decision,
   findMegasBySpecies,
   findPokemon,
+  formula,
   matchup,
   type MegaForm,
   type Party,
@@ -44,6 +45,8 @@ export type BattleInput = {
   opponentRanks: RankBlock;
   myStatus: StatusCondition | "";
   opponentStatus: StatusCondition | "";
+  // 살아있는(교체 가능한) 종족. 빈 배열이면 파티 전체. 기절한 포켓몬을 빼면 교체 후보에서 제외된다.
+  rosterSpecies: string[];
 };
 
 // 내 액티브 종족의 가능한 메가 폼 목록.
@@ -76,9 +79,11 @@ export const battleOptions = (input: BattleInput): decision.MoveOption[] | undef
 };
 
 export type SwitchOption = { pick: string; verdict: matchup.MatchupVerdict };
+export type FirstMove = "선공" | "후공" | "동속";
 export type BattleAdvice = {
   moveOptions: decision.MoveOption[];
   switchOptions: SwitchOption[];
+  firstMove: FirstMove;
   recommendation: string;
 };
 
@@ -101,21 +106,38 @@ export const battleAdvice = (input: BattleInput): BattleAdvice | undefined => {
     return undefined;
   }
   const moves = battleOptions(input) ?? [];
-  const mega = resolveMega(activeMegaOptions(input), input.myMegaForm);
   const opponentMega = resolveMega(opponentMegaOptions(input), input.opponentMegaForm);
-  const matchupContext: matchup.MatchupContext = {
-    myMegaByPick: mega ? new Map([[myActive.species, mega]]) : undefined,
-    opponentMegaBySpecies: opponentMega
-      ? new Map([[input.opponentSpecies, opponentMega]])
-      : undefined,
+  // 교체 후보는 살아있는 종족(roster)만. 빈 배열이면 파티 전체로 본다.
+  const roster =
+    input.rosterSpecies.length > 0 ? input.rosterSpecies : input.myParty.map((m) => m.species);
+  const bench = input.myParty.filter(
+    (member, index) => index !== input.myActiveIndex && roster.includes(member.species)
+  );
+  // 교체 후보 평가는 타입 매치업이 아니라 실제 데미지로 한다. 상대 랭크업·메가를 그대로 반영해야
+  // "특방 6업 상대엔 약점을 못 찌른다"는 사실이 verdict에 들어가고, 무한 교체 추천을 막는다.
+  const switchVerdict = (mon: PartyMember): matchup.MatchupVerdict => {
+    const opts =
+      decision.moveOptions(mon, input.opponentSpecies, input.opponentHpPercent, {
+        opponentMega,
+        opponentRanks: input.opponentRanks,
+      }) ?? [];
+    const best = opts
+      .filter((o) => o.damaging && o.guaranteedHits !== null)
+      .sort((a, b) => b.koChance - a.koChance || (a.guaranteedHits ?? 99) - (b.guaranteedHits ?? 99))[0];
+    if (!best || best.guaranteedHits === null) {
+      return "불리";
+    }
+    if (best.koChance >= 0.5 || best.guaranteedHits <= 2) {
+      return "유리";
+    }
+    if (best.guaranteedHits === 3) {
+      return "호각";
+    }
+    return "불리";
   };
-  const bench = input.myParty.filter((_, index) => index !== input.myActiveIndex);
   const switchOptions: SwitchOption[] = bench
-    .map((mon) => {
-      const pair = matchup.pairwise(mon, input.opponentSpecies, matchupContext);
-      return pair ? { pick: mon.species, verdict: pair.verdict } : undefined;
-    })
-    .filter((option): option is SwitchOption => option !== undefined);
+    .filter((mon) => findPokemon(mon.species))
+    .map((mon) => ({ pick: mon.species, verdict: switchVerdict(mon) }));
 
   const topMove = [...moves]
     .filter((option) => option.damaging)
@@ -124,18 +146,88 @@ export const battleAdvice = (input: BattleInput): BattleAdvice | undefined => {
     (a, b) => verdictRank(b.verdict) - verdictRank(a.verdict)
   )[0];
 
+  // 선공 판정. 트릭룸이면 느린 쪽이 선공. 내 랭크·마비·메가, 상대 랭크·마비·메가를 반영한다.
+  // 상대는 기술 표와 동일하게 0투자 중립 가정.
+  const myMega = resolveMega(activeMegaOptions(input), input.myMegaForm);
+  const opponentEntry = findPokemon(input.opponentSpecies);
+  const myEntry = findPokemon(myActive.species);
+  const myBaseS = myMega ? myMega.base.S : (myEntry?.base.S ?? 0);
+  const oppBaseS = opponentMega ? opponentMega.base.S : (opponentEntry?.base.S ?? 0);
+  const mySpeed = formula.effectiveSpeed({
+    base: formula.actualStat({
+      stat: "S",
+      base: myBaseS,
+      iv: myActive.ivs.S,
+      ev: myActive.evs.S,
+      level: myActive.level,
+      nature: myActive.nature,
+    }),
+    rank: input.myRanks.S,
+    tailwind: false,
+    paralyzed: input.myStatus === "마비",
+    stickyWeb: false,
+    itemMultiplier: 1,
+    abilityMultiplier: 1,
+  });
+  const oppSpeed = formula.effectiveSpeed({
+    base: formula.actualStat({
+      stat: "S",
+      base: oppBaseS,
+      iv: 31,
+      ev: 0,
+      level: myActive.level,
+      nature: "노력",
+    }),
+    rank: input.opponentRanks.S,
+    tailwind: false,
+    paralyzed: input.opponentStatus === "마비",
+    stickyWeb: false,
+    itemMultiplier: 1,
+    abilityMultiplier: 1,
+  });
+  const firstMove: FirstMove =
+    mySpeed === oppSpeed
+      ? "동속"
+      : (input.trickRoom ? mySpeed < oppSpeed : mySpeed > oppSpeed)
+        ? "선공"
+        : "후공";
+
+  // 데미지 범위를 verdict로 환산하는 공통 기준. 교체 후보와 현재 액티브를 같은 잣대로 비교한다.
+  const hitsToVerdict = (koChance: number, guaranteedHits: number | null): matchup.MatchupVerdict => {
+    if (guaranteedHits === null) {
+      return "불리";
+    }
+    if (koChance >= 0.5 || guaranteedHits <= 2) {
+      return "유리";
+    }
+    if (guaranteedHits === 3) {
+      return "호각";
+    }
+    return "불리";
+  };
+  // 현재 액티브도 교체 후보와 동일 기준으로 평가한다(myRanks·status·mega 반영된 topMove 사용).
+  const activeVerdict: matchup.MatchupVerdict = topMove
+    ? hitsToVerdict(topMove.koChance, topMove.guaranteedHits)
+    : "불리";
+
   let recommendation: string;
   if (topMove && topMove.koChance >= 0.5) {
-    recommendation = `${withLo(topMove.move)} 노림 (${topMove.hitsText}, KO ${Math.round(topMove.koChance * 100)}%)`;
-  } else if (bestSwitch && bestSwitch.verdict === "유리") {
+    // 선공으로 KO면 안전, 후공이면 상대 공격을 한 번 맞고 잡는다는 점을 명시.
+    const lead =
+      firstMove === "선공" ? "선공으로 " : firstMove === "후공" ? "후공이라 한 대 맞지만 " : "";
+    recommendation = `${lead}${withLo(topMove.move)} 노림 (${topMove.hitsText}, KO ${Math.round(topMove.koChance * 100)}%)`;
+  } else if (bestSwitch && verdictRank(bestSwitch.verdict) > verdictRank(activeVerdict)) {
+    // 교체는 현재 액티브보다 '명확히' 유리할 때만. 동급이면 현재 픽을 유지해 핑퐁을 막는다.
     recommendation = `${withLo(bestSwitch.pick)} 빼는 게 유리`;
-  } else if (topMove) {
-    recommendation = `결정타 없음 — ${topMove.move} 또는 교체 검토`;
+  } else if (topMove && topMove.guaranteedHits !== null && topMove.guaranteedHits <= 3) {
+    const lead = firstMove === "후공" ? "후공이라 불리하지만 " : "";
+    recommendation = `${lead}${withLo(topMove.move)}로 ${topMove.hitsText} 압박 (현 상태 유지)`;
   } else {
-    recommendation = "유효 옵션 없음 (상대 종족 확인)";
+    // 공격도 교체도 상대를 압박 못 하는 상황(상대 랭크업·내구 우위 등). 무한 교체 추천을 멈춘다.
+    recommendation = "공격·교체 모두 압박 어려움 — 상대 랭크 해소(도발·교체 유도)나 상태이상 활용 검토";
   }
 
-  return { moveOptions: moves, switchOptions, recommendation };
+  return { moveOptions: moves, switchOptions, firstMove, recommendation };
 };
 
 export const buildBattleState = (input: BattleInput): BattleState | undefined => {
@@ -143,6 +235,8 @@ export const buildBattleState = (input: BattleInput): BattleState | undefined =>
   if (!myActive || !findPokemon(input.opponentSpecies)) {
     return undefined;
   }
+  // 랭크·상태·메가를 필드 슬롯에 그대로 실어, 서버 AI 경로(battleDecisionBody)도 결정론과 같은 데이터를 본다.
+  const toRanks = (ranks: RankBlock) => ({ ...DEFAULT_RANKS, ...ranks });
   return {
     my: input.myParty,
     opponent: {
@@ -151,12 +245,23 @@ export const buildBattleState = (input: BattleInput): BattleState | undefined =>
         {
           member: stubOpponent(input.opponentSpecies, myActive.level),
           hpPercent: input.opponentHpPercent,
-          ranks: DEFAULT_RANKS,
+          ranks: toRanks(input.opponentRanks),
+          status: input.opponentStatus || undefined,
+          megaForm: input.opponentMegaForm || undefined,
           terastalized: false,
         },
       ],
     },
-    myField: [{ member: myActive, hpPercent: 100, ranks: DEFAULT_RANKS, terastalized: false }],
+    myField: [
+      {
+        member: myActive,
+        hpPercent: 100,
+        ranks: toRanks(input.myRanks),
+        status: input.myStatus || undefined,
+        megaForm: input.myMegaForm || undefined,
+        terastalized: false,
+      },
+    ],
     weather: input.weather || undefined,
     trickRoom: input.trickRoom,
     turn: input.turn,
