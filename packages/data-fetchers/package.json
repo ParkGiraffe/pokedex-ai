@@ -1,0 +1,34 @@
+{
+  "name": "@pokedex-agent/data-fetchers",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "fetch:types": "tsx src/fetch-types.ts",
+    "fetch:pokedex": "tsx src/fetch-pokedex.ts",
+    "fetch:moves": "tsx src/fetch-moves.ts",
+    "fetch:abilities": "tsx src/fetch-abilities.ts",
+    "fetch:items": "tsx src/fetch-items.ts",
+    "fetch:natures": "tsx src/fetch-natures.ts",
+    "fetch:sprites": "tsx src/fetch-sprites.ts",
+    "fetch:sets": "tsx src/fetch-sets.ts",
+    "fetch:usage": "tsx src/fetch-usage.ts",
+    "fetch:champions": "tsx src/fetch-champions.ts",
+    "fetch:champions-items": "tsx src/fetch-champions-items.ts",
+    "fetch:megas": "tsx src/fetch-megas.ts",
+    "fetch:all": "tsx src/fetch-all.ts"
+  },
+  "dependencies": {
+    "@pkmn/data": "^0.10.9",
+    "@pkmn/dex": "^0.10.9",
+    "@pkmn/smogon": "^0.5.30",
+    "@pokedex-agent/pokedex-core": "workspace:*",
+    "p-limit": "^7.2.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "tsx": "^4.21.0"
+  }
+}

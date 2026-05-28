@@ -1,0 +1,1378 @@
+{
+  "source": "pkmnchamps.com (Supabase 공개 anon, 읽기 전용)",
+  "season": "reg_m1",
+  "generated_at_utc": "2026-05-22T00:00:00Z",
+  "count": 274,
+  "pokemon": [
+    {
+      "id": 3,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 3,
+      "megaForm": "venusaur-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 6,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 6,
+      "megaForm": "charizard-mega-x",
+      "regionForm": ""
+    },
+    {
+      "id": 6,
+      "megaForm": "charizard-mega-y",
+      "regionForm": ""
+    },
+    {
+      "id": 9,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 9,
+      "megaForm": "blastoise-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 15,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 15,
+      "megaForm": "beedrill-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 18,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 18,
+      "megaForm": "pidgeot-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 24,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 25,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 26,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 26,
+      "megaForm": "",
+      "regionForm": "raichu-alola"
+    },
+    {
+      "id": 36,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 36,
+      "megaForm": "clefable-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 38,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 38,
+      "megaForm": "",
+      "regionForm": "ninetales-alola"
+    },
+    {
+      "id": 59,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 59,
+      "megaForm": "",
+      "regionForm": "arcanine-hisui"
+    },
+    {
+      "id": 65,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 65,
+      "megaForm": "alakazam-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 68,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 71,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 71,
+      "megaForm": "victreebel-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 80,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 80,
+      "megaForm": "",
+      "regionForm": "slowbro-galar"
+    },
+    {
+      "id": 80,
+      "megaForm": "slowbro-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 94,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 94,
+      "megaForm": "gengar-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 115,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 115,
+      "megaForm": "kangaskhan-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 121,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 121,
+      "megaForm": "starmie-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 127,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 127,
+      "megaForm": "pinsir-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 128,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 128,
+      "megaForm": "",
+      "regionForm": "tauros-paldea-aqua-breed"
+    },
+    {
+      "id": 128,
+      "megaForm": "",
+      "regionForm": "tauros-paldea-blaze-breed"
+    },
+    {
+      "id": 128,
+      "megaForm": "",
+      "regionForm": "tauros-paldea-combat-breed"
+    },
+    {
+      "id": 130,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 130,
+      "megaForm": "gyarados-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 132,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 134,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 135,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 136,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 142,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 142,
+      "megaForm": "aerodactyl-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 143,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 149,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 149,
+      "megaForm": "dragonite-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 154,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 154,
+      "megaForm": "meganium-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 157,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 157,
+      "megaForm": "",
+      "regionForm": "typhlosion-hisui"
+    },
+    {
+      "id": 160,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 160,
+      "megaForm": "feraligatr-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 168,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 181,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 181,
+      "megaForm": "ampharos-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 184,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 186,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 196,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 197,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 199,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 199,
+      "megaForm": "",
+      "regionForm": "slowking-galar"
+    },
+    {
+      "id": 205,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 208,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 208,
+      "megaForm": "steelix-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 212,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 212,
+      "megaForm": "scizor-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 214,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 214,
+      "megaForm": "heracross-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 227,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 227,
+      "megaForm": "skarmory-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 229,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 229,
+      "megaForm": "houndoom-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 248,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 248,
+      "megaForm": "tyranitar-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 279,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 282,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 282,
+      "megaForm": "gardevoir-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 302,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 302,
+      "megaForm": "sableye-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 306,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 306,
+      "megaForm": "aggron-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 308,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 308,
+      "megaForm": "medicham-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 310,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 310,
+      "megaForm": "manectric-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 319,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 319,
+      "megaForm": "sharpedo-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 323,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 323,
+      "megaForm": "camerupt-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 324,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 334,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 334,
+      "megaForm": "altaria-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 350,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 351,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 354,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 354,
+      "megaForm": "banette-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 358,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 358,
+      "megaForm": "chimecho-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 359,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 359,
+      "megaForm": "absol-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 362,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 362,
+      "megaForm": "glalie-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 389,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 392,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 395,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 405,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 407,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 409,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 411,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 428,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 428,
+      "megaForm": "lopunny-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 442,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 445,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 445,
+      "megaForm": "garchomp-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 448,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 448,
+      "megaForm": "lucario-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 450,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 454,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 460,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 460,
+      "megaForm": "abomasnow-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 461,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 464,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 470,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 471,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 472,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 473,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 475,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 475,
+      "megaForm": "gallade-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 478,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 479,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 479,
+      "megaForm": "",
+      "regionForm": "rotom-fan"
+    },
+    {
+      "id": 479,
+      "megaForm": "",
+      "regionForm": "rotom-frost"
+    },
+    {
+      "id": 479,
+      "megaForm": "",
+      "regionForm": "rotom-heat"
+    },
+    {
+      "id": 479,
+      "megaForm": "",
+      "regionForm": "rotom-mow"
+    },
+    {
+      "id": 479,
+      "megaForm": "",
+      "regionForm": "rotom-wash"
+    },
+    {
+      "id": 497,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 500,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 500,
+      "megaForm": "emboar-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 503,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 503,
+      "megaForm": "",
+      "regionForm": "samurott-hisui"
+    },
+    {
+      "id": 505,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 510,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 512,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 514,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 516,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 530,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 530,
+      "megaForm": "excadrill-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 531,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 531,
+      "megaForm": "audino-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 534,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 547,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 550,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 553,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 563,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 569,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 571,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 571,
+      "megaForm": "",
+      "regionForm": "zoroark-hisui"
+    },
+    {
+      "id": 579,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 584,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 587,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 609,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 609,
+      "megaForm": "chandelure-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 614,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 618,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 618,
+      "megaForm": "",
+      "regionForm": "stunfisk-galar"
+    },
+    {
+      "id": 623,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 623,
+      "megaForm": "golurk-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 635,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 637,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 652,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 652,
+      "megaForm": "chesnaught-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 655,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 655,
+      "megaForm": "delphox-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 658,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 658,
+      "megaForm": "greninja-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 660,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 661,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 663,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 666,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 669,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 670,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 670,
+      "megaForm": "",
+      "regionForm": "floette-eternal"
+    },
+    {
+      "id": 670,
+      "megaForm": "floette-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 671,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 675,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 676,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 678,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 678,
+      "megaForm": "meowstic-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 681,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 683,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 685,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 693,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 695,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 697,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 699,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 700,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 701,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 701,
+      "megaForm": "hawlucha-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 702,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 706,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 706,
+      "megaForm": "",
+      "regionForm": "goodra-hisui"
+    },
+    {
+      "id": 707,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 709,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 711,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 713,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 713,
+      "megaForm": "",
+      "regionForm": "avalugg-hisui"
+    },
+    {
+      "id": 715,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 724,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 724,
+      "megaForm": "",
+      "regionForm": "decidueye-hisui"
+    },
+    {
+      "id": 727,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 730,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 733,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 738,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 740,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 740,
+      "megaForm": "crabominable-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 745,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 745,
+      "megaForm": "",
+      "regionForm": "lycanroc-dusk"
+    },
+    {
+      "id": 745,
+      "megaForm": "",
+      "regionForm": "lycanroc-midnight"
+    },
+    {
+      "id": 748,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 750,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 752,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 758,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 763,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 765,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 766,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 778,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 780,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 780,
+      "megaForm": "drampa-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 784,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 823,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 841,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 842,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 844,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 851,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 855,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 858,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 866,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 869,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 876,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 887,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 899,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 900,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 902,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 902,
+      "megaForm": "",
+      "regionForm": "basculegion-female"
+    },
+    {
+      "id": 903,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 908,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 911,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 914,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 925,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 934,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 936,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 937,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 939,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 949,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 952,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 952,
+      "megaForm": "scovillain-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 956,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 959,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 964,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 968,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 970,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 970,
+      "megaForm": "glimmora-mega",
+      "regionForm": ""
+    },
+    {
+      "id": 981,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 983,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 1000,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 1013,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 1018,
+      "megaForm": "",
+      "regionForm": ""
+    },
+    {
+      "id": 1019,
+      "megaForm": "",
+      "regionForm": ""
+    }
+  ]
+}

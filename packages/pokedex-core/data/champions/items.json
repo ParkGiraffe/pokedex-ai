@@ -1,0 +1,663 @@
+{
+  "source": "pkmnchamps season_allowed + PokeAPI(보충)",
+  "generated_at_utc": "2026-05-22T00:00:00Z",
+  "count": 130,
+  "items": [
+    {
+      "slug": "abomasite",
+      "ko": "눈설왕나이트",
+      "isMega": true
+    },
+    {
+      "slug": "absolite",
+      "ko": "앱솔나이트",
+      "isMega": true
+    },
+    {
+      "slug": "aerodactylite",
+      "ko": "프테라나이트",
+      "isMega": true
+    },
+    {
+      "slug": "aggronite",
+      "ko": "보스로라나이트",
+      "isMega": true
+    },
+    {
+      "slug": "alakazite",
+      "ko": "후딘나이트",
+      "isMega": true
+    },
+    {
+      "slug": "altarianite",
+      "ko": "파비코리나이트",
+      "isMega": true
+    },
+    {
+      "slug": "ampharosite",
+      "ko": "전룡나이트",
+      "isMega": true
+    },
+    {
+      "slug": "aspear-berry",
+      "ko": "배리열매",
+      "isMega": false
+    },
+    {
+      "slug": "audinite",
+      "ko": "다부니나이트",
+      "isMega": true
+    },
+    {
+      "slug": "babiri-berry",
+      "ko": "바리비열매",
+      "isMega": false
+    },
+    {
+      "slug": "banettite",
+      "ko": "다크펫나이트",
+      "isMega": true
+    },
+    {
+      "slug": "beedrillite",
+      "ko": "독침붕나이트",
+      "isMega": true
+    },
+    {
+      "slug": "black-belt",
+      "ko": "검은띠",
+      "isMega": false
+    },
+    {
+      "slug": "black-glasses",
+      "ko": "검은안경",
+      "isMega": false
+    },
+    {
+      "slug": "blastoisinite",
+      "ko": "거북왕나이트",
+      "isMega": false
+    },
+    {
+      "slug": "blazikenite",
+      "ko": "번치코나이트",
+      "isMega": true
+    },
+    {
+      "slug": "bright-powder",
+      "ko": "반짝가루",
+      "isMega": false
+    },
+    {
+      "slug": "cameruptite",
+      "ko": "폭타나이트",
+      "isMega": true
+    },
+    {
+      "slug": "chandelurite",
+      "ko": "샹델라나이트",
+      "isMega": true
+    },
+    {
+      "slug": "charcoal",
+      "ko": "목탄",
+      "isMega": false
+    },
+    {
+      "slug": "charizardite-x",
+      "ko": "리자몽나이트 X",
+      "isMega": true,
+      "megaForme": "X"
+    },
+    {
+      "slug": "charizardite-y",
+      "ko": "리자몽나이트 Y",
+      "isMega": true,
+      "megaForme": "Y"
+    },
+    {
+      "slug": "charti-berry",
+      "ko": "루미열매",
+      "isMega": false
+    },
+    {
+      "slug": "cheri-berry",
+      "ko": "버치열매",
+      "isMega": false
+    },
+    {
+      "slug": "chesnaughtite",
+      "ko": "브리가론나이트",
+      "isMega": true
+    },
+    {
+      "slug": "chesto-berry",
+      "ko": "유루열매",
+      "isMega": false
+    },
+    {
+      "slug": "chilan-berry",
+      "ko": "카리열매",
+      "isMega": false
+    },
+    {
+      "slug": "chimechonite",
+      "ko": "치렁나이트",
+      "isMega": true
+    },
+    {
+      "slug": "choice-scarf",
+      "ko": "구애스카프",
+      "isMega": false
+    },
+    {
+      "slug": "chople-berry",
+      "ko": "로플열매",
+      "isMega": false
+    },
+    {
+      "slug": "clefablite",
+      "ko": "픽시나이트",
+      "isMega": true
+    },
+    {
+      "slug": "colbur-berry",
+      "ko": "마코열매",
+      "isMega": false
+    },
+    {
+      "slug": "crabominite",
+      "ko": "모단단게나이트",
+      "isMega": true
+    },
+    {
+      "slug": "delphoxite",
+      "ko": "마폭시나이트",
+      "isMega": true
+    },
+    {
+      "slug": "diancite",
+      "ko": "디안시나이트",
+      "isMega": true
+    },
+    {
+      "slug": "dragon-fang",
+      "ko": "용의이빨",
+      "isMega": false
+    },
+    {
+      "slug": "dragonitite",
+      "ko": "망나뇽나이트",
+      "isMega": true
+    },
+    {
+      "slug": "drampite",
+      "ko": "할비롱나이트",
+      "isMega": true
+    },
+    {
+      "slug": "emboarite",
+      "ko": "염무왕나이트",
+      "isMega": true
+    },
+    {
+      "slug": "excadrillite",
+      "ko": "몰드류나이트",
+      "isMega": true
+    },
+    {
+      "slug": "fairy-feather",
+      "ko": "fairy-feather",
+      "isMega": false
+    },
+    {
+      "slug": "feraligatrite",
+      "ko": "장크로다일나이트",
+      "isMega": true
+    },
+    {
+      "slug": "floettite",
+      "ko": "플라엣테나이트",
+      "isMega": true
+    },
+    {
+      "slug": "focus-band",
+      "ko": "기합의머리띠",
+      "isMega": false
+    },
+    {
+      "slug": "focus-sash",
+      "ko": "기합의띠",
+      "isMega": false
+    },
+    {
+      "slug": "froslassite",
+      "ko": "눈여아나이트",
+      "isMega": true
+    },
+    {
+      "slug": "galladite",
+      "ko": "엘레이드나이트",
+      "isMega": true
+    },
+    {
+      "slug": "garchompite",
+      "ko": "한카리아스나이트",
+      "isMega": true
+    },
+    {
+      "slug": "gardevoirite",
+      "ko": "가디안나이트",
+      "isMega": true
+    },
+    {
+      "slug": "gengarite",
+      "ko": "팬텀나이트",
+      "isMega": true
+    },
+    {
+      "slug": "glalitite",
+      "ko": "얼음귀신나이트",
+      "isMega": false
+    },
+    {
+      "slug": "glimmorite",
+      "ko": "킬라플로르나이트",
+      "isMega": true
+    },
+    {
+      "slug": "golurkite",
+      "ko": "골루그나이트",
+      "isMega": true
+    },
+    {
+      "slug": "greninjite",
+      "ko": "개굴닌자나이트",
+      "isMega": true
+    },
+    {
+      "slug": "gyaradosite",
+      "ko": "갸라도스나이트",
+      "isMega": true
+    },
+    {
+      "slug": "haban-berry",
+      "ko": "하반열매",
+      "isMega": false
+    },
+    {
+      "slug": "hard-stone",
+      "ko": "딱딱한돌",
+      "isMega": false
+    },
+    {
+      "slug": "hawluchite",
+      "ko": "루차불나이트",
+      "isMega": true
+    },
+    {
+      "slug": "heracronite",
+      "ko": "헤라크로스나이트",
+      "isMega": false
+    },
+    {
+      "slug": "houndoominite",
+      "ko": "헬가나이트",
+      "isMega": true
+    },
+    {
+      "slug": "kangaskhanite",
+      "ko": "캥카나이트",
+      "isMega": true
+    },
+    {
+      "slug": "kasib-berry",
+      "ko": "수불열매",
+      "isMega": false
+    },
+    {
+      "slug": "kebia-berry",
+      "ko": "으름열매",
+      "isMega": false
+    },
+    {
+      "slug": "kings-rock",
+      "ko": "왕의징표석",
+      "isMega": false
+    },
+    {
+      "slug": "latiasite",
+      "ko": "라티아스나이트",
+      "isMega": true
+    },
+    {
+      "slug": "latiosite",
+      "ko": "라티오스나이트",
+      "isMega": true
+    },
+    {
+      "slug": "leftovers",
+      "ko": "먹다남은음식",
+      "isMega": false
+    },
+    {
+      "slug": "leppa-berry",
+      "ko": "과사열매",
+      "isMega": false
+    },
+    {
+      "slug": "light-ball",
+      "ko": "전기구슬",
+      "isMega": false
+    },
+    {
+      "slug": "lopunnite",
+      "ko": "이어롭나이트",
+      "isMega": true
+    },
+    {
+      "slug": "lucarionite",
+      "ko": "루카리오나이트",
+      "isMega": true
+    },
+    {
+      "slug": "lum-berry",
+      "ko": "리샘열매",
+      "isMega": false
+    },
+    {
+      "slug": "magnet",
+      "ko": "자석",
+      "isMega": false
+    },
+    {
+      "slug": "manectite",
+      "ko": "썬더볼트나이트",
+      "isMega": true
+    },
+    {
+      "slug": "mawilite",
+      "ko": "입치트나이트",
+      "isMega": true
+    },
+    {
+      "slug": "medichamite",
+      "ko": "요가램나이트",
+      "isMega": true
+    },
+    {
+      "slug": "meganiumite",
+      "ko": "메가니움나이트",
+      "isMega": true
+    },
+    {
+      "slug": "mental-herb",
+      "ko": "멘탈허브",
+      "isMega": false
+    },
+    {
+      "slug": "meowsticite",
+      "ko": "냐오닉스나이트",
+      "isMega": true
+    },
+    {
+      "slug": "metagrossite",
+      "ko": "메타그로스나이트",
+      "isMega": true
+    },
+    {
+      "slug": "metal-coat",
+      "ko": "금속코트",
+      "isMega": false
+    },
+    {
+      "slug": "mewtwonite-x",
+      "ko": "뮤츠나이트 X",
+      "isMega": true,
+      "megaForme": "X"
+    },
+    {
+      "slug": "mewtwonite-y",
+      "ko": "뮤츠나이트 Y",
+      "isMega": true,
+      "megaForme": "Y"
+    },
+    {
+      "slug": "miracle-seed",
+      "ko": "기적의씨",
+      "isMega": false
+    },
+    {
+      "slug": "mystic-water",
+      "ko": "신비의물방울",
+      "isMega": false
+    },
+    {
+      "slug": "never-melt-ice",
+      "ko": "녹지않는얼음",
+      "isMega": false
+    },
+    {
+      "slug": "occa-berry",
+      "ko": "오카열매",
+      "isMega": false
+    },
+    {
+      "slug": "oran-berry",
+      "ko": "오랭열매",
+      "isMega": false
+    },
+    {
+      "slug": "passho-berry",
+      "ko": "꼬시개열매",
+      "isMega": false
+    },
+    {
+      "slug": "payapa-berry",
+      "ko": "야파열매",
+      "isMega": false
+    },
+    {
+      "slug": "pecha-berry",
+      "ko": "복슝열매",
+      "isMega": false
+    },
+    {
+      "slug": "persim-berry",
+      "ko": "시몬열매",
+      "isMega": false
+    },
+    {
+      "slug": "pidgeotite",
+      "ko": "피죤투나이트",
+      "isMega": true
+    },
+    {
+      "slug": "pinsirite",
+      "ko": "쁘사이저나이트",
+      "isMega": true
+    },
+    {
+      "slug": "poison-barb",
+      "ko": "독바늘",
+      "isMega": false
+    },
+    {
+      "slug": "quick-claw",
+      "ko": "선제공격손톱",
+      "isMega": false
+    },
+    {
+      "slug": "raichunite-x",
+      "ko": "라이츄나이트 X",
+      "isMega": true,
+      "megaForme": "X"
+    },
+    {
+      "slug": "raichunite-y",
+      "ko": "라이츄나이트 Y",
+      "isMega": true,
+      "megaForme": "Y"
+    },
+    {
+      "slug": "rawst-berry",
+      "ko": "복분열매",
+      "isMega": false
+    },
+    {
+      "slug": "rayquazite",
+      "ko": "레쿠쟈나이트",
+      "isMega": true
+    },
+    {
+      "slug": "rindo-berry",
+      "ko": "린드열매",
+      "isMega": false
+    },
+    {
+      "slug": "roseli-berry",
+      "ko": "로셀열매",
+      "isMega": false
+    },
+    {
+      "slug": "sablenite",
+      "ko": "깜까미나이트",
+      "isMega": false
+    },
+    {
+      "slug": "salamencite",
+      "ko": "보만다나이트",
+      "isMega": true
+    },
+    {
+      "slug": "sceptilite",
+      "ko": "나무킹나이트",
+      "isMega": true
+    },
+    {
+      "slug": "scizorite",
+      "ko": "핫삼나이트",
+      "isMega": true
+    },
+    {
+      "slug": "scope-lens",
+      "ko": "초점렌즈",
+      "isMega": false
+    },
+    {
+      "slug": "scovillainite",
+      "ko": "스코빌런나이트",
+      "isMega": true
+    },
+    {
+      "slug": "sharp-beak",
+      "ko": "예리한부리",
+      "isMega": false
+    },
+    {
+      "slug": "sharpedonite",
+      "ko": "샤크니아나이트",
+      "isMega": true
+    },
+    {
+      "slug": "shell-bell",
+      "ko": "조개껍질방울",
+      "isMega": false
+    },
+    {
+      "slug": "shuca-berry",
+      "ko": "슈캐열매",
+      "isMega": false
+    },
+    {
+      "slug": "silk-scarf",
+      "ko": "실크스카프",
+      "isMega": false
+    },
+    {
+      "slug": "silver-powder",
+      "ko": "은빛가루",
+      "isMega": false
+    },
+    {
+      "slug": "sitrus-berry",
+      "ko": "자뭉열매",
+      "isMega": false
+    },
+    {
+      "slug": "skarmorite",
+      "ko": "무장조나이트",
+      "isMega": true
+    },
+    {
+      "slug": "slowbronite",
+      "ko": "야도란나이트",
+      "isMega": true
+    },
+    {
+      "slug": "soft-sand",
+      "ko": "부드러운모래",
+      "isMega": false
+    },
+    {
+      "slug": "spell-tag",
+      "ko": "저주의부적",
+      "isMega": false
+    },
+    {
+      "slug": "starmienite",
+      "ko": "아쿠스타나이트",
+      "isMega": true
+    },
+    {
+      "slug": "steelixite",
+      "ko": "강철톤나이트",
+      "isMega": true
+    },
+    {
+      "slug": "swampertite",
+      "ko": "대짱이나이트",
+      "isMega": true
+    },
+    {
+      "slug": "tanga-berry",
+      "ko": "리체열매",
+      "isMega": false
+    },
+    {
+      "slug": "twisted-spoon",
+      "ko": "휘어진스푼",
+      "isMega": false
+    },
+    {
+      "slug": "tyranitarite",
+      "ko": "마기라스나이트",
+      "isMega": true
+    },
+    {
+      "slug": "venusaurite",
+      "ko": "이상해꽃나이트",
+      "isMega": true
+    },
+    {
+      "slug": "victreebelite",
+      "ko": "우츠보트나이트",
+      "isMega": true
+    },
+    {
+      "slug": "wacan-berry",
+      "ko": "초나열매",
+      "isMega": false
+    },
+    {
+      "slug": "white-herb",
+      "ko": "하양허브",
+      "isMega": false
+    },
+    {
+      "slug": "yache-berry",
+      "ko": "플카열매",
+      "isMega": false
+    }
+  ]
+}

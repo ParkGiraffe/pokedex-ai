@@ -1,0 +1,750 @@
+{
+  "_doc": "각 케이스는 calculateDamage 입력 그대로. expected는 본 구현(Showdown 4096 알고리즘 충실 구현)의 출력을 회귀 기준선으로 잠근 값이다. 외부(smartnuo/Showdown) ±0 대조는 별도 수동 검증 항목으로 남는다.",
+  "cases": [
+    {
+      "id": "basic-1",
+      "label": "일반 물리, 자속 없음, 효과보통",
+      "input": {
+        "level": 50,
+        "attack": 130,
+        "defense": 100,
+        "basePower": 80,
+        "category": "물리",
+        "attackerTypes": [
+          "격투"
+        ],
+        "defenderTypes": [
+          "노말"
+        ],
+        "moveType": "노말",
+        "attackerTerastalized": false,
+        "stab": false
+      },
+      "expected": {
+        "min": 39,
+        "max": 47
+      }
+    },
+    {
+      "id": "stab-1",
+      "label": "자속 1.5배, 효과보통",
+      "input": {
+        "level": 50,
+        "attack": 130,
+        "defense": 100,
+        "basePower": 80,
+        "category": "물리",
+        "attackerTypes": [
+          "격투"
+        ],
+        "defenderTypes": [
+          "노말"
+        ],
+        "moveType": "격투",
+        "attackerTerastalized": false,
+        "stab": true
+      },
+      "expected": {
+        "min": 116,
+        "max": 140
+      }
+    },
+    {
+      "id": "tera-same",
+      "label": "테라 자속 + 원본 자속 = 2.0배",
+      "input": {
+        "level": 50,
+        "attack": 150,
+        "defense": 100,
+        "basePower": 80,
+        "category": "물리",
+        "attackerTypes": [
+          "격투"
+        ],
+        "defenderTypes": [
+          "노말"
+        ],
+        "moveType": "격투",
+        "attackerTeraType": "격투",
+        "attackerTerastalized": true,
+        "stab": true
+      },
+      "expected": {
+        "min": 180,
+        "max": 216
+      }
+    },
+    {
+      "id": "tera-diff",
+      "label": "테라 새 타입 + 원본 자속 아님 = 1.5배",
+      "input": {
+        "level": 50,
+        "attack": 150,
+        "defense": 100,
+        "basePower": 80,
+        "category": "물리",
+        "attackerTypes": [
+          "격투"
+        ],
+        "defenderTypes": [
+          "노말"
+        ],
+        "moveType": "비행",
+        "attackerTeraType": "비행",
+        "attackerTerastalized": true,
+        "stab": false
+      },
+      "expected": {
+        "min": 67,
+        "max": 81
+      }
+    },
+    {
+      "id": "stellar-stab",
+      "label": "스텔라 + 자속 (2.0)",
+      "input": {
+        "level": 50,
+        "attack": 150,
+        "defense": 100,
+        "basePower": 80,
+        "category": "물리",
+        "attackerTypes": [
+          "격투"
+        ],
+        "defenderTypes": [
+          "노말"
+        ],
+        "moveType": "격투",
+        "attackerTeraType": "스텔라",
+        "attackerTerastalized": true,
+        "stab": true
+      },
+      "expected": {
+        "min": 180,
+        "max": 216
+      }
+    },
+    {
+      "id": "type-x2",
+      "label": "타입 상성 2배",
+      "input": {
+        "level": 50,
+        "attack": 130,
+        "defense": 100,
+        "basePower": 80,
+        "category": "물리",
+        "attackerTypes": [
+          "물"
+        ],
+        "defenderTypes": [
+          "불꽃"
+        ],
+        "moveType": "물",
+        "attackerTerastalized": false,
+        "stab": true
+      },
+      "expected": {
+        "min": 116,
+        "max": 140
+      }
+    },
+    {
+      "id": "type-x4",
+      "label": "복합 상성 4배",
+      "input": {
+        "level": 50,
+        "attack": 130,
+        "defense": 100,
+        "basePower": 80,
+        "category": "특수",
+        "attackerTypes": [
+          "얼음"
+        ],
+        "defenderTypes": [
+          "드래곤",
+          "비행"
+        ],
+        "moveType": "얼음",
+        "attackerTerastalized": false,
+        "stab": true
+      },
+      "expected": {
+        "min": 232,
+        "max": 280
+      }
+    },
+    {
+      "id": "type-x0_5",
+      "label": "상성 절반",
+      "input": {
+        "level": 50,
+        "attack": 130,
+        "defense": 100,
+        "basePower": 80,
+        "category": "특수",
+        "attackerTypes": [
+          "불꽃"
+        ],
+        "defenderTypes": [
+          "물"
+        ],
+        "moveType": "불꽃",
+        "attackerTerastalized": false,
+        "stab": true
+      },
+      "expected": {
+        "min": 29,
+        "max": 35
+      }
+    },
+    {
+      "id": "type-x0_25",
+      "label": "복합 0.25배",
+      "input": {
+        "level": 50,
+        "attack": 130,
+        "defense": 100,
+        "basePower": 80,
+        "category": "특수",
+        "attackerTypes": [
+          "불꽃"
+        ],
+        "defenderTypes": [
+          "물",
+          "바위"
+        ],
+        "moveType": "불꽃",
+        "attackerTerastalized": false,
+        "stab": true
+      },
+      "expected": {
+        "min": 14,
+        "max": 17
+      }
+    },
+    {
+      "id": "type-x0",
+      "label": "상성 0",
+      "input": {
+        "level": 50,
+        "attack": 130,
+        "defense": 100,
+        "basePower": 80,
+        "category": "물리",
+        "attackerTypes": [
+          "전기"
+        ],
+        "defenderTypes": [
+          "땅"
+        ],
+        "moveType": "전기",
+        "attackerTerastalized": false,
+        "stab": true
+      },
+      "expected": {
+        "min": 0,
+        "max": 0
+      }
+    },
+    {
+      "id": "crit",
+      "label": "급소 1.5배",
+      "input": {
+        "level": 50,
+        "attack": 130,
+        "defense": 100,
+        "basePower": 80,
+        "category": "물리",
+        "attackerTypes": [
+          "격투"
+        ],
+        "defenderTypes": [
+          "노말"
+        ],
+        "moveType": "격투",
+        "attackerTerastalized": false,
+        "stab": true,
+        "critical": true
+      },
+      "expected": {
+        "min": 176,
+        "max": 210
+      }
+    },
+    {
+      "id": "burn",
+      "label": "화상 물리 절반",
+      "input": {
+        "level": 50,
+        "attack": 130,
+        "defense": 100,
+        "basePower": 80,
+        "category": "물리",
+        "attackerTypes": [
+          "격투"
+        ],
+        "defenderTypes": [
+          "노말"
+        ],
+        "moveType": "격투",
+        "attackerTerastalized": false,
+        "stab": true,
+        "burned": true
+      },
+      "expected": {
+        "min": 60,
+        "max": 72
+      }
+    },
+    {
+      "id": "burn-special-noop",
+      "label": "화상 특수는 영향 없음",
+      "input": {
+        "level": 50,
+        "attack": 130,
+        "defense": 100,
+        "basePower": 80,
+        "category": "특수",
+        "attackerTypes": [
+          "불꽃"
+        ],
+        "defenderTypes": [
+          "풀"
+        ],
+        "moveType": "불꽃",
+        "attackerTerastalized": false,
+        "stab": true,
+        "burned": true
+      },
+      "expected": {
+        "min": 116,
+        "max": 140
+      }
+    },
+    {
+      "id": "item-glasses",
+      "label": "안경 1.2배",
+      "input": {
+        "level": 50,
+        "attack": 130,
+        "defense": 100,
+        "basePower": 80,
+        "category": "특수",
+        "attackerTypes": [
+          "불꽃"
+        ],
+        "defenderTypes": [
+          "풀"
+        ],
+        "moveType": "불꽃",
+        "attackerTerastalized": false,
+        "stab": true,
+        "itemMultiplier": 1.2
+      },
+      "expected": {
+        "min": 139,
+        "max": 168
+      }
+    },
+    {
+      "id": "item-band",
+      "label": "구애머리띠 1.5배",
+      "input": {
+        "level": 50,
+        "attack": 130,
+        "defense": 100,
+        "basePower": 80,
+        "category": "물리",
+        "attackerTypes": [
+          "격투"
+        ],
+        "defenderTypes": [
+          "노말"
+        ],
+        "moveType": "격투",
+        "attackerTerastalized": false,
+        "stab": true,
+        "itemMultiplier": 1.5
+      },
+      "expected": {
+        "min": 174,
+        "max": 210
+      }
+    },
+    {
+      "id": "item-life-orb",
+      "label": "생명의구슬 1.3배",
+      "input": {
+        "level": 50,
+        "attack": 130,
+        "defense": 100,
+        "basePower": 80,
+        "category": "물리",
+        "attackerTypes": [
+          "격투"
+        ],
+        "defenderTypes": [
+          "노말"
+        ],
+        "moveType": "격투",
+        "attackerTerastalized": false,
+        "stab": true,
+        "itemMultiplier": 1.3
+      },
+      "expected": {
+        "min": 151,
+        "max": 182
+      }
+    },
+    {
+      "id": "weather-rain",
+      "label": "비날씨 물 기술 1.5배",
+      "input": {
+        "level": 50,
+        "attack": 130,
+        "defense": 100,
+        "basePower": 80,
+        "category": "특수",
+        "attackerTypes": [
+          "물"
+        ],
+        "defenderTypes": [
+          "불꽃"
+        ],
+        "moveType": "물",
+        "attackerTerastalized": false,
+        "stab": true,
+        "weatherBoost": 1.5
+      },
+      "expected": {
+        "min": 176,
+        "max": 210
+      }
+    },
+    {
+      "id": "weather-sun-vs-water",
+      "label": "맑음에서 물 기술 0.5배",
+      "input": {
+        "level": 50,
+        "attack": 130,
+        "defense": 100,
+        "basePower": 80,
+        "category": "특수",
+        "attackerTypes": [
+          "물"
+        ],
+        "defenderTypes": [
+          "불꽃"
+        ],
+        "moveType": "물",
+        "attackerTerastalized": false,
+        "stab": true,
+        "weatherBoost": 0.5
+      },
+      "expected": {
+        "min": 56,
+        "max": 68
+      }
+    },
+    {
+      "id": "lvl-1",
+      "label": "Lv 1 케이스",
+      "input": {
+        "level": 1,
+        "attack": 30,
+        "defense": 20,
+        "basePower": 40,
+        "category": "물리",
+        "attackerTypes": [
+          "벌레"
+        ],
+        "defenderTypes": [
+          "풀"
+        ],
+        "moveType": "벌레",
+        "attackerTerastalized": false,
+        "stab": true
+      },
+      "expected": {
+        "min": 8,
+        "max": 12
+      }
+    },
+    {
+      "id": "lvl-100",
+      "label": "Lv 100 케이스",
+      "input": {
+        "level": 100,
+        "attack": 200,
+        "defense": 150,
+        "basePower": 100,
+        "category": "물리",
+        "attackerTypes": [
+          "악"
+        ],
+        "defenderTypes": [
+          "에스퍼"
+        ],
+        "moveType": "악",
+        "attackerTerastalized": false,
+        "stab": true
+      },
+      "expected": {
+        "min": 288,
+        "max": 342
+      }
+    },
+    {
+      "id": "stellar-no-stab",
+      "label": "스텔라 + 자속 아님 (1.2)",
+      "input": {
+        "level": 50,
+        "attack": 150,
+        "defense": 100,
+        "basePower": 80,
+        "category": "물리",
+        "attackerTypes": [
+          "격투"
+        ],
+        "defenderTypes": [
+          "노말"
+        ],
+        "moveType": "비행",
+        "attackerTeraType": "스텔라",
+        "attackerTerastalized": true,
+        "stab": false
+      },
+      "expected": {
+        "min": 54,
+        "max": 65
+      }
+    },
+    {
+      "id": "tera-orig-only",
+      "label": "테라 후 원본 자속만 (1.5배)",
+      "input": {
+        "level": 50,
+        "attack": 150,
+        "defense": 100,
+        "basePower": 80,
+        "category": "물리",
+        "attackerTypes": [
+          "격투"
+        ],
+        "defenderTypes": [
+          "노말"
+        ],
+        "moveType": "격투",
+        "attackerTeraType": "비행",
+        "attackerTerastalized": true,
+        "stab": true
+      },
+      "expected": {
+        "min": 134,
+        "max": 162
+      }
+    },
+    {
+      "id": "tera-new-only",
+      "label": "테라 후 새 타입만 자속 (1.5배)",
+      "input": {
+        "level": 50,
+        "attack": 150,
+        "defense": 100,
+        "basePower": 80,
+        "category": "물리",
+        "attackerTypes": [
+          "격투"
+        ],
+        "defenderTypes": [
+          "노말"
+        ],
+        "moveType": "비행",
+        "attackerTeraType": "비행",
+        "attackerTerastalized": true,
+        "stab": false
+      },
+      "expected": {
+        "min": 67,
+        "max": 81
+      }
+    },
+    {
+      "id": "crit-burn",
+      "label": "급소 + 화상 동시",
+      "input": {
+        "level": 50,
+        "attack": 130,
+        "defense": 100,
+        "basePower": 80,
+        "category": "물리",
+        "attackerTypes": [
+          "격투"
+        ],
+        "defenderTypes": [
+          "노말"
+        ],
+        "moveType": "격투",
+        "attackerTerastalized": false,
+        "stab": true,
+        "critical": true,
+        "burned": true
+      },
+      "expected": {
+        "min": 90,
+        "max": 108
+      }
+    },
+    {
+      "id": "x4-with-glasses",
+      "label": "4배 상성 + 안경",
+      "input": {
+        "level": 50,
+        "attack": 130,
+        "defense": 100,
+        "basePower": 80,
+        "category": "특수",
+        "attackerTypes": [
+          "얼음"
+        ],
+        "defenderTypes": [
+          "드래곤",
+          "비행"
+        ],
+        "moveType": "얼음",
+        "attackerTerastalized": false,
+        "stab": true,
+        "itemMultiplier": 1.2
+      },
+      "expected": {
+        "min": 278,
+        "max": 336
+      }
+    },
+    {
+      "id": "x0_25-with-life-orb",
+      "label": "0.25배 + 생명의구슬",
+      "input": {
+        "level": 50,
+        "attack": 130,
+        "defense": 100,
+        "basePower": 80,
+        "category": "특수",
+        "attackerTypes": [
+          "불꽃"
+        ],
+        "defenderTypes": [
+          "물",
+          "바위"
+        ],
+        "moveType": "불꽃",
+        "attackerTerastalized": false,
+        "stab": true,
+        "itemMultiplier": 1.3
+      },
+      "expected": {
+        "min": 18,
+        "max": 22
+      }
+    },
+    {
+      "id": "rain-stab-x2",
+      "label": "비날씨 + 자속 + 2배 상성",
+      "input": {
+        "level": 50,
+        "attack": 130,
+        "defense": 100,
+        "basePower": 100,
+        "category": "특수",
+        "attackerTypes": [
+          "물"
+        ],
+        "defenderTypes": [
+          "땅"
+        ],
+        "moveType": "물",
+        "attackerTerastalized": false,
+        "stab": true,
+        "weatherBoost": 1.5
+      },
+      "expected": {
+        "min": 222,
+        "max": 264
+      }
+    },
+    {
+      "id": "tera-stellar-x4",
+      "label": "스텔라 + 자속 + 4배",
+      "input": {
+        "level": 50,
+        "attack": 130,
+        "defense": 100,
+        "basePower": 80,
+        "category": "특수",
+        "attackerTypes": [
+          "얼음"
+        ],
+        "defenderTypes": [
+          "드래곤",
+          "비행"
+        ],
+        "moveType": "얼음",
+        "attackerTeraType": "스텔라",
+        "attackerTerastalized": true,
+        "stab": true
+      },
+      "expected": {
+        "min": 312,
+        "max": 376
+      }
+    },
+    {
+      "id": "lvl50-strong",
+      "label": "Lv50 고화력 표준",
+      "input": {
+        "level": 50,
+        "attack": 200,
+        "defense": 100,
+        "basePower": 120,
+        "category": "물리",
+        "attackerTypes": [
+          "드래곤"
+        ],
+        "defenderTypes": [
+          "격투"
+        ],
+        "moveType": "드래곤",
+        "attackerTerastalized": false,
+        "stab": true
+      },
+      "expected": {
+        "min": 135,
+        "max": 160
+      }
+    },
+    {
+      "id": "lvl50-weak-def",
+      "label": "Lv50 약방어 케이스",
+      "input": {
+        "level": 50,
+        "attack": 130,
+        "defense": 60,
+        "basePower": 80,
+        "category": "물리",
+        "attackerTypes": [
+          "격투"
+        ],
+        "defenderTypes": [
+          "노말"
+        ],
+        "moveType": "격투",
+        "attackerTerastalized": false,
+        "stab": true
+      },
+      "expected": {
+        "min": 198,
+        "max": 234
+      }
+    }
+  ]
+}
