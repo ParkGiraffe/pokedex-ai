@@ -11,16 +11,17 @@ type PokemonPickerProps = {
   invalid?: boolean;
 };
 
+// 사용자 입력의 앞뒤 공백은 자동 제거한다 ("리자몽 "·" 리자몽"도 매칭).
 export const PokemonPicker = ({ value, onSelect, id, invalid }: PokemonPickerProps) => (
   <Input
     id={id}
     list={POKEMON_DATALIST_ID}
     value={value}
-    placeholder="종족명"
+    placeholder="포켓몬"
     aria-invalid={invalid}
-    className={invalid ? "border-rose-500" : undefined}
+    className={invalid ? "border-destructive" : undefined}
     onChange={(event) => {
-      const name = event.currentTarget.value;
+      const name = event.currentTarget.value.trim();
       onSelect(name, findPokemon(name));
     }}
   />
