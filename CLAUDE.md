@@ -1,6 +1,6 @@
 # pokedex-agent — Claude 컨텍스트 가이드
 
-박기린(op5321)의 개인 도구. 스마트누오(smartnuo.com) 클론 웹앱 + Claude Code 대화형 AI 분석.
+박기린(op5321)의 개인 도구. 포켓몬 챔피언스 싱글배틀 분석 웹앱 + Claude API 기반 AI 분석.
 대상 게임: 포켓몬스터 스칼렛/바이올렛(9세대 SV) 싱글배틀.
 
 새 Claude 세션이 시작되면 **이 파일 → 아래 4개 → docs/specs/ 최신본** 순서로 읽고 컨텍스트를 복원한다.
@@ -37,7 +37,7 @@
 pokedex-agent/
 ├── .claude/                  컨텍스트·하드룰·데이터 임시 위치
 ├── apps/
-│   └── client/               React + Vite 웹앱 (스마트누오 클론 UI)
+│   └── client/               React + Vite 웹앱
 ├── packages/
 │   ├── pokedex-core/         결정론적 도메인 라이브러리 (데이터·공식·타입)
 │   └── data-fetchers/        PokeAPI 수집 스크립트
@@ -57,7 +57,7 @@ pokedex-agent/
 | Phase | 산출물                                | spec | plan |
 |-------|-------------------------------------|------|------|
 | 0     | 데이터 파운데이션 + 공식 라이브러리         | `docs/specs/2026-05-21-foundation-design.md` | `docs/plans/2026-05-21-phase-0-foundation.md` |
-| 1     | 스마트누오 클론 UI (4페이지)              | `docs/specs/2026-05-21-phase-1-client-ui-outline.md` (윤곽) | Phase 0 완료 후 작성 |
+| 1     | 웹앱 UI (4페이지)              | `docs/specs/2026-05-21-phase-1-client-ui-outline.md` (윤곽) | Phase 0 완료 후 작성 |
 | 2     | 파티 분석 AI (정적)                      | `docs/specs/2026-05-21-phase-2-party-analysis-outline.md` (윤곽) | Phase 1 완료 후 작성 |
 | 3     | 매치업 추천 AI                          | `docs/specs/2026-05-21-phase-3-matchup-leadrec-outline.md` (윤곽) | Phase 2 완료 후 작성 |
 | 4     | 실시간 배틀 의사결정 AI                   | `docs/specs/2026-05-21-phase-4-battle-decision-outline.md` (윤곽) | Phase 3 완료 후 작성 |
