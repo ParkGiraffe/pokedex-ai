@@ -1,4 +1,4 @@
-import { analysis, NATURE_NAMES, TYPE_NAMES } from "@pokedex-agent/pokedex-core";
+import { analysis, findMegaByItem, NATURE_NAMES, TYPE_NAMES } from "@pokedex-agent/pokedex-core";
 import { useState } from "react";
 
 import { cn } from "@/common/lib/cn";
@@ -44,7 +44,7 @@ const PartySlot = ({ index, draft, onChange, onRemove }: SlotProps) => {
         </button>
       </div>
 
-      <Field label="종족">
+      <Field label="포켓몬">
         <PokemonPicker value={draft.species} invalid={Boolean(error)} onSelect={(name) => onChange({ species: name })} />
       </Field>
 
@@ -56,22 +56,18 @@ const PartySlot = ({ index, draft, onChange, onRemove }: SlotProps) => {
           <Input value={draft.item} onChange={(event) => onChange({ item: event.currentTarget.value })} />
         </Field>
         <Field label="성격">
-          <Select value={draft.nature} onChange={(event) => onChange({ nature: event.currentTarget.value as (typeof NATURE_NAMES)[number] })}>
-            {NATURE_NAMES.map((nature) => (
-              <option key={nature} value={nature}>
-                {nature}
-              </option>
-            ))}
-          </Select>
+          <Select
+            value={draft.nature}
+            onValueChange={(value) => onChange({ nature: value as (typeof NATURE_NAMES)[number] })}
+            options={NATURE_NAMES.map((nature) => ({ value: nature, label: nature }))}
+          />
         </Field>
         <Field label="테라">
-          <Select value={draft.teraType} onChange={(event) => onChange({ teraType: event.currentTarget.value as (typeof TERA_OPTIONS)[number] })}>
-            {TERA_OPTIONS.map((tera) => (
-              <option key={tera} value={tera}>
-                {tera}
-              </option>
-            ))}
-          </Select>
+          <Select
+            value={draft.teraType}
+            onValueChange={(value) => onChange({ teraType: value as (typeof TERA_OPTIONS)[number] })}
+            options={TERA_OPTIONS.map((tera) => ({ value: tera, label: tera }))}
+          />
         </Field>
       </div>
 
@@ -132,6 +128,11 @@ export const PartyPage = () => {
     .filter((entry) => entry.weakCount > 0)
     .sort((a, b) => b.weakCount - a.weakCount);
 
+  // 챔피언스는 한 배틀에 메가진화가 1마리만 가능. 메가스톤 보유 슬롯이 2개 이상이면 잉여.
+  const megaCarriers = members
+    .map((member, index) => ({ member, index, mega: member.item ? findMegaByItem(member.item) : undefined }))
+    .filter((entry) => entry.mega !== undefined);
+
   return (
     <section className="flex flex-col gap-4">
       <header className="flex flex-wrap items-center justify-between gap-2">
@@ -149,15 +150,19 @@ export const PartyPage = () => {
       <Card>
         <h2 className="mb-2 text-sm font-semibold text-neutral-300">파티 약점 (2배 이상으로 받는 멤버 수)</h2>
         {weakness.length === 0 ? (
-          <p className="text-sm text-neutral-500">유효한 종족을 입력하면 약점이 집계된다.</p>
+          <p className="text-sm text-muted-foreground">유효한 포켓몬을 입력하면 약점이 집계된다.</p>
         ) : (
           <div className="flex flex-wrap gap-1.5">
             {weakness.map((entry) => (
               <span
                 key={entry.type}
                 className={cn(
-                  "rounded px-2 py-0.5 text-xs",
-                  entry.weakCount >= 3 ? "bg-rose-700 text-rose-100" : "bg-rose-900 text-rose-300"
+                  "rounded-md border px-2 py-0.5 text-xs font-medium",
+                  entry.weakCount >= 3
+                    ? "border-transparent bg-destructive/20 text-destructive"
+                    : entry.weakCount === 2
+                      ? "border-transparent bg-warning/20 text-warning"
+                      : "border-border bg-muted text-muted-foreground"
                 )}
               >
                 {entry.type} {entry.weakCount}
@@ -178,6 +183,17 @@ export const PartyPage = () => {
           화력 합계: 물리 {summary.balance.physicalPower} · 특수 {summary.balance.specialPower} · 내구{" "}
           {summary.balance.bulk}
         </p>
+        {megaCarriers.length >= 2 && (
+          <p className="flex items-center gap-1.5 text-xs text-warning">
+            <span className="rounded-md bg-warning/15 px-2 py-0.5 font-semibold">메가 {megaCarriers.length}개</span>
+            <span className="text-muted-foreground">1마리만 사용 가능 · "이 파티 분석"으로 대체 도구 확인</span>
+          </p>
+        )}
+        {megaCarriers.length === 1 && (
+          <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <span className="rounded-md bg-muted px-2 py-0.5">메가 {megaCarriers[0]!.member.species}</span>
+          </p>
+        )}
       </Card>
 
       <div className="grid gap-3 md:grid-cols-2">

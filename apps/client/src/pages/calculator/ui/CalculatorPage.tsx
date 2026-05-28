@@ -2,6 +2,7 @@ import { NATURE_NAMES, TYPE_NAMES } from "@pokedex-agent/pokedex-core";
 
 import { cn } from "@/common/lib/cn";
 import { Card } from "@/common/ui/Card";
+import { Checkbox } from "@/common/ui/Checkbox";
 import { Field } from "@/common/ui/Field";
 import { NumberField } from "@/common/ui/NumberField";
 import { Select } from "@/common/ui/Select";
@@ -50,8 +51,8 @@ export const CalculatorPage = () => {
 
       <div className="grid gap-4 md:grid-cols-2">
         <Card className="flex flex-col gap-3">
-          <h2 className="text-sm font-semibold text-emerald-400">공격 (누오)</h2>
-          <Field label="종족">
+          <h2 className="text-sm font-semibold text-emerald-400">공격</h2>
+          <Field label="포켓몬">
             <div className="flex items-center gap-2">
               <PokemonIcon species={attacker.species} />
               <PokemonPicker
@@ -65,27 +66,19 @@ export const CalculatorPage = () => {
             <Field label="분류">
               <Select
                 value={attacker.category}
-                onChange={(event) =>
-                  setAttacker({ category: event.currentTarget.value as "물리" | "특수" })
-                }
-              >
-                <option value="물리">물리</option>
-                <option value="특수">특수</option>
-              </Select>
+                onValueChange={(value) => setAttacker({ category: value as "물리" | "특수" })}
+                options={[
+                  { value: "물리", label: "물리" },
+                  { value: "특수", label: "특수" },
+                ]}
+              />
             </Field>
             <Field label="기술 타입">
               <Select
                 value={attacker.moveType}
-                onChange={(event) =>
-                  setAttacker({ moveType: event.currentTarget.value as (typeof TYPE_NAMES)[number] })
-                }
-              >
-                {TYPE_NAMES.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
-                ))}
-              </Select>
+                onValueChange={(value) => setAttacker({ moveType: value as (typeof TYPE_NAMES)[number] })}
+                options={TYPE_NAMES.map((type) => ({ value: type, label: type }))}
+              />
             </Field>
             <Field label="위력">
               <NumberField
@@ -107,16 +100,9 @@ export const CalculatorPage = () => {
             <Field label="성격">
               <Select
                 value={attacker.nature}
-                onChange={(event) =>
-                  setAttacker({ nature: event.currentTarget.value as (typeof NATURE_NAMES)[number] })
-                }
-              >
-                {NATURE_NAMES.map((nature) => (
-                  <option key={nature} value={nature}>
-                    {nature}
-                  </option>
-                ))}
-              </Select>
+                onValueChange={(value) => setAttacker({ nature: value as (typeof NATURE_NAMES)[number] })}
+                options={NATURE_NAMES.map((nature) => ({ value: nature, label: nature }))}
+              />
             </Field>
             <Field label="공격 랭크">
               <NumberField
@@ -128,79 +114,49 @@ export const CalculatorPage = () => {
             </Field>
             <Field label="도구">
               <Select
-                value={attacker.itemMultiplier}
-                onChange={(event) =>
-                  setAttacker({ itemMultiplier: Number(event.currentTarget.value) })
-                }
-              >
-                {ITEM_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </Select>
+                value={String(attacker.itemMultiplier)}
+                onValueChange={(value) => setAttacker({ itemMultiplier: Number(value) })}
+                options={ITEM_OPTIONS.map((option) => ({ value: String(option.value), label: option.label }))}
+              />
             </Field>
             <Field label="날씨">
               <Select
-                value={attacker.weatherBoost}
-                onChange={(event) =>
-                  setAttacker({ weatherBoost: Number(event.currentTarget.value) as 1 | 1.5 | 0.5 })
-                }
-              >
-                {WEATHER_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </Select>
+                value={String(attacker.weatherBoost)}
+                onValueChange={(value) => setAttacker({ weatherBoost: Number(value) as 1 | 1.5 | 0.5 })}
+                options={WEATHER_OPTIONS.map((option) => ({ value: String(option.value), label: option.label }))}
+              />
             </Field>
           </div>
           <div className="flex flex-wrap items-center gap-4 text-sm">
-            <label className="flex items-center gap-1.5">
-              <input
-                type="checkbox"
-                checked={attacker.terastalized}
-                onChange={(event) => setAttacker({ terastalized: event.currentTarget.checked })}
-              />
-              테라스탈
-            </label>
+            <Checkbox
+              checked={attacker.terastalized}
+              onCheckedChange={(checked) => setAttacker({ terastalized: checked })}
+              label="테라스탈"
+            />
             {attacker.terastalized && (
               <Select
                 className="w-auto"
                 value={attacker.teraType}
-                onChange={(event) =>
-                  setAttacker({ teraType: event.currentTarget.value as typeof attacker.teraType })
-                }
-              >
-                {[...TYPE_NAMES, "스텔라"].map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
-                ))}
-              </Select>
+                onValueChange={(value) => setAttacker({ teraType: value as typeof attacker.teraType })}
+                options={[...TYPE_NAMES, "스텔라"].map((type) => ({ value: type, label: type }))}
+              />
             )}
-            <label className="flex items-center gap-1.5">
-              <input
-                type="checkbox"
-                checked={attacker.critical}
-                onChange={(event) => setAttacker({ critical: event.currentTarget.checked })}
-              />
-              급소
-            </label>
-            <label className="flex items-center gap-1.5">
-              <input
-                type="checkbox"
-                checked={attacker.burned}
-                onChange={(event) => setAttacker({ burned: event.currentTarget.checked })}
-              />
-              화상
-            </label>
+            <Checkbox
+              checked={attacker.critical}
+              onCheckedChange={(checked) => setAttacker({ critical: checked })}
+              label="급소"
+            />
+            <Checkbox
+              checked={attacker.burned}
+              onCheckedChange={(checked) => setAttacker({ burned: checked })}
+              label="화상"
+            />
           </div>
         </Card>
 
         <Card className="flex flex-col gap-3">
-          <h2 className="text-sm font-semibold text-sky-400">방어 (토오)</h2>
-          <Field label="종족">
+          <h2 className="text-sm font-semibold text-sky-400">방어</h2>
+          <Field label="포켓몬">
             <div className="flex items-center gap-2">
               <PokemonIcon species={defender.species} />
               <PokemonPicker
@@ -232,16 +188,9 @@ export const CalculatorPage = () => {
             <Field label="성격">
               <Select
                 value={defender.nature}
-                onChange={(event) =>
-                  setDefender({ nature: event.currentTarget.value as (typeof NATURE_NAMES)[number] })
-                }
-              >
-                {NATURE_NAMES.map((nature) => (
-                  <option key={nature} value={nature}>
-                    {nature}
-                  </option>
-                ))}
-              </Select>
+                onValueChange={(value) => setDefender({ nature: value as (typeof NATURE_NAMES)[number] })}
+                options={NATURE_NAMES.map((nature) => ({ value: nature, label: nature }))}
+              />
             </Field>
             <Field label="방어 랭크">
               <NumberField
@@ -278,7 +227,7 @@ export const CalculatorPage = () => {
             <RollBar rolls={result.damage.rolls} max={result.damage.max} />
           </div>
         ) : (
-          <p className="text-sm text-neutral-400">공격·방어 종족을 정확히 입력하라.</p>
+          <p className="text-sm text-neutral-400">공격·방어 포켓몬을 정확히 입력하라.</p>
         )}
       </Card>
 

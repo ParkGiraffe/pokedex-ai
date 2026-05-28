@@ -2,9 +2,11 @@ import { findMegasBySpecies, NATURE_NAMES } from "@pokedex-agent/pokedex-core";
 
 import { cn } from "@/common/lib/cn";
 import { Card } from "@/common/ui/Card";
+import { Checkbox } from "@/common/ui/Checkbox";
 import { Field } from "@/common/ui/Field";
 import { NumberField } from "@/common/ui/NumberField";
 import { Select } from "@/common/ui/Select";
+import { MegaControl } from "@/features/pokemon-picker/ui/MegaControl";
 import { PokemonDatalist } from "@/features/pokemon-picker/ui/PokemonDatalist";
 import { PokemonIcon } from "@/features/pokemon-picker/ui/PokemonIcon";
 import { PokemonPicker } from "@/features/pokemon-picker/ui/PokemonPicker";
@@ -27,43 +29,21 @@ const SideCard = ({ title, accent, side, onChange }: SideCardProps) => {
         <h2 className={cn("text-sm font-semibold", accent)}>{title}</h2>
         <span className="text-lg font-bold">{speed ?? "-"}</span>
       </div>
-      <Field label="종족">
+      <Field label="포켓몬">
         <div className="flex items-center gap-2">
           <PokemonIcon species={side.species} />
           <PokemonPicker value={side.species} invalid={speed === undefined} onSelect={(name) => onChange({ species: name })} />
         </div>
       </Field>
-      {(() => {
-        const megas = findMegasBySpecies(side.species);
-        if (megas.length === 0) {
-          return null;
-        }
-        if (megas.length === 1) {
-          const only = megas[0]!;
-          return (
-            <label className="flex items-center gap-1.5 text-sm">
-              <input
-                type="checkbox"
-                checked={side.megaForm === only.form}
-                onChange={(event) => onChange({ megaForm: event.currentTarget.checked ? only.form : "" })}
-              />
-              메가진화 ({only.ko})
-            </label>
-          );
-        }
-        return (
-          <Field label="메가진화">
-            <Select value={side.megaForm} onChange={(event) => onChange({ megaForm: event.currentTarget.value })}>
-              <option value="">비메가</option>
-              {megas.map((mega) => (
-                <option key={mega.form} value={mega.form}>
-                  {mega.ko}
-                </option>
-              ))}
-            </Select>
-          </Field>
-        );
-      })()}
+      {findMegasBySpecies(side.species).length > 0 && (
+        <Field label="메가진화">
+          <MegaControl
+            species={side.species}
+            value={side.megaForm}
+            onChange={(form) => onChange({ megaForm: form })}
+          />
+        </Field>
+      )}
       <div className="grid grid-cols-2 gap-3">
         <Field label="스피드 노력치">
           <NumberField value={side.ev} min={0} max={32} step={1} onValueChange={(value) => onChange({ ev: value })} />
@@ -71,42 +51,29 @@ const SideCard = ({ title, accent, side, onChange }: SideCardProps) => {
         <Field label="성격">
           <Select
             value={side.nature}
-            onChange={(event) => onChange({ nature: event.currentTarget.value as (typeof NATURE_NAMES)[number] })}
-          >
-            {NATURE_NAMES.map((nature) => (
-              <option key={nature} value={nature}>
-                {nature}
-              </option>
-            ))}
-          </Select>
+            onValueChange={(value) => onChange({ nature: value as (typeof NATURE_NAMES)[number] })}
+            options={NATURE_NAMES.map((nature) => ({ value: nature, label: nature }))}
+          />
         </Field>
         <Field label="스피드 랭크">
           <NumberField value={side.rank} min={-6} max={6} onValueChange={(value) => onChange({ rank: value })} />
         </Field>
         <Field label="도구/특성 배율">
           <Select
-            value={side.itemMultiplier}
-            onChange={(event) => onChange({ itemMultiplier: Number(event.currentTarget.value) })}
-          >
-            <option value={1}>없음</option>
-            <option value={1.5}>구애스카프 1.5배</option>
-            <option value={0.5}>두꺼운자루 0.5배</option>
-          </Select>
+            value={String(side.itemMultiplier)}
+            onValueChange={(value) => onChange({ itemMultiplier: Number(value) })}
+            options={[
+              { value: "1", label: "없음" },
+              { value: "1.5", label: "구애스카프 1.5배" },
+              { value: "0.5", label: "두꺼운자루 0.5배" },
+            ]}
+          />
         </Field>
       </div>
       <div className="flex flex-wrap gap-4 text-sm">
-        <label className="flex items-center gap-1.5">
-          <input type="checkbox" checked={side.tailwind} onChange={(event) => onChange({ tailwind: event.currentTarget.checked })} />
-          순풍
-        </label>
-        <label className="flex items-center gap-1.5">
-          <input type="checkbox" checked={side.paralyzed} onChange={(event) => onChange({ paralyzed: event.currentTarget.checked })} />
-          마비
-        </label>
-        <label className="flex items-center gap-1.5">
-          <input type="checkbox" checked={side.stickyWeb} onChange={(event) => onChange({ stickyWeb: event.currentTarget.checked })} />
-          끈적네트
-        </label>
+        <Checkbox checked={side.tailwind} onCheckedChange={(checked) => onChange({ tailwind: checked })} label="순풍" />
+        <Checkbox checked={side.paralyzed} onCheckedChange={(checked) => onChange({ paralyzed: checked })} label="마비" />
+        <Checkbox checked={side.stickyWeb} onCheckedChange={(checked) => onChange({ stickyWeb: checked })} label="끈적네트" />
       </div>
     </Card>
   );
@@ -129,10 +96,7 @@ export const SpeedPage = () => {
         <h1 className="text-xl font-bold">스피드</h1>
       </header>
 
-      <label className="flex w-fit items-center gap-1.5 text-sm">
-        <input type="checkbox" checked={trickRoom} onChange={(event) => setTrickRoom(event.currentTarget.checked)} />
-        트릭룸
-      </label>
+      <Checkbox checked={trickRoom} onCheckedChange={setTrickRoom} label="트릭룸" className="w-fit" />
 
       <div className="grid gap-4 md:grid-cols-2">
         <SideCard title="좌" accent="text-emerald-400" side={left} onChange={setLeft} />

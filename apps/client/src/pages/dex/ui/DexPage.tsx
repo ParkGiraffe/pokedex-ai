@@ -1,4 +1,5 @@
 import { findPokemon, TYPE_NAMES } from "@pokedex-agent/pokedex-core";
+import { useEffect, useState } from "react";
 
 import { cn } from "@/common/lib/cn";
 import { Button } from "@/common/ui/Button";
@@ -7,6 +8,40 @@ import { Field } from "@/common/ui/Field";
 import { Input } from "@/common/ui/Input";
 import { Select } from "@/common/ui/Select";
 import { PokemonIcon } from "@/features/pokemon-picker/ui/PokemonIcon";
+
+// 페이지 직접 입력. 사용자가 타이핑 중일 땐 부모 state로 즉시 반영 안 하고, blur/Enter에 commit한다.
+// 그래야 "1"이 박힌 채로 새 숫자 입력 시 132·52 같은 이상한 합쳐짐이 안 생긴다.
+const PageInput = ({ value, max, onCommit }: { value: number; max: number; onCommit: (page: number) => void }) => {
+  const [draft, setDraft] = useState<string>(String(value));
+  useEffect(() => {
+    setDraft(String(value));
+  }, [value]);
+  const commit = () => {
+    const next = Number(draft);
+    if (Number.isNaN(next)) {
+      setDraft(String(value));
+      return;
+    }
+    onCommit(Math.min(max, Math.max(1, next)));
+  };
+  return (
+    <input
+      type="number"
+      value={draft}
+      min={1}
+      max={max}
+      onChange={(event) => setDraft(event.currentTarget.value)}
+      onFocus={(event) => event.currentTarget.select()}
+      onBlur={commit}
+      onKeyDown={(event) => {
+        if (event.key === "Enter") {
+          event.currentTarget.blur();
+        }
+      }}
+      className="h-9 w-16 rounded-md border border-border bg-input px-2 text-center text-sm text-foreground transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+    />
+  );
+};
 
 import {
   ALL_GENERATIONS,
@@ -60,24 +95,24 @@ export const DexPage = () => {
           <Input value={query} placeholder="이름 또는 도감번호" onChange={(event) => setQuery(event.currentTarget.value)} />
         </Field>
         <Field label="타입">
-          <Select value={type} onChange={(event) => setType(event.currentTarget.value as typeof type)}>
-            <option value={ALL_TYPES}>전체</option>
-            {TYPE_NAMES.map((name) => (
-              <option key={name} value={name}>
-                {name}
-              </option>
-            ))}
-          </Select>
+          <Select
+            value={type}
+            onValueChange={(value) => setType(value as typeof type)}
+            options={[
+              { value: ALL_TYPES, label: "전체" },
+              ...TYPE_NAMES.map((name) => ({ value: name, label: name })),
+            ]}
+          />
         </Field>
         <Field label="세대">
-          <Select value={generation} onChange={(event) => setGeneration(Number(event.currentTarget.value))}>
-            <option value={ALL_GENERATIONS}>전체</option>
-            {GENERATIONS.map((gen) => (
-              <option key={gen} value={gen}>
-                {gen}세대
-              </option>
-            ))}
-          </Select>
+          <Select
+            value={String(generation)}
+            onValueChange={(value) => setGeneration(Number(value))}
+            options={[
+              { value: String(ALL_GENERATIONS), label: "전체" },
+              ...GENERATIONS.map((gen) => ({ value: String(gen), label: `${gen}세대` })),
+            ]}
+          />
         </Field>
       </div>
 
@@ -150,9 +185,8 @@ export const DexPage = () => {
           <Button variant="secondary" disabled={safePage === 1} onClick={() => setPage(safePage - 1)}>
             이전
           </Button>
-          <span className="text-neutral-400">
-            {safePage} / {totalPages}
-          </span>
+          <PageInput value={safePage} max={totalPages} onCommit={setPage} />
+          <span className="text-muted-foreground">/ {totalPages}</span>
           <Button variant="secondary" disabled={safePage === totalPages} onClick={() => setPage(safePage + 1)}>
             다음
           </Button>
