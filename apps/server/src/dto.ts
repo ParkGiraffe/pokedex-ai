@@ -1,8 +1,15 @@
 import { BattleState, Party } from "@pokedex-agent/pokedex-core";
 import { z } from "zod";
 
+const MegaFormSelection = z
+  .object({
+    my: z.record(z.string(), z.string()).optional(),
+    opponent: z.record(z.string(), z.string()).optional(),
+  })
+  .optional();
+
 export const AnalyzePartyBody = z.object({ party: Party });
-export const MatchupLeadrecBody = z.object({ state: BattleState });
+export const MatchupLeadrecBody = z.object({ state: BattleState, megaForms: MegaFormSelection });
 export const BattleAdviceBody = z.object({ state: BattleState });
 
 const StatSpread = z

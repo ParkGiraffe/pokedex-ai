@@ -30,7 +30,8 @@
         "S": 80
       },
       "ability": "두꺼운지방",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "obligatory"
     },
     {
       "stone": "charizardite-x",
@@ -52,7 +53,8 @@
         "S": 100
       },
       "ability": "단단한발톱",
-      "megaForme": "X"
+      "megaForme": "X",
+      "megaPriority": "obligatory"
     },
     {
       "stone": "charizardite-y",
@@ -74,7 +76,8 @@
         "S": 100
       },
       "ability": "가뭄",
-      "megaForme": "Y"
+      "megaForme": "Y",
+      "megaPriority": "obligatory"
     },
     {
       "stone": "blastoiseite",
@@ -95,7 +98,8 @@
         "S": 78
       },
       "ability": "메가런처",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "obligatory"
     },
     {
       "stone": "beedrillite",
@@ -117,7 +121,8 @@
         "S": 145
       },
       "ability": "적응력",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "fringe"
     },
     {
       "stone": "pidgeotite",
@@ -139,10 +144,11 @@
         "S": 121
       },
       "ability": "노가드",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "fringe"
     },
     {
-      "stone": "clefableite",
+      "stone": "clefablite",
       "form": "clefable-mega",
       "baseNo": 36,
       "baseKo": "픽시",
@@ -161,10 +167,11 @@
         "S": 70
       },
       "ability": "매직미러",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "flexible"
     },
     {
-      "stone": "alakazamite",
+      "stone": "alakazite",
       "form": "alakazam-mega",
       "baseNo": 65,
       "baseKo": "후딘",
@@ -182,7 +189,8 @@
         "S": 150
       },
       "ability": "트레이스",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "flexible"
     },
     {
       "stone": "victreebelite",
@@ -204,10 +212,11 @@
         "S": 70
       },
       "ability": "내용물분출",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "obligatory"
     },
     {
-      "stone": "slowbroite",
+      "stone": "slowbronite",
       "form": "slowbro-mega",
       "baseNo": 80,
       "baseKo": "야도란",
@@ -226,7 +235,8 @@
         "S": 30
       },
       "ability": "조가비갑옷",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "flexible"
     },
     {
       "stone": "gengarite",
@@ -248,7 +258,8 @@
         "S": 130
       },
       "ability": "그림자밟기",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "flexible"
     },
     {
       "stone": "kangaskhanite",
@@ -269,10 +280,11 @@
         "S": 100
       },
       "ability": "부자유친",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "obligatory"
     },
     {
-      "stone": "starmieite",
+      "stone": "starmienite",
       "form": "starmie-mega",
       "baseNo": 121,
       "baseKo": "아쿠스타",
@@ -291,7 +303,8 @@
         "S": 120
       },
       "ability": "천하장사",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "flexible"
     },
     {
       "stone": "pinsirite",
@@ -313,7 +326,8 @@
         "S": 105
       },
       "ability": "스카이스킨",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "fringe"
     },
     {
       "stone": "gyaradosite",
@@ -335,7 +349,8 @@
         "S": 81
       },
       "ability": "틀깨기",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "flexible"
     },
     {
       "stone": "aerodactylite",
@@ -357,10 +372,11 @@
         "S": 150
       },
       "ability": "단단한발톱",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "flexible"
     },
     {
-      "stone": "dragoniteite",
+      "stone": "dragonitite",
       "form": "dragonite-mega",
       "baseNo": 149,
       "baseKo": "망나뇽",
@@ -379,7 +395,8 @@
         "S": 100
       },
       "ability": "멀티스케일",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "flexible"
     },
     {
       "stone": "meganiumite",
@@ -401,7 +418,8 @@
         "S": 80
       },
       "ability": "mega-sol",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "obligatory"
     },
     {
       "stone": "feraligatrite",
@@ -423,7 +441,8 @@
         "S": 78
       },
       "ability": "dragonize",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "obligatory"
     },
     {
       "stone": "ampharosite",
@@ -445,7 +464,8 @@
         "S": 45
       },
       "ability": "틀깨기",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "fringe"
     },
     {
       "stone": "steelixite",
@@ -467,7 +487,8 @@
         "S": 30
       },
       "ability": "모래의힘",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "fringe"
     },
     {
       "stone": "scizorite",
@@ -489,7 +510,8 @@
         "S": 75
       },
       "ability": "테크니션",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "obligatory"
     },
     {
       "stone": "heracrossite",
@@ -511,10 +533,11 @@
         "S": 75
       },
       "ability": "스킬링크",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "obligatory"
     },
     {
-      "stone": "skarmoryite",
+      "stone": "skarmorite",
       "form": "skarmory-mega",
       "baseNo": 227,
       "baseKo": "무장조",
@@ -533,10 +556,11 @@
         "S": 110
       },
       "ability": "굳건한신념",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "flexible"
     },
     {
-      "stone": "houndoomite",
+      "stone": "houndoominite",
       "form": "houndoom-mega",
       "baseNo": 229,
       "baseKo": "헬가",
@@ -555,7 +579,8 @@
         "S": 115
       },
       "ability": "선파워",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "fringe"
     },
     {
       "stone": "tyranitarite",
@@ -577,7 +602,8 @@
         "S": 71
       },
       "ability": "모래날림",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "flexible"
     },
     {
       "stone": "blazikenite",
@@ -599,7 +625,8 @@
         "S": 100
       },
       "ability": "가속",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "unknown"
     },
     {
       "stone": "gardevoirite",
@@ -621,7 +648,8 @@
         "S": 100
       },
       "ability": "페어리스킨",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "fringe"
     },
     {
       "stone": "sableyeite",
@@ -643,7 +671,8 @@
         "S": 20
       },
       "ability": "매직미러",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "obligatory"
     },
     {
       "stone": "aggronite",
@@ -664,7 +693,8 @@
         "S": 50
       },
       "ability": "필터",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "fringe"
     },
     {
       "stone": "medichamite",
@@ -686,10 +716,11 @@
         "S": 100
       },
       "ability": "순수한힘",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "obligatory"
     },
     {
-      "stone": "sharpedoite",
+      "stone": "sharpedonite",
       "form": "sharpedo-mega",
       "baseNo": 319,
       "baseKo": "샤크니아",
@@ -708,10 +739,11 @@
         "S": 105
       },
       "ability": "옹골찬턱",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "fringe"
     },
     {
-      "stone": "banetteite",
+      "stone": "banettite",
       "form": "banette-mega",
       "baseNo": 354,
       "baseKo": "다크펫",
@@ -729,10 +761,11 @@
         "S": 75
       },
       "ability": "짓궂은마음",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "obligatory"
     },
     {
-      "stone": "chimechoite",
+      "stone": "chimechonite",
       "form": "chimecho-mega",
       "baseNo": 358,
       "baseKo": "치렁",
@@ -751,10 +784,11 @@
         "S": 65
       },
       "ability": "부유",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "fringe"
     },
     {
-      "stone": "salamenceite",
+      "stone": "salamencite",
       "form": "salamence-mega",
       "baseNo": 373,
       "baseKo": "보만다",
@@ -773,7 +807,8 @@
         "S": 120
       },
       "ability": "스카이스킨",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "unknown"
     },
     {
       "stone": "metagrossite",
@@ -795,10 +830,11 @@
         "S": 110
       },
       "ability": "단단한발톱",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "unknown"
     },
     {
-      "stone": "lopunnyite",
+      "stone": "lopunnite",
       "form": "lopunny-mega",
       "baseNo": 428,
       "baseKo": "이어롭",
@@ -817,7 +853,8 @@
         "S": 135
       },
       "ability": "배짱",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "obligatory"
     },
     {
       "stone": "garchompite",
@@ -839,10 +876,11 @@
         "S": 92
       },
       "ability": "모래의힘",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "flexible"
     },
     {
-      "stone": "lucarioite",
+      "stone": "lucarionite",
       "form": "lucario-mega",
       "baseNo": 448,
       "baseKo": "루카리오",
@@ -861,10 +899,11 @@
         "S": 112
       },
       "ability": "적응력",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "obligatory"
     },
     {
-      "stone": "abomasnowite",
+      "stone": "abomasite",
       "form": "abomasnow-mega",
       "baseNo": 460,
       "baseKo": "눈설왕",
@@ -883,10 +922,11 @@
         "S": 30
       },
       "ability": "눈퍼뜨리기",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "fringe"
     },
     {
-      "stone": "galladeite",
+      "stone": "galladite",
       "form": "gallade-mega",
       "baseNo": 475,
       "baseKo": "엘레이드",
@@ -905,7 +945,8 @@
         "S": 110
       },
       "ability": "정신력",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "flexible"
     },
     {
       "stone": "froslassite",
@@ -927,7 +968,8 @@
         "S": 120
       },
       "ability": "눈퍼뜨리기",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "obligatory"
     },
     {
       "stone": "emboarite",
@@ -949,7 +991,8 @@
         "S": 75
       },
       "ability": "틀깨기",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "fringe"
     },
     {
       "stone": "excadrillite",
@@ -971,10 +1014,11 @@
         "S": 103
       },
       "ability": "piercing-drill",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "flexible"
     },
     {
-      "stone": "chandelureite",
+      "stone": "chandelurite",
       "form": "chandelure-mega",
       "baseNo": 609,
       "baseKo": "샹델라",
@@ -993,7 +1037,8 @@
         "S": 90
       },
       "ability": "틈새포착",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "fringe"
     },
     {
       "stone": "golurkite",
@@ -1015,7 +1060,8 @@
         "S": 55
       },
       "ability": "보이지않는주먹",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "fringe"
     },
     {
       "stone": "chesnaughtite",
@@ -1037,7 +1083,8 @@
         "S": 44
       },
       "ability": "방탄",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "flexible"
     },
     {
       "stone": "delphoxite",
@@ -1059,10 +1106,11 @@
         "S": 134
       },
       "ability": "부유",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "obligatory"
     },
     {
-      "stone": "greninjaite",
+      "stone": "greninjite",
       "form": "greninja-mega",
       "baseNo": 658,
       "baseKo": "개굴닌자",
@@ -1081,10 +1129,11 @@
         "S": 142
       },
       "ability": "변환자재",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "flexible"
     },
     {
-      "stone": "floetteite",
+      "stone": "floettite",
       "form": "floette-mega",
       "baseNo": 670,
       "baseKo": "플라엣테",
@@ -1102,7 +1151,8 @@
         "S": 102
       },
       "ability": "페어리오라",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "obligatory"
     },
     {
       "stone": "meowsticite",
@@ -1123,10 +1173,11 @@
         "S": 124
       },
       "ability": "트레이스",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "fringe"
     },
     {
-      "stone": "hawluchaite",
+      "stone": "hawluchite",
       "form": "hawlucha-mega",
       "baseNo": 701,
       "baseKo": "루차불",
@@ -1145,10 +1196,11 @@
         "S": 118
       },
       "ability": "노가드",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "fringe"
     },
     {
-      "stone": "crabominableite",
+      "stone": "crabominite",
       "form": "crabominable-mega",
       "baseNo": 740,
       "baseKo": "모단단게",
@@ -1167,10 +1219,11 @@
         "S": 33
       },
       "ability": "철주먹",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "fringe"
     },
     {
-      "stone": "drampaite",
+      "stone": "drampite",
       "form": "drampa-mega",
       "baseNo": 780,
       "baseKo": "할비롱",
@@ -1189,7 +1242,8 @@
         "S": 36
       },
       "ability": "발끈",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "fringe"
     },
     {
       "stone": "scovillainite",
@@ -1211,10 +1265,11 @@
         "S": 75
       },
       "ability": "spicy-spray",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "obligatory"
     },
     {
-      "stone": "glimmoraite",
+      "stone": "glimmorite",
       "form": "glimmora-mega",
       "baseNo": 970,
       "baseKo": "킬라플로르",
@@ -1233,7 +1288,8 @@
         "S": 101
       },
       "ability": "적응력",
-      "megaForme": null
+      "megaForme": null,
+      "megaPriority": "flexible"
     }
   ]
 }

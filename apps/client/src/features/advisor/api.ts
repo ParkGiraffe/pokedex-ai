@@ -20,8 +20,15 @@ const postJson = async <T>(path: string, body: unknown, fallback: string): Promi
 export const requestPartyAnalysis = (party: Party): Promise<ClaudeResponse> =>
   postJson("/analyze-party", { party }, "파티 분석 실패");
 
-export const requestMatchupLeadrec = (state: BattleState): Promise<ClaudeResponse> =>
-  postJson("/matchup-leadrec", { state }, "매치업 분석 실패");
+export type MegaFormSelection = {
+  my?: Record<string, string>;
+  opponent?: Record<string, string>;
+};
+
+export const requestMatchupLeadrec = (
+  state: BattleState,
+  megaForms?: MegaFormSelection
+): Promise<ClaudeResponse> => postJson("/matchup-leadrec", { state, megaForms }, "매치업 분석 실패");
 
 export const requestBattleAdvice = (state: BattleState): Promise<ClaudeResponse> =>
   postJson("/battle-advice", { state }, "배틀 추천 실패");

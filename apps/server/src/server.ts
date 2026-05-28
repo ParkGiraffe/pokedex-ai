@@ -85,7 +85,7 @@ export const buildServer = (): FastifyInstance => {
 
   app.post("/matchup-leadrec", async (request) => {
     const body = MatchupLeadrecBody.parse(request.body);
-    return adviseMatchup(body.state);
+    return adviseMatchup(body.state, body.megaForms);
   });
 
   app.post("/battle-advice", async (request) => {

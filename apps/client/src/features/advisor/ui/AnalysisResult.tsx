@@ -59,7 +59,6 @@ export const AnalysisResult = ({ result }: AnalysisResultProps) => {
           <ul className="mt-1.5 flex flex-col gap-1 text-sm text-neutral-300">
             {result.actionable.map((action, index) => (
               <li key={`${action.kind}-${index}`}>
-                {action.slot ? `슬롯 ${action.slot}: ` : ""}
                 {action.reason}
                 {action.from && action.to ? ` (${action.from} → ${action.to})` : ""}
               </li>
