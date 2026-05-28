@@ -45,6 +45,8 @@ export type MoveOptionsContext = {
   myRanks?: StatRanks; // 내 액티브 랭크업/다운 (-6..+6). 미지정 시 0.
   opponentRanks?: StatRanks; // 상대 랭크업/다운.
   myStatus?: StatusCondition | ""; // 화상 시 물리 공격 ÷2. 마비는 스피드 영향이라 데미지엔 무관.
+  // 상대 진영 스크린. 빛의장막=특수기 0.5배, 리플렉터=물리기 0.5배. 기술 분류에 맞게 적용.
+  opponentScreens?: { light?: boolean; reflect?: boolean };
 };
 
 export const moveOptions = (
@@ -115,6 +117,9 @@ export const moveOptions = (
     const attack = applyRank(rawAttack, context.myRanks?.[attackKey] ?? 0);
     const defense = applyRank(rawDefense, context.opponentRanks?.[defenseKey] ?? 0);
 
+    const screen = physical
+      ? (context.opponentScreens?.reflect ?? false)
+      : (context.opponentScreens?.light ?? false);
     const result = calculateDamage({
       level: myActive.level,
       attack,
@@ -126,6 +131,7 @@ export const moveOptions = (
       moveType: move.type as TypeName,
       attackerTerastalized: false,
       burned: context.myStatus === "화상",
+      screen,
     });
 
     const koRolls = result.rolls.filter((roll) => roll >= currentHp).length;

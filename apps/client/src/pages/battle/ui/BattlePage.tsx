@@ -54,6 +54,7 @@ export const BattlePage = () => {
     myStatus: battle.myStatus,
     opponentStatus: battle.opponentStatus,
     rosterSpecies: battle.rosterSpecies,
+    field: battle.field,
   };
   const myMegas = activeMegaOptions(input);
   const opponentMegas = opponentMegaOptions(input);
@@ -312,6 +313,68 @@ export const BattlePage = () => {
           </div>
           <p className="text-xs text-muted-foreground">
             랭크는 각 능력치 -6~+6. +1 = 1.5배, -1 ≈ 0.67배. 화상이면 물리 공격이 절반.
+          </p>
+        </Card>
+      )}
+
+      {myParty.length > 0 && (
+        <Card className="flex flex-col gap-3">
+          <h2 className="text-sm font-semibold text-neutral-300">필드</h2>
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="flex flex-col gap-2">
+              <span className="text-xs font-medium text-muted-foreground">내 진입 위험</span>
+              <Checkbox
+                checked={battle.field.myStealthRock}
+                onCheckedChange={(checked) => battle.setField({ myStealthRock: checked })}
+                label="스텔스록"
+              />
+              <Checkbox
+                checked={battle.field.myStickyWeb}
+                onCheckedChange={(checked) => battle.setField({ myStickyWeb: checked })}
+                label="끈적네트"
+              />
+              <Field label="압정 층수">
+                <Select
+                  value={String(battle.field.mySpikes)}
+                  onValueChange={(value) => battle.setField({ mySpikes: Number(value) as 0 | 1 | 2 | 3 })}
+                  options={[
+                    { value: "0", label: "없음" },
+                    { value: "1", label: "1층" },
+                    { value: "2", label: "2층" },
+                    { value: "3", label: "3층" },
+                  ]}
+                />
+              </Field>
+            </div>
+            <div className="flex flex-col gap-2">
+              <span className="text-xs font-medium text-muted-foreground">상대 스크린</span>
+              <Checkbox
+                checked={battle.field.opponentLightScreen}
+                onCheckedChange={(checked) => battle.setField({ opponentLightScreen: checked })}
+                label="빛의장막 (특수 반감)"
+              />
+              <Checkbox
+                checked={battle.field.opponentReflect}
+                onCheckedChange={(checked) => battle.setField({ opponentReflect: checked })}
+                label="리플렉터 (물리 반감)"
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <span className="text-xs font-medium text-muted-foreground">순풍</span>
+              <Checkbox
+                checked={battle.field.myTailwind}
+                onCheckedChange={(checked) => battle.setField({ myTailwind: checked })}
+                label="내 순풍"
+              />
+              <Checkbox
+                checked={battle.field.opponentTailwind}
+                onCheckedChange={(checked) => battle.setField({ opponentTailwind: checked })}
+                label="상대 순풍"
+              />
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            스텔스록·압정은 교체 진입 데미지로 교체 평가에, 스크린은 데미지에, 순풍은 선공 판정에 반영된다.
           </p>
         </Card>
       )}

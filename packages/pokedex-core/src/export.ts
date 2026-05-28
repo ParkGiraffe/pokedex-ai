@@ -109,6 +109,21 @@ const battleDecisionBody = (state: BattleState): string => {
   if (state.weather) lines.push(`- 날씨: ${state.weather}`);
   if (state.terrain) lines.push(`- 필드: ${state.terrain}`);
   if (state.trickRoom) lines.push(`- 트릭룸: 활성`);
+  // 필드 상태(진입 위험·스크린·순풍). 데미지·교체·선공 판단의 근거.
+  const fld = state.battleField;
+  if (fld) {
+    const notes: string[] = [];
+    if (fld.myStealthRock) notes.push("내 진영 스텔스록");
+    if (fld.mySpikes > 0) notes.push(`내 진영 압정 ${fld.mySpikes}층`);
+    if (fld.myStickyWeb) notes.push("내 진영 끈적네트");
+    if (fld.opponentLightScreen) notes.push("상대 빛의장막(특수 반감)");
+    if (fld.opponentReflect) notes.push("상대 리플렉터(물리 반감)");
+    if (fld.myTailwind) notes.push("내 순풍(스피드 2배)");
+    if (fld.opponentTailwind) notes.push("상대 순풍");
+    if (notes.length > 0) {
+      lines.push(`- 필드 상태: ${notes.join(", ")} (위 데미지·타수에 이미 반영됨. 교체 시 내 진영 진입 위험 고려)`);
+    }
+  }
   lines.push("");
   lines.push("## 내 파티");
   lines.push(state.my.map(formatMember).join("\n"));
@@ -156,6 +171,9 @@ const battleDecisionBody = (state: BattleState): string => {
       myRanks: pickRanks(mySlot.ranks),
       opponentRanks: pickRanks(opponentSlot.ranks),
       myStatus: mySlot.status ?? "",
+      opponentScreens: state.battleField
+        ? { light: state.battleField.opponentLightScreen, reflect: state.battleField.opponentReflect }
+        : undefined,
     });
     if (options) {
       const oppRankNote = opponentSlot.ranks.D !== 0 || opponentSlot.ranks.B !== 0 ? " (상대 랭크 반영)" : "";

@@ -108,6 +108,18 @@ export const FieldSlot = z.object({
 });
 export type FieldSlot = z.infer<typeof FieldSlot>;
 
+// 필드 상태. 진입 위험(hazard)은 내 쪽, 스크린은 상대 쪽, 순풍은 양쪽 기준.
+export const BattleFieldState = z.object({
+  myStealthRock: z.boolean().default(false),
+  mySpikes: z.number().int().min(0).max(3).default(0),
+  myStickyWeb: z.boolean().default(false),
+  opponentLightScreen: z.boolean().default(false),
+  opponentReflect: z.boolean().default(false),
+  myTailwind: z.boolean().default(false),
+  opponentTailwind: z.boolean().default(false),
+});
+export type BattleFieldState = z.infer<typeof BattleFieldState>;
+
 export const BattleState = z.object({
   my: Party,
   opponent: z.object({
@@ -119,6 +131,7 @@ export const BattleState = z.object({
   terrain: Terrain.optional(),
   trickRoom: z.boolean().default(false),
   turn: z.number().int().min(1).default(1),
+  battleField: BattleFieldState.optional(),
 });
 export type BattleState = z.infer<typeof BattleState>;
 

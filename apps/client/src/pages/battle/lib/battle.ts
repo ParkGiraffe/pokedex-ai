@@ -13,7 +13,7 @@ import {
   type Weather,
 } from "@pokedex-agent/pokedex-core";
 
-import { type RankBlock } from "../model/store";
+import { type BattleField, type RankBlock } from "../model/store";
 
 const DEFAULT_RANKS = { A: 0, B: 0, C: 0, D: 0, S: 0, accuracy: 0, evasion: 0 };
 
@@ -47,6 +47,8 @@ export type BattleInput = {
   opponentStatus: StatusCondition | "";
   // 살아있는(교체 가능한) 종족. 빈 배열이면 파티 전체. 기절한 포켓몬을 빼면 교체 후보에서 제외된다.
   rosterSpecies: string[];
+  // 필드 상태(진입 위험·스크린·순풍). 데미지·교체 평가·선공 판정에 반영된다.
+  field: BattleField;
 };
 
 // 내 액티브 종족의 가능한 메가 폼 목록.
@@ -75,6 +77,10 @@ export const battleOptions = (input: BattleInput): decision.MoveOption[] | undef
     myRanks: input.myRanks,
     opponentRanks: input.opponentRanks,
     myStatus: input.myStatus,
+    opponentScreens: {
+      light: input.field.opponentLightScreen,
+      reflect: input.field.opponentReflect,
+    },
   });
 };
 
@@ -115,25 +121,58 @@ export const battleAdvice = (input: BattleInput): BattleAdvice | undefined => {
   );
   // 교체 후보 평가는 타입 매치업이 아니라 실제 데미지로 한다. 상대 랭크업·메가를 그대로 반영해야
   // "특방 6업 상대엔 약점을 못 찌른다"는 사실이 verdict에 들어가고, 무한 교체 추천을 막는다.
+  const downgradeVerdict = (verdict: matchup.MatchupVerdict): matchup.MatchupVerdict =>
+    verdict === "유리" ? "호각" : "불리";
+  // 교체 진입 위험(스텔스록+압정)이 HP 25% 이상이면 verdict를 한 단계 낮춘다. 비메가 종족 기준으로 진입.
+  const entryDamageRatio = (mon: PartyMember): number => {
+    const entry = findPokemon(mon.species);
+    if (!entry) {
+      return 0;
+    }
+    const maxHp = formula.actualStat({
+      stat: "H",
+      base: entry.base.H,
+      iv: mon.ivs.H,
+      ev: mon.evs.H,
+      level: mon.level,
+      nature: mon.nature,
+    });
+    let damage = 0;
+    if (input.field.myStealthRock) {
+      damage += formula.stealthRockDamage(entry.types, maxHp);
+    }
+    if (input.field.mySpikes > 0) {
+      damage += formula.spikesDamage(entry.types, maxHp, input.field.mySpikes as 1 | 2 | 3);
+    }
+    return maxHp > 0 ? damage / maxHp : 0;
+  };
   const switchVerdict = (mon: PartyMember): matchup.MatchupVerdict => {
     const opts =
       decision.moveOptions(mon, input.opponentSpecies, input.opponentHpPercent, {
         opponentMega,
         opponentRanks: input.opponentRanks,
+        opponentScreens: {
+          light: input.field.opponentLightScreen,
+          reflect: input.field.opponentReflect,
+        },
       }) ?? [];
     const best = opts
       .filter((o) => o.damaging && o.guaranteedHits !== null)
       .sort((a, b) => b.koChance - a.koChance || (a.guaranteedHits ?? 99) - (b.guaranteedHits ?? 99))[0];
+    let verdict: matchup.MatchupVerdict;
     if (!best || best.guaranteedHits === null) {
-      return "불리";
+      verdict = "불리";
+    } else if (best.koChance >= 0.5 || best.guaranteedHits <= 2) {
+      verdict = "유리";
+    } else if (best.guaranteedHits === 3) {
+      verdict = "호각";
+    } else {
+      verdict = "불리";
     }
-    if (best.koChance >= 0.5 || best.guaranteedHits <= 2) {
-      return "유리";
+    if (entryDamageRatio(mon) >= 0.25) {
+      verdict = downgradeVerdict(verdict);
     }
-    if (best.guaranteedHits === 3) {
-      return "호각";
-    }
-    return "불리";
+    return verdict;
   };
   const switchOptions: SwitchOption[] = bench
     .filter((mon) => findPokemon(mon.species))
@@ -163,7 +202,7 @@ export const battleAdvice = (input: BattleInput): BattleAdvice | undefined => {
       nature: myActive.nature,
     }),
     rank: input.myRanks.S,
-    tailwind: false,
+    tailwind: input.field.myTailwind,
     paralyzed: input.myStatus === "마비",
     stickyWeb: false,
     itemMultiplier: 1,
@@ -179,7 +218,7 @@ export const battleAdvice = (input: BattleInput): BattleAdvice | undefined => {
       nature: "노력",
     }),
     rank: input.opponentRanks.S,
-    tailwind: false,
+    tailwind: input.field.opponentTailwind,
     paralyzed: input.opponentStatus === "마비",
     stickyWeb: false,
     itemMultiplier: 1,
@@ -265,5 +304,6 @@ export const buildBattleState = (input: BattleInput): BattleState | undefined =>
     weather: input.weather || undefined,
     trickRoom: input.trickRoom,
     turn: input.turn,
+    battleField: input.field,
   };
 };

@@ -20,6 +20,7 @@ export type DamageInput = {
   weatherBoost?: 1 | 1.5 | 0.5; // 날씨에 의한 위력 보정 (불꽃-맑음 1.5, 물-맑음 0.5 등)
   itemMultiplier?: number; // 도구 종합 보정 (생명의구슬 1.3, 안경 1.2 등)
   burned?: boolean; // 화상 (물리 공격 실수치 절반)
+  screen?: boolean; // 상대 빛의장막(특수)/리플렉터(물리). 싱글 0.5배, 급소면 무시.
 };
 
 export type DamageResult = {
@@ -69,6 +70,7 @@ export const calculateDamage = (input: DamageInput): DamageResult => {
     weatherBoost = 1,
     itemMultiplier = 1,
     burned = false,
+    screen = false,
   } = input;
 
   const effectiveness = typeEffectiveness(moveType, defenderTypes);
@@ -91,10 +93,14 @@ export const calculateDamage = (input: DamageInput): DamageResult => {
   const stab = stabMod(input);
   const item = toMod(itemMultiplier);
 
+  // 스크린은 급소가 아닐 때만 0.5배. 싱글 기준 2048/4096.
+  const screenActive = screen && !critical;
+
   const rolls = RANDOM_ROLLS.map((r) => {
     let d = Math.floor((damage * r) / 100);
     d = applyMod(d, stab);
     d = Math.floor(d * effectiveness);
+    if (screenActive) d = applyMod(d, 2048);
     if (item !== 4096) d = applyMod(d, item);
     return Math.max(1, d);
   });
@@ -105,4 +111,26 @@ export const calculateDamage = (input: DamageInput): DamageResult => {
     rolls: [...rolls],
     effectiveness,
   };
+};
+
+// 스텔스록 진입 데미지(최대 HP 비율). 바위 타입 상성 × 1/8. 비행 2배=1/4, 4배=1/2.
+export const stealthRockDamage = (
+  defenderTypes: ReadonlyArray<TypeName>,
+  maxHp: number
+): number => {
+  const eff = typeEffectiveness("바위", defenderTypes);
+  return Math.floor((maxHp * eff) / 8);
+};
+
+// 압정 진입 데미지(최대 HP 비율). 층수별 1/8·1/6·1/4. 비행 타입은 무효(0).
+export const spikesDamage = (
+  defenderTypes: ReadonlyArray<TypeName>,
+  maxHp: number,
+  layers: 1 | 2 | 3
+): number => {
+  if (defenderTypes.includes("비행")) {
+    return 0;
+  }
+  const fraction = layers === 1 ? 8 : layers === 2 ? 6 : 4;
+  return Math.floor(maxHp / fraction);
 };
