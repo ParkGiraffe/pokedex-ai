@@ -6,6 +6,7 @@ import {
   teamSelect,
 } from "@pokedex-agent/battle-engine";
 import Fastify, { type FastifyInstance } from "fastify";
+import { ZodError } from "zod";
 
 import { adviseBattle, adviseMatchup, adviseParty } from "./advisor";
 import {
@@ -94,7 +95,10 @@ export const buildServer = (): FastifyInstance => {
   });
 
   app.setErrorHandler((error, _request, reply) => {
-    reply.status(400).send({ error: error instanceof Error ? error.message : String(error) });
+    // 입력 검증 실패(ZodError·Fastify 4xx)는 클라이언트 잘못(4xx), 나머지는 서버 장애(5xx)로 구분한다.
+    const fastifyStatus = (error as { statusCode?: number } | null)?.statusCode;
+    const status = error instanceof ZodError ? 400 : typeof fastifyStatus === "number" ? fastifyStatus : 500;
+    reply.status(status).send({ error: error instanceof Error ? error.message : String(error) });
   });
 
   return app;

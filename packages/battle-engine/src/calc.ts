@@ -70,7 +70,8 @@ const buildPokemon = (side: EngineSide): Pokemon => {
         status: side.status,
       });
     } catch {
-      // 존재하지 않는 메가 폼이면 기본 종족으로 폴백한다.
+      // 존재하지 않는 메가 폼이면 기본 종족으로 폴백한다(챔피언스↔smogon/calc 데이터 어긋남).
+      // 이 패키지는 순수 라이브러리라 로거가 없다. 메가 폼 디버깅은 호출 측에서 활성 메가 목록을 확인할 것.
     }
   }
   return new Pokemon(gen, baseEn, {

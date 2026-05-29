@@ -260,7 +260,7 @@ export const battleAdvice = (input: BattleInput): BattleAdvice | undefined => {
     recommendation = `${withLo(bestSwitch.pick)} 빼는 게 유리`;
   } else if (topMove && topMove.guaranteedHits !== null && topMove.guaranteedHits <= 3) {
     const lead = firstMove === "후공" ? "후공이라 불리하지만 " : "";
-    recommendation = `${lead}${withLo(topMove.move)}로 ${topMove.hitsText} 압박 (현 상태 유지)`;
+    recommendation = `${lead}${withLo(topMove.move)} ${topMove.hitsText} 압박 (현 상태 유지)`;
   } else {
     // 공격도 교체도 상대를 압박 못 하는 상황(상대 랭크업·내구 우위 등). 무한 교체 추천을 멈춘다.
     recommendation = "공격·교체 모두 압박 어려움 — 상대 랭크 해소(도발·교체 유도)나 상태이상 활용 검토";

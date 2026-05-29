@@ -46,9 +46,11 @@ export const findPokemon = (key: string | number): PokedexEntry | undefined => {
 export const findMove = (key: string): MoveData | undefined =>
   moveByKo.get(key) ?? moveByEn.get(key.toLowerCase());
 
-export const findAbility = (key: string): AbilityData | undefined => abilityByKo.get(key);
+export const findAbility = (key: string): AbilityData | undefined =>
+  abilityByKo.get(key) ?? abilityByEn.get(key.toLowerCase());
 
-export const findItem = (key: string): ItemData | undefined => itemByKo.get(key);
+export const findItem = (key: string): ItemData | undefined =>
+  itemByKo.get(key) ?? itemByEn.get(key.toLowerCase());
 
 const editDistance = (a: string, b: string): number => {
   const m = a.length;
