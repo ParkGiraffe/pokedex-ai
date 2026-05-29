@@ -36,7 +36,7 @@ export const Sheet = ({ open, title, onClose, className, children }: SheetProps)
         aria-modal="true"
         aria-label={title}
         className={cn(
-          "relative flex h-full w-full max-w-md flex-col gap-4 overflow-y-auto border-l border-neutral-800 bg-neutral-950 p-5 shadow-xl",
+          "relative flex h-full w-full max-w-md flex-col gap-4 overflow-y-auto border-l border-border bg-popover p-5 shadow-xl",
           className
         )}
       >
@@ -45,7 +45,7 @@ export const Sheet = ({ open, title, onClose, className, children }: SheetProps)
           <button
             type="button"
             onClick={onClose}
-            className="rounded-md px-2 py-1 text-sm text-neutral-400 hover:bg-neutral-800 hover:text-neutral-100"
+            className="rounded-md px-2 py-1 text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground"
           >
             닫기
           </button>

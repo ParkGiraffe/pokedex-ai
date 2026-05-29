@@ -141,7 +141,7 @@ export const MatchupPage = () => {
 
       {myParty.length === 0 || validOpponents.length === 0 ? (
         <Card>
-          <p className="text-sm text-neutral-400">
+          <p className="text-sm text-muted-foreground">
             파티빌더에서 내 파티를, 위에서 상대 포켓몬을 입력하면 매치업이 계산된다.
           </p>
         </Card>
@@ -286,7 +286,7 @@ export const MatchupPage = () => {
             </p>
             <div className="flex flex-wrap items-center justify-between gap-2">
               {!isReady ? (
-                <p className="text-xs text-amber-400">
+                <p className="text-xs text-warning">
                   정확히 {matchup.LINEUP_SIZE}마리를 골라야 추천을 요청할 수 있다.
                 </p>
               ) : (

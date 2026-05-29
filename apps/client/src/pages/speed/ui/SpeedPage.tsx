@@ -99,14 +99,14 @@ export const SpeedPage = () => {
       <Checkbox checked={trickRoom} onCheckedChange={setTrickRoom} label="트릭룸" className="w-fit" />
 
       <div className="grid gap-4 md:grid-cols-2">
-        <SideCard title="좌" accent="text-emerald-400" side={left} onChange={setLeft} />
-        <SideCard title="우" accent="text-sky-400" side={right} onChange={setRight} />
+        <SideCard title="좌" accent="text-primary" side={left} onChange={setLeft} />
+        <SideCard title="우" accent="text-info" side={right} onChange={setRight} />
       </div>
 
       <Card>
-        <p className="text-lg font-bold text-emerald-400">{fasterLabel}</p>
+        <p className="text-lg font-bold text-primary">{fasterLabel}</p>
         {comparison && (
-          <p className="mt-1 text-sm text-neutral-400">
+          <p className="mt-1 text-sm text-muted-foreground">
             좌 {comparison.left} vs 우 {comparison.right}
             {trickRoom ? " (트릭룸: 느린 쪽이 선공)" : ""}
           </p>

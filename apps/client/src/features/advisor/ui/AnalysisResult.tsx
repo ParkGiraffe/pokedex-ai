@@ -10,10 +10,10 @@ const KIND_LABEL: Record<string, string> = {
 };
 
 const KIND_ACCENT: Record<string, string> = {
-  strength: "text-emerald-400",
-  weakness: "text-rose-400",
-  warning: "text-amber-400",
-  recommendation: "text-sky-400",
+  strength: "text-primary",
+  weakness: "text-destructive",
+  warning: "text-warning",
+  recommendation: "text-info",
 };
 
 const KIND_ORDER: Array<keyof typeof KIND_LABEL> = ["strength", "weakness", "warning", "recommendation"];
@@ -31,18 +31,18 @@ export const AnalysisResult = ({ result }: AnalysisResultProps) => {
   return (
     <div className="flex flex-col gap-3">
       <Card className="flex flex-col gap-3">
-        <p className="text-sm font-semibold text-emerald-400">{result.summary}</p>
+        <p className="text-sm font-semibold text-primary">{result.summary}</p>
         {grouped.length > 0 && (
-          <div className="flex flex-col gap-2 border-t border-neutral-800 pt-2.5">
+          <div className="flex flex-col gap-2 border-t border-border pt-2.5">
             {grouped.map((group) => (
               <section key={group.kind} className="flex flex-col gap-1">
-                <h3 className={`text-xs font-semibold ${KIND_ACCENT[group.kind] ?? "text-neutral-300"}`}>
+                <h3 className={`text-xs font-semibold ${KIND_ACCENT[group.kind] ?? "text-foreground"}`}>
                   {KIND_LABEL[group.kind] ?? group.kind}
                 </h3>
-                <ul className="flex flex-col gap-0.5 text-sm text-neutral-200">
+                <ul className="flex flex-col gap-0.5 text-sm text-foreground">
                   {group.items.map((item, index) => (
                     <li key={`${group.kind}-${index}`}>
-                      {item.target && <span className="text-neutral-500">{item.target}: </span>}
+                      {item.target && <span className="text-muted-foreground">{item.target}: </span>}
                       {item.text}
                     </li>
                   ))}
@@ -55,8 +55,8 @@ export const AnalysisResult = ({ result }: AnalysisResultProps) => {
 
       {result.actionable.length > 0 && (
         <Card>
-          <h3 className="text-sm font-semibold text-neutral-200">제안</h3>
-          <ul className="mt-1.5 flex flex-col gap-1 text-sm text-neutral-300">
+          <h3 className="text-sm font-semibold text-foreground">제안</h3>
+          <ul className="mt-1.5 flex flex-col gap-1 text-sm text-foreground">
             {result.actionable.map((action, index) => (
               <li key={`${action.kind}-${index}`}>
                 {action.reason}

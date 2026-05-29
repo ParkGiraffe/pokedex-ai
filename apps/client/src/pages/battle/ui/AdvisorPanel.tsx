@@ -12,7 +12,7 @@ export const AdvisorPanel = ({ advice }: AdvisorPanelProps) => {
   if (!advice) {
     return (
       <Card>
-        <p className="text-sm text-neutral-400">상대 포켓몬을 입력하면 추천이 표시된다.</p>
+        <p className="text-sm text-muted-foreground">상대 포켓몬을 입력하면 추천이 표시된다.</p>
       </Card>
     );
   }
@@ -23,23 +23,23 @@ export const AdvisorPanel = ({ advice }: AdvisorPanelProps) => {
   return (
     <Card className="flex flex-col gap-3">
       <div className="flex items-center gap-2">
-        <h2 className="text-sm font-semibold text-neutral-300">추천</h2>
+        <h2 className="text-sm font-semibold text-foreground">추천</h2>
         <span className={cn("rounded-md bg-muted px-2 py-0.5 text-xs font-medium", firstMoveClass)}>
           {firstMove}
         </span>
       </div>
-      <p className="rounded bg-emerald-950 px-2 py-1.5 text-sm font-medium text-emerald-300">
+      <p className="rounded bg-primary/10 px-2 py-1.5 text-sm font-medium text-primary">
         {recommendation}
       </p>
 
       {moveOptions.length > 0 && (
         <div>
-          <p className="mb-1 text-xs text-neutral-500">내 기술</p>
+          <p className="mb-1 text-xs text-muted-foreground">내 기술</p>
           <ul className="flex flex-col gap-0.5 text-sm">
             {moveOptions.map((option) => (
               <li key={option.move} className="flex items-center justify-between gap-2">
-                <span className="text-neutral-200">{option.move}</span>
-                <span className={cn("text-xs", option.koChance >= 0.5 ? "text-rose-400" : "text-neutral-400")}>
+                <span className="text-foreground">{option.move}</span>
+                <span className={cn("text-xs", option.koChance >= 0.5 ? "text-destructive" : "text-muted-foreground")}>
                   {option.damaging ? `${option.hitsText} · KO ${Math.round(option.koChance * 100)}%` : "변화기"}
                 </span>
               </li>
@@ -50,12 +50,12 @@ export const AdvisorPanel = ({ advice }: AdvisorPanelProps) => {
 
       {switchOptions.length > 0 && (
         <div>
-          <p className="mb-1 text-xs text-neutral-500">교체</p>
+          <p className="mb-1 text-xs text-muted-foreground">교체</p>
           <ul className="flex flex-col gap-0.5 text-sm">
             {switchOptions.map((option) => (
               <li key={option.pick} className="flex items-center justify-between gap-2">
-                <span className="text-neutral-200">{option.pick}</span>
-                <span className="text-xs text-neutral-400">{option.verdict}</span>
+                <span className="text-foreground">{option.pick}</span>
+                <span className="text-xs text-muted-foreground">{option.verdict}</span>
               </li>
             ))}
           </ul>
