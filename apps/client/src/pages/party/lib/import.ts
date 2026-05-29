@@ -1,4 +1,4 @@
-import { type NatureName, type StatBlock, type TeraType } from "@pokedex-agent/pokedex-core";
+import { NatureName, type StatBlock, TeraType } from "@pokedex-agent/pokedex-core";
 
 import { createDraft, type MemberDraft } from "../model/store";
 
@@ -43,8 +43,9 @@ export const parsePartyImport = (text: string): MemberDraft[] => {
       level: typeof raw.level === "number" ? raw.level : base.level,
       ability: raw.ability ? String(raw.ability) : "",
       item: raw.item ? String(raw.item) : "",
-      nature: (raw.nature as NatureName) ?? base.nature,
-      teraType: (raw.teraType as TeraType) ?? base.teraType,
+      // 임의 문자열을 그대로 캐스트하면 actualStat의 NATURE_TABLE 조회에서 터진다. Zod로 검증 후 폴백.
+      nature: NatureName.safeParse(raw.nature).success ? (raw.nature as NatureName) : base.nature,
+      teraType: TeraType.safeParse(raw.teraType).success ? (raw.teraType as TeraType) : base.teraType,
       moves: [moves[0] ?? "", moves[1] ?? "", moves[2] ?? "", moves[3] ?? ""],
       evs,
     };

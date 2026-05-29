@@ -6,7 +6,8 @@ import { z } from "zod";
 
 // Claude 비전. 기본 claude-opus-4-7 (한국어 OCR·게임 UI 정확도 최상).
 const ANTHROPIC_MODEL = process.env.ANTHROPIC_MODEL ?? "claude-opus-4-7";
-const anthropic = new Anthropic();
+// 비전 OCR은 응답이 느릴 수 있어 추천보다 여유를 둔다. 타임아웃 없으면 요청이 무한 대기한다.
+const anthropic = new Anthropic({ timeout: 120_000 });
 const CORE = resolve(import.meta.dirname, "../../../packages/pokedex-core/data");
 
 const PROMPT = [

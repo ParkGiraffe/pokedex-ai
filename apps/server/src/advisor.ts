@@ -19,7 +19,8 @@ const MODEL_BY_TASK: Record<ExportTask, string> = {
   "matchup-leadrec": process.env.ADVISOR_MODEL_MATCHUP ?? "claude-sonnet-4-6",
   "battle-decision": process.env.ADVISOR_MODEL_BATTLE ?? "claude-sonnet-4-6",
 };
-const anthropic = new Anthropic();
+// 타임아웃 없으면 Claude API가 hang할 때 Fastify 요청이 무한 대기한다.
+const anthropic = new Anthropic({ timeout: 90_000 });
 
 const SYSTEM = [
   "포켓몬 챔피언스 싱글배틀 분석가. 한국 SV 커뮤니티 어휘 (영어 직역 금지).",
