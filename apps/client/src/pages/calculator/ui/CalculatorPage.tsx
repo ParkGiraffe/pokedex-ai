@@ -51,7 +51,7 @@ export const CalculatorPage = () => {
 
       <div className="grid gap-4 md:grid-cols-2">
         <Card className="flex flex-col gap-3">
-          <h2 className="text-sm font-semibold text-emerald-400">공격</h2>
+          <h2 className="text-sm font-semibold text-primary">공격</h2>
           <Field label="포켓몬">
             <div className="flex items-center gap-2">
               <PokemonIcon species={attacker.species} />
@@ -155,7 +155,7 @@ export const CalculatorPage = () => {
         </Card>
 
         <Card className="flex flex-col gap-3">
-          <h2 className="text-sm font-semibold text-sky-400">방어</h2>
+          <h2 className="text-sm font-semibold text-info">방어</h2>
           <Field label="포켓몬">
             <div className="flex items-center gap-2">
               <PokemonIcon species={defender.species} />
@@ -208,17 +208,17 @@ export const CalculatorPage = () => {
         {result ? (
           <div className="flex flex-col gap-3">
             <div className="flex flex-wrap items-baseline gap-x-6 gap-y-1">
-              <span className="text-2xl font-bold text-emerald-400">
+              <span className="text-2xl font-bold text-primary">
                 {result.minPercent.toFixed(1)}% ~ {result.maxPercent.toFixed(1)}%
               </span>
-              <span className="text-sm text-neutral-400">
+              <span className="text-sm text-muted-foreground">
                 데미지 {result.damage.min} ~ {result.damage.max} / HP {result.defenderHp}
               </span>
-              <span className="text-sm text-neutral-400">상성 {result.damage.effectiveness}배</span>
+              <span className="text-sm text-muted-foreground">상성 {result.damage.effectiveness}배</span>
               <span
                 className={cn(
                   "text-sm font-medium",
-                  result.maxPercent >= 100 ? "text-rose-400" : "text-neutral-300"
+                  result.maxPercent >= 100 ? "text-destructive" : "text-foreground"
                 )}
               >
                 {result.hitsText || "데미지 없음"}
@@ -227,7 +227,7 @@ export const CalculatorPage = () => {
             <RollBar rolls={result.damage.rolls} max={result.damage.max} />
           </div>
         ) : (
-          <p className="text-sm text-neutral-400">공격·방어 포켓몬을 정확히 입력하라.</p>
+          <p className="text-sm text-muted-foreground">공격·방어 포켓몬을 정확히 입력하라.</p>
         )}
       </Card>
 

@@ -4,6 +4,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>포켓덱스 에이전트</title>
+    <script>
+      // 페인트 전에 저장된 테마를 <html>에 적용해 FOUC(색 깜빡임)를 막는다.
+      // 저장 형식은 zustand persist의 { state: { theme } }. 키는 features/theme/model/store.ts와 일치.
+      (function () {
+        try {
+          var raw = localStorage.getItem("pokedex-theme");
+          var theme = raw ? JSON.parse(raw).state.theme : "crimson";
+          document.documentElement.dataset.theme = theme || "crimson";
+        } catch (e) {
+          document.documentElement.dataset.theme = "crimson";
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
