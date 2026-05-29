@@ -23,8 +23,8 @@ describe("스피드 공식", () => {
     expect(effectiveSpeed({ base: 100, paralyzed: true })).toBe(50);
   });
 
-  it("끈적끈적네트는 1/3로 깎임", () => {
-    expect(effectiveSpeed({ base: 99, stickyWeb: true })).toBe(33);
+  it("끈적네트는 스피드 1랭크 다운(2/3배)으로 깎임", () => {
+    expect(effectiveSpeed({ base: 99, stickyWeb: true })).toBe(66);
   });
 
   it("트릭룸 상태에선 느린 쪽이 먼저 행동한다", () => {

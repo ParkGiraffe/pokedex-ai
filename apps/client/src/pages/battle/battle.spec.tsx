@@ -28,6 +28,22 @@ describe("배틀 페이지", () => {
       weather: "",
       trickRoom: false,
       turn: 1,
+      myMegaForm: "",
+      opponentMegaForm: "",
+      myRanks: { A: 0, B: 0, C: 0, D: 0, S: 0 },
+      opponentRanks: { A: 0, B: 0, C: 0, D: 0, S: 0 },
+      myStatus: "",
+      opponentStatus: "",
+      rosterSpecies: [],
+      field: {
+        myStealthRock: false,
+        mySpikes: 0,
+        myStickyWeb: false,
+        opponentLightScreen: false,
+        opponentReflect: false,
+        myTailwind: false,
+        opponentTailwind: false,
+      },
     });
     expect(options).toHaveLength(4);
     expect(options?.every((option) => option.koChance >= 0 && option.koChance <= 1)).toBe(true);

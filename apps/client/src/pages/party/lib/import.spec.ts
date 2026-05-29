@@ -17,14 +17,14 @@ describe("parsePartyImport", () => {
     const [member] = parsePartyImport(json);
     expect(member!.species).toBe("한카리아스");
     expect(member!.moves).toEqual(["지진", "역린", "", ""]);
-    expect(member!.evs.A).toBe(252);
-    expect(member!.evs.S).toBe(252);
+    expect(member!.evs.A).toBe(32);
+    expect(member!.evs.S).toBe(32);
     expect(member!.item).toBe("기합의띠");
   });
 
-  it("EV는 0~252로 클램프한다", () => {
+  it("노력 포인트는 0~32로 클램프한다", () => {
     const [member] = parsePartyImport('[{"species":"피카츄","evs":{"S":999}}]');
-    expect(member!.evs.S).toBe(252);
+    expect(member!.evs.S).toBe(32);
   });
 
   it("배열이 아니거나 종족이 없으면 던진다", () => {

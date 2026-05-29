@@ -13,11 +13,11 @@ describe("챔피언스 데이터", () => {
     expect(inChampionsRoster("없는포켓몬")).toBe(false);
   });
 
-  it("사용률 1위로 예상 세트를 만들고 EV를 0~252로 환산한다", () => {
+  it("사용률 1위로 예상 세트를 만들고 노력 포인트를 0~32로 둔다", () => {
     const set = championsAssumedSet("한카리아스");
     expect(set?.moves).toContain("earthquake");
-    expect(set?.evs.atk).toBeGreaterThan(32);
-    expect(set?.evs.atk).toBeLessThanOrEqual(252);
+    expect(set?.evs.atk).toBeGreaterThan(0);
+    expect(set?.evs.atk).toBeLessThanOrEqual(32);
   });
 
   it("샘플 세트에 메가 폼이 반영된다", () => {
