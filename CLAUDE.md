@@ -1,7 +1,7 @@
 # pokedex-agent — Claude 컨텍스트 가이드
 
 박기린(op5321)의 개인 도구. 포켓몬 챔피언스 싱글배틀 분석 웹앱 + Claude API 기반 AI 분석.
-대상 게임: 포켓몬스터 스칼렛/바이올렛(9세대 SV) 싱글배틀.
+대상 게임: 포켓몬 챔피언스(9세대 SV 메커니즘 기반, 메가진화·테라스탈 공존, 노력치 0~32 포인트 시스템) 싱글배틀.
 
 새 Claude 세션이 시작되면 **이 파일 → 아래 4개 → docs/specs/ 최신본** 순서로 읽고 컨텍스트를 복원한다.
 
@@ -13,13 +13,14 @@
 4. `.claude/data-policy.md` — PokeAPI 기반 데이터 갱신 정책 (손편집 금지)
 5. `.claude/rules/` — 언어·프레임워크별 코드 가이드 (p2z에서 가져옴)
    - `type-script.md` · `react.md` · `i18n.md` · `git.md` — 본 프로젝트에서 그대로 적용
-   - `expo.md` · `react-native.md` · `nestjs.md` — 참고용 (현재 본 프로젝트엔 mobile·server 없음)
+   - `expo.md` · `react-native.md` — 참고용 (현재 본 프로젝트엔 mobile 없음)
+   - `nestjs.md` — 참고용. 현재 `apps/server`는 NestJS가 아니라 Fastify + tsx 경량 서버다(아래 구조 참고)
 6. `.claude/skills/` — p2z 표준 작업 절차 (스킬 카드)
    - `tanstack-router/SKILL.md` · `tanstack-query-api-client/SKILL.md` — `apps/client` 라우팅·API
    - `tailwind-cva-component/SKILL.md` — UI 컴포넌트 작성 표준
    - `testing-vitest/SKILL.md` — 테스트 작성 표준
    - `check-all/SKILL.md` · `pr-title/SKILL.md` — 일반 작업 절차
-   - 나머지(`dto-response`, `infra-up`, `nest-*`)는 server/infra 도입 전까지 참고용
+   - 나머지(`dto-response`, `infra-up`, `nest-*`)는 NestJS/DB 인프라용이라 현재 Fastify 서버엔 비적용(참고용)
 7. `docs/lexicon.md` — 한국 SV 커뮤니티 어휘 사전 (응답·UI 문구에 사용)
 8. `docs/p2z-refs/` — p2z의 루트·apps별 CLAUDE.md·README 사본 (원문 대조용)
 9. `docs/specs/` 아래 가장 최신 디자인 문서
@@ -31,18 +32,21 @@
 - **새 패키지 도입 전 사용자 승인.** 임의로 의존성 추가하지 않는다.
 - **데이터는 항상 PokeAPI 최신본에서 가져온다.** 한 글자도 손으로 입력하지 않는다.
 
-## 프로젝트 구조 (목표)
+## 프로젝트 구조 (현재)
 
 ```
 pokedex-agent/
 ├── .claude/                  컨텍스트·하드룰·데이터 임시 위치
 ├── apps/
-│   └── client/               React + Vite 웹앱
+│   ├── client/               React + Vite 웹앱 (battle·calculator·dex·matchup·party·speed 페이지)
+│   └── server/               Fastify + tsx 경량 서버. Anthropic API 직접 호출(추천·이미지 OCR import)
 ├── packages/
-│   ├── pokedex-core/         결정론적 도메인 라이브러리 (데이터·공식·타입)
+│   ├── pokedex-core/         결정론적 도메인 라이브러리 (데이터·공식·타입·export·matchup·decision)
+│   ├── battle-engine/        배틀 상태·데미지 계산 엔진
 │   └── data-fetchers/        PokeAPI 수집 스크립트
 ├── docs/
 │   ├── specs/                Phase별 디자인 문서
+│   ├── plans/                Phase별 구현 계획
 │   └── lexicon.md            한국 SV 커뮤니티 어휘 사전
 ├── CLAUDE.md                 이 파일
 ├── README.md
@@ -51,6 +55,8 @@ pokedex-agent/
 ├── turbo.json
 └── mise.toml
 ```
+
+> 주의: `docs/specs/`·`docs/plans/`의 2026-05-21자 문서는 SV·클립보드 paste 시대에 작성됐다. 노력치 0~252 EV, 스마트누오 클론, paste 왕복 UX 언급은 모두 폐기된 옛 설계다. 현재 진실은 코드(특히 `packages/pokedex-core/src/types.ts`)와 이 CLAUDE.md다.
 
 ## Phase 분해 (전체 윤곽)
 

@@ -16,8 +16,10 @@ Monorepo를 pnpm의 Workspace와 Turborepo를 사용하여 구성한다. 기술 
 
 | Workspace             | 경로                       |
 |-----------------------|--------------------------|
-| 웹앱 (스마트누오 클론)     | `apps/client`            |
+| 웹앱                   | `apps/client`            |
+| Anthropic API 서버      | `apps/server`            |
 | 결정론적 도메인 라이브러리 | `packages/pokedex-core`  |
+| 배틀 계산 엔진           | `packages/battle-engine` |
 | 데이터 수집 스크립트       | `packages/data-fetchers` |
 
 # 개발 환경
