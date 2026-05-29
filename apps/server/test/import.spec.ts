@@ -3,13 +3,13 @@ import { describe, expect, it } from "vitest";
 import { buildImportResult, mergeMembers } from "../src/import";
 
 describe("buildImportResult", () => {
-  it("0~32 포인트를 EV(0~252)로 환산한다 (66포인트=508)", () => {
+  it("노력 포인트(0~32)를 환산 없이 그대로 보존한다", () => {
     const { party } = buildImportResult([
       { species: "한카리아스", points: { A: 32, S: 32, H: 2 }, moves: ["지진"] },
     ]);
-    expect(party[0]!.evs.A).toBe(246);
-    expect(party[0]!.evs.S).toBe(246);
-    expect(party[0]!.evs.H).toBe(15);
+    expect(party[0]!.evs.A).toBe(32);
+    expect(party[0]!.evs.S).toBe(32);
+    expect(party[0]!.evs.H).toBe(2);
   });
 
   it("도구가 기술 칸에 섞여 있어도 사전으로 재분류한다", () => {

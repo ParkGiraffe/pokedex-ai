@@ -17,10 +17,10 @@ describe("타입 스키마", () => {
       ivs: { H: 31, A: 31, B: 31, C: 31, D: 31, S: 31 },
     });
     expect(member.species).toBe("어써러셔");
-    expect(member.evs.H).toBe(252);
+    expect(member.evs.H).toBe(32);
   });
 
-  it("스탯당 EV는 252를 넘을 수 없다", () => {
+  it("스탯당 노력 포인트는 32를 넘을 수 없다", () => {
     expect(() =>
       PartyMember.parse({
         species: "어써러셔",
@@ -29,7 +29,7 @@ describe("타입 스키마", () => {
         ability: "재생력",
         teraType: "강철",
         moves: ["지진", "스톤에지", "기합구슬", "탁쳐서떨구기"],
-        evs: { H: 253, A: 0, B: 0, C: 0, D: 0, S: 0 },
+        evs: { H: 33, A: 0, B: 0, C: 0, D: 0, S: 0 },
         ivs: { H: 31, A: 31, B: 31, C: 31, D: 31, S: 31 },
       })
     ).toThrow();
@@ -61,10 +61,10 @@ describe("타입 스키마", () => {
     expect(isTypeName("Steel")).toBe(false);
   });
 
-  it("StatBlock의 모든 값은 0 이상 252 이하의 정수다", () => {
+  it("StatBlock의 모든 값은 0 이상 32 이하의 정수다", () => {
     expect(() => StatBlock.parse({ H: -1, A: 0, B: 0, C: 0, D: 0, S: 0 })).toThrow();
-    expect(() => StatBlock.parse({ H: 253, A: 0, B: 0, C: 0, D: 0, S: 0 })).toThrow();
-    expect(() => StatBlock.parse({ H: 100, A: 0, B: 0, C: 0, D: 0, S: 0 })).not.toThrow();
+    expect(() => StatBlock.parse({ H: 33, A: 0, B: 0, C: 0, D: 0, S: 0 })).toThrow();
+    expect(() => StatBlock.parse({ H: 32, A: 0, B: 0, C: 0, D: 0, S: 0 })).not.toThrow();
   });
 });
 

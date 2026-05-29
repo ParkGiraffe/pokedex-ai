@@ -17,7 +17,7 @@ const sampleParty: Party = [
   },
 ];
 
-describe("Claude paste 직렬화", () => {
+describe("Claude 프롬프트 직렬화", () => {
   it("party-analysis 작업 헤더가 첫 줄에 들어간다", () => {
     const text = serializeForClaude("party-analysis", { party: sampleParty });
     const firstLine = text.split("\n")[0]!;
@@ -25,9 +25,9 @@ describe("Claude paste 직렬화", () => {
     expect(firstLine).toContain("파티 분석");
   });
 
-  it("출력에 JSON 코드블록이 포함된다", () => {
+  it("응답으로 JSON 코드블록을 요청한다", () => {
     const text = serializeForClaude("party-analysis", { party: sampleParty });
-    expect(text).toMatch(/```json\n[\s\S]+?\n```/);
+    expect(text).toContain("JSON 코드블록");
   });
 
   it("정적 분석 섹션을 함께 첨부한다", () => {
