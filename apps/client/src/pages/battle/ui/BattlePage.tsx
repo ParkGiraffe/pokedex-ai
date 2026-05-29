@@ -86,7 +86,7 @@ export const BattlePage = () => {
         )}
       </header>
 
-      <Card className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <Card className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         <Field label="턴">
           <NumberField value={battle.turn} min={1} onValueChange={battle.setTurn} />
         </Field>
@@ -103,7 +103,6 @@ export const BattlePage = () => {
         <Field label="상대 포켓몬">
           <PokemonPicker value={battle.opponentSpecies} onSelect={(name) => battle.setOpponentSpecies(name)} />
         </Field>
-        <Checkbox checked={battle.trickRoom} onCheckedChange={battle.setTrickRoom} label="트릭룸" />
       </Card>
 
       {myParty.length > 0 && (
@@ -376,7 +375,7 @@ export const BattlePage = () => {
               />
             </div>
             <div className="flex flex-col gap-2">
-              <span className="text-xs font-medium text-muted-foreground">순풍</span>
+              <span className="text-xs font-medium text-muted-foreground">선공 판정</span>
               <Checkbox
                 checked={battle.field.myTailwind}
                 onCheckedChange={(checked) => battle.setField({ myTailwind: checked })}
@@ -387,10 +386,11 @@ export const BattlePage = () => {
                 onCheckedChange={(checked) => battle.setField({ opponentTailwind: checked })}
                 label="상대 순풍"
               />
+              <Checkbox checked={battle.trickRoom} onCheckedChange={battle.setTrickRoom} label="트릭룸" />
             </div>
           </div>
           <p className="text-xs text-muted-foreground">
-            스텔스록·압정은 교체 진입 데미지로 교체 평가에, 스크린은 데미지에, 순풍은 선공 판정에 반영된다.
+            스텔스록·압정은 교체 진입 데미지로 교체 평가에, 스크린은 데미지에, 순풍·트릭룸은 선공 판정에 반영된다.
           </p>
         </Card>
       )}
