@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>pokedex-agent — 포켓몬스러운 색감 견본</title>
+<style>
+  /* ============================================================
+     이 파일은 "견본"이다. 앱에 적용되지 않는다.
+     현재 앱은 shadcn 기본값(채도 0 zinc + 임의 emerald) = 전형적 AI 색감.
+     아래는 포켓몬 정통 아이덴티티에 기반한 3개 방향 제안 + 18타입 색 시스템.
+     ============================================================ */
+
+  :root {
+    /* --- 포켓몬 18타입 정식 색 (커뮤니티 표준). 약점 매트릭스·타입 배지의 진짜 색 언어 --- */
+    --t-normal:#9099A1; --t-fire:#FF9D55; --t-water:#5090D6; --t-electric:#F4D23C;
+    --t-grass:#63BC5A; --t-ice:#73CEC0; --t-fighting:#CE4069; --t-poison:#AB6AC8;
+    --t-ground:#D97845; --t-flying:#8FA9DE; --t-psychic:#F97176; --t-bug:#90C12C;
+    --t-rock:#C7B78B; --t-ghost:#5269AC; --t-dragon:#0B6DC3; --t-dark:#5A5366;
+    --t-steel:#5A8EA1; --t-fairy:#EC8FE6;
+
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Pretendard", "Noto Sans KR", sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font);
+    background: #0a0a0a;
+    color: #e8e8e8;
+    line-height: 1.5;
+    padding: 40px 24px 80px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; }
+  h1 { font-size: 30px; font-weight: 800; letter-spacing: -0.02em; }
+  .sub { color: #9a9a9a; margin: 8px 0 36px; font-size: 15px; }
+  h2 { font-size: 20px; font-weight: 700; margin: 0 0 4px; }
+  .h2note { color: #8a8a8a; font-size: 13px; margin-bottom: 18px; }
+
+  section { margin-bottom: 52px; }
+
+  /* 타입 색 팔레트 스트립 */
+  .types { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px,1fr)); gap: 8px; }
+  .type-chip {
+    border-radius: 10px; padding: 10px 8px; text-align: center;
+    font-weight: 700; font-size: 13px; color: #fff;
+    text-shadow: 0 1px 2px rgba(0,0,0,.35);
+  }
+  .type-chip small { display:block; font-weight:600; font-size:10px; opacity:.85; margin-top:2px; }
+
+  /* 4열 테마 비교 */
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+
+  /* 각 테마 미니 대시보드 = .theme 스코프 안에서 CSS 변수로 스킨 */
+  .theme {
+    border-radius: 18px; overflow: hidden;
+    border: 1px solid var(--th-border);
+    background: var(--th-bg);
+    color: var(--th-fg);
+  }
+  .theme-head {
+    padding: 14px 16px; font-weight: 800; font-size: 14px;
+    display:flex; align-items:center; gap:8px;
+    background: var(--th-head-bg); color: var(--th-head-fg);
+    border-bottom: 1px solid var(--th-border);
+  }
+  .theme-head .dot { width:10px; height:10px; border-radius:50%; background: var(--th-primary); box-shadow: 0 0 0 3px var(--th-primary-soft); }
+  .theme-body { padding: 16px; display:flex; flex-direction:column; gap:14px; }
+  .tag { font-size:11px; color: var(--th-muted); }
+
+  .card {
+    background: var(--th-card); border:1px solid var(--th-border);
+    border-radius: 12px; padding: 13px;
+  }
+  .row { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+  .mon { font-weight:700; font-size:15px; }
+  .verdict {
+    font-size:11px; font-weight:800; padding:3px 9px; border-radius:999px;
+    background: var(--th-primary-soft); color: var(--th-primary);
+  }
+  .badges { display:flex; gap:6px; margin-top:9px; flex-wrap:wrap; }
+  .badge { font-size:11px; font-weight:700; color:#fff; padding:3px 9px; border-radius:999px; text-shadow:0 1px 1px rgba(0,0,0,.3); }
+
+  /* HP 바 — 포켓몬 시그니처(초록→노랑→빨강) */
+  .hp { margin-top:11px; }
+  .hp-label { display:flex; justify-content:space-between; font-size:10px; color:var(--th-muted); margin-bottom:3px; }
+  .hp-track { height:8px; border-radius:999px; background: var(--th-track); overflow:hidden; }
+  .hp-fill { height:100%; border-radius:999px; }
+  .hp-green { width:72%; background: linear-gradient(90deg,#3fbf5f,#5ed47b); }
+  .hp-yellow{ width:38%; background: linear-gradient(90deg,#e6b800,#f7d23c); }
+  .hp-red   { width:14%; background: linear-gradient(90deg,#d63a3a,#f25c5c); }
+
+  .stats { display:grid; grid-template-columns: repeat(3,1fr); gap:7px; }
+  .stat { background: var(--th-track); border-radius:8px; padding:7px 8px; text-align:center; }
+  .stat b { display:block; font-size:15px; font-weight:800; color:var(--th-fg); }
+  .stat span { font-size:9px; color:var(--th-muted); }
+
+  .btns { display:flex; gap:8px; }
+  .btn {
+    flex:1; text-align:center; font-weight:700; font-size:13px;
+    padding:9px 10px; border-radius:10px; cursor:pointer; border:none;
+    background: var(--th-primary); color: var(--th-on-primary);
+  }
+  .btn.ghost { background: transparent; border:1px solid var(--th-border); color: var(--th-fg); }
+
+  .why { background:#141414; border:1px solid #262626; border-radius:14px; padding:18px 20px; }
+  .why h3 { font-size:14px; margin-bottom:8px; }
+  .why ul { margin-left:18px; color:#bdbdbd; font-size:13.5px; }
+  .why li { margin:4px 0; }
+  .swatch-row { display:flex; gap:6px; margin-top:10px; flex-wrap:wrap; }
+  .sw { width:34px; height:34px; border-radius:8px; border:1px solid rgba(255,255,255,.12); }
+  code { background:#1c1c1c; padding:1px 6px; border-radius:5px; font-size:12px; }
+
+  /* ===================== 테마 토큰 ===================== */
+
+  /* 0) 현재 (AI 기본값) — 비교용 */
+  .now {
+    --th-bg:#1c1c1e; --th-fg:#fafafa; --th-card:#242427; --th-border:#ffffff24;
+    --th-head-bg:#242427; --th-head-fg:#fafafa; --th-muted:#a1a1a1; --th-track:#2e2e31;
+    --th-primary:#10b981; --th-primary-soft:#10b98122; --th-on-primary:#06281c;
+  }
+  /* A) Pokédex Crimson — 딥 네이비 + 몬스터볼 레드 + 골드. 정밀 도구 */
+  .crimson {
+    --th-bg:#0e1320; --th-fg:#eef2fb; --th-card:#161d2e;
+    --th-border:#27324a; --th-head-bg:#11192a; --th-head-fg:#fef0e6;
+    --th-muted:#8a98b5; --th-track:#1d2740;
+    --th-primary:#ee2b1c; --th-primary-soft:#ee2b1c22; --th-on-primary:#fff;
+    --th-gold:#f5b912;
+  }
+  .crimson .theme-head { border-bottom:2px solid var(--th-primary); }
+  .crimson .verdict { background:#f5b91220; color:#f5b912; }
+
+  /* B) Scarlet · Violet — SV 듀오, 그라데이션 헤더 */
+  .sv {
+    --th-bg:#130f1c; --th-fg:#f3eefb; --th-card:#1c1630; --th-border:#352a52;
+    --th-head-fg:#fff; --th-muted:#a394c4; --th-track:#241b3d;
+    --th-primary:#f1361d; --th-primary-soft:#f1361d22; --th-on-primary:#fff;
+  }
+  .sv .theme-head { background: linear-gradient(100deg,#f1361d,#7c3aed); border-bottom:none; }
+
+  /* C) Pokédex Light — 실물 도감 기기. 크림 화이트 + 레드 밴드 */
+  .light {
+    --th-bg:#f5f2ea; --th-fg:#16243a; --th-card:#ffffff; --th-border:#e4ddcf;
+    --th-head-bg:#e3350d; --th-head-fg:#fff; --th-muted:#6b7385; --th-track:#ede8db;
+    --th-primary:#e3350d; --th-primary-soft:#e3350d18; --th-on-primary:#fff;
+  }
+  .light .card { box-shadow: 0 1px 3px rgba(20,30,50,.06); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>포켓몬스러운 색감 — 견본 제안</h1>
+  <p class="sub">
+    이 페이지는 견본일 뿐 앱에 적용되지 않았다. 현재 앱은 shadcn 기본값(채도 0 zinc 회색 + 임의 emerald)이라
+    "AI가 뽑은 색"처럼 보인다. 아래는 포켓몬 정통 아이덴티티에 기반한 3개 방향이다. 같은 미니 대시보드를 테마별로 렌더해 비교한다.
+  </p>
+
+  <!-- 1. 타입 색 시스템 -->
+  <section>
+    <h2>1. 18타입 색 시스템 — 모든 방향의 공통 토대</h2>
+    <p class="h2note">
+      약점 매트릭스·타입 배지·기술 타입은 generic 초록/빨강이 아니라 팬이 외우고 있는 정식 타입 색을 써야 한다.
+      이것 하나만으로도 "포켓몬 앱"임이 즉시 전달된다.
+    </p>
+    <div class="types">
+      <div class="type-chip" style="background:var(--t-normal)">노말<small>NORMAL</small></div>
+      <div class="type-chip" style="background:var(--t-fire)">불꽃<small>FIRE</small></div>
+      <div class="type-chip" style="background:var(--t-water)">물<small>WATER</small></div>
+      <div class="type-chip" style="background:var(--t-electric);color:#5a4a00;text-shadow:none">전기<small>ELECTRIC</small></div>
+      <div class="type-chip" style="background:var(--t-grass)">풀<small>GRASS</small></div>
+      <div class="type-chip" style="background:var(--t-ice);color:#1c4a45;text-shadow:none">얼음<small>ICE</small></div>
+      <div class="type-chip" style="background:var(--t-fighting)">격투<small>FIGHTING</small></div>
+      <div class="type-chip" style="background:var(--t-poison)">독<small>POISON</small></div>
+      <div class="type-chip" style="background:var(--t-ground)">땅<small>GROUND</small></div>
+      <div class="type-chip" style="background:var(--t-flying)">비행<small>FLYING</small></div>
+      <div class="type-chip" style="background:var(--t-psychic)">에스퍼<small>PSYCHIC</small></div>
+      <div class="type-chip" style="background:var(--t-bug)">벌레<small>BUG</small></div>
+      <div class="type-chip" style="background:var(--t-rock);color:#43391c;text-shadow:none">바위<small>ROCK</small></div>
+      <div class="type-chip" style="background:var(--t-ghost)">고스트<small>GHOST</small></div>
+      <div class="type-chip" style="background:var(--t-dragon)">드래곤<small>DRAGON</small></div>
+      <div class="type-chip" style="background:var(--t-dark)">악<small>DARK</small></div>
+      <div class="type-chip" style="background:var(--t-steel)">강철<small>STEEL</small></div>
+      <div class="type-chip" style="background:var(--t-fairy)">페어리<small>FAIRY</small></div>
+    </div>
+  </section>
+
+  <!-- 2. 테마 비교 -->
+  <section>
+    <h2>2. 테마 방향 비교</h2>
+    <p class="h2note">맨 왼쪽이 "현재(AI 기본값)". 나머지 셋이 제안. 카드는 매치업/배틀 화면을 축약한 모형이다.</p>
+    <div class="grid">
+
+      <!-- 현재 -->
+      <div class="theme now">
+        <div class="theme-head"><span class="dot"></span>현재 · AI 기본값</div>
+        <div class="theme-body">
+          <span class="tag">zinc 회색 + emerald · 도메인 색 없음</span>
+          <div class="card">
+            <div class="row"><span class="mon">한카리아스</span><span class="verdict">유리</span></div>
+            <div class="badges"><span class="badge" style="background:#10b981">땅</span><span class="badge" style="background:#10b981">드래곤</span></div>
+            <div class="hp"><div class="hp-label"><span>HP</span><span>72%</span></div><div class="hp-track"><div class="hp-fill" style="width:72%;background:#10b981"></div></div></div>
+          </div>
+          <div class="stats"><div class="stat"><b>182</b><span>공격</span></div><div class="stat"><b>102</b><span>스피드</span></div><div class="stat"><b>108</b><span>HP</span></div></div>
+          <div class="btns"><button class="btn">선두 추천</button><button class="btn ghost">초기화</button></div>
+        </div>
+      </div>
+
+      <!-- A Crimson -->
+      <div class="theme crimson">
+        <div class="theme-head"><span class="dot"></span>A · Pokédex Crimson</div>
+        <div class="theme-body">
+          <span class="tag">딥 네이비 + 몬스터볼 레드 + 골드</span>
+          <div class="card">
+            <div class="row"><span class="mon">한카리아스</span><span class="verdict">유리</span></div>
+            <div class="badges"><span class="badge" style="background:var(--t-ground)">땅</span><span class="badge" style="background:var(--t-dragon)">드래곤</span></div>
+            <div class="hp"><div class="hp-label"><span>HP</span><span>72%</span></div><div class="hp-track"><div class="hp-fill hp-green"></div></div></div>
+          </div>
+          <div class="stats"><div class="stat"><b>182</b><span>공격</span></div><div class="stat"><b>102</b><span>스피드</span></div><div class="stat"><b>108</b><span>HP</span></div></div>
+          <div class="btns"><button class="btn">선두 추천</button><button class="btn ghost">초기화</button></div>
+        </div>
+      </div>
+
+      <!-- B SV -->
+      <div class="theme sv">
+        <div class="theme-head"><span class="dot"></span>B · Scarlet · Violet</div>
+        <div class="theme-body">
+          <span class="tag">스칼렛↔바이올렛 그라데이션, 에너지감</span>
+          <div class="card">
+            <div class="row"><span class="mon">한카리아스</span><span class="verdict">유리</span></div>
+            <div class="badges"><span class="badge" style="background:var(--t-ground)">땅</span><span class="badge" style="background:var(--t-dragon)">드래곤</span></div>
+            <div class="hp"><div class="hp-label"><span>HP</span><span>72%</span></div><div class="hp-track"><div class="hp-fill hp-green"></div></div></div>
+          </div>
+          <div class="stats"><div class="stat"><b>182</b><span>공격</span></div><div class="stat"><b>102</b><span>스피드</span></div><div class="stat"><b>108</b><span>HP</span></div></div>
+          <div class="btns"><button class="btn">선두 추천</button><button class="btn ghost">초기화</button></div>
+        </div>
+      </div>
+
+      <!-- C Light -->
+      <div class="theme light">
+        <div class="theme-head"><span class="dot"></span>C · Pokédex Light</div>
+        <div class="theme-body">
+          <span class="tag">실물 도감 기기 · 크림 + 레드 밴드</span>
+          <div class="card">
+            <div class="row"><span class="mon">한카리아스</span><span class="verdict">유리</span></div>
+            <div class="badges"><span class="badge" style="background:var(--t-ground)">땅</span><span class="badge" style="background:var(--t-dragon)">드래곤</span></div>
+            <div class="hp"><div class="hp-label"><span>HP</span><span>72%</span></div><div class="hp-track"><div class="hp-fill hp-green"></div></div></div>
+          </div>
+          <div class="stats"><div class="stat"><b>182</b><span>공격</span></div><div class="stat"><b>102</b><span>스피드</span></div><div class="stat"><b>108</b><span>HP</span></div></div>
+          <div class="btns"><button class="btn">선두 추천</button><button class="btn ghost">초기화</button></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 3. HP 단계색 -->
+  <section>
+    <h2>3. HP 바 — 포켓몬 시그니처 (초록 → 노랑 → 빨강)</h2>
+    <p class="h2note">배틀 화면의 상대 HP%는 단일 색이 아니라 잔량에 따라 색이 바뀌어야 한다. 게임 그대로의 신호.</p>
+    <div class="grid" style="grid-template-columns:repeat(3,1fr);max-width:560px">
+      <div class="card now" style="background:#1c1c1e"><div class="hp-label" style="color:#a1a1a1"><span>HP</span><span>100~50%</span></div><div class="hp-track" style="background:#2e2e31"><div class="hp-fill hp-green"></div></div></div>
+      <div class="card now" style="background:#1c1c1e"><div class="hp-label" style="color:#a1a1a1"><span>HP</span><span>50~20%</span></div><div class="hp-track" style="background:#2e2e31"><div class="hp-fill hp-yellow"></div></div></div>
+      <div class="card now" style="background:#1c1c1e"><div class="hp-label" style="color:#a1a1a1"><span>HP</span><span>20% 이하</span></div><div class="hp-track" style="background:#2e2e31"><div class="hp-fill hp-red"></div></div></div>
+    </div>
+  </section>
+
+  <!-- 4. 근거 -->
+  <section>
+    <h2>4. 왜 이게 더 "포켓몬스러운가"</h2>
+    <div class="grid" style="grid-template-columns:1fr 1fr">
+      <div class="why">
+        <h3>현재가 "AI스러운" 이유</h3>
+        <ul>
+          <li>배경·카드·테두리가 전부 <code>oklch(... 0 0)</code> — 채도 0 순수 회색. v0/shadcn 기본 그대로.</li>
+          <li>액센트가 emerald 하나. 포켓몬과 의미적 연결이 없다.</li>
+          <li>타입·약점 같은 도메인 데이터까지 generic 초록/빨강으로 칠한다.</li>
+          <li>브랜드 신호(레드·몬스터볼·도감 기기)가 0개.</li>
+        </ul>
+        <div class="swatch-row">
+          <div class="sw" style="background:#1c1c1e"></div><div class="sw" style="background:#242427"></div>
+          <div class="sw" style="background:#2e2e31"></div><div class="sw" style="background:#10b981"></div>
+        </div>
+      </div>
+      <div class="why">
+        <h3>제안의 공통 원리</h3>
+        <ul>
+          <li>중립색에 미세한 색조(네이비/바이올렛/크림)를 입혀 "죽은 회색"을 제거.</li>
+          <li>시그니처 1색을 포켓몬 정체성(몬스터볼·도감 레드 / SV 듀오)에서 가져온다.</li>
+          <li>18타입 정식 색을 약점·배지·기술에 그대로 쓴다 = 가장 강한 도메인 신호.</li>
+          <li>HP는 초록→노랑→빨강, 골드는 테라스탈·강조에. 전부 게임에 근거.</li>
+        </ul>
+        <div class="swatch-row">
+          <div class="sw" style="background:#0e1320"></div><div class="sw" style="background:#ee2b1c"></div>
+          <div class="sw" style="background:#f5b912"></div><div class="sw" style="background:#7c3aed"></div>
+          <div class="sw" style="background:#e3350d"></div><div class="sw" style="background:#f5f2ea"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <p class="sub" style="margin-top:8px">
+    적용은 보류 상태다. 방향(A/B/C 또는 조합)을 고르면 그때 <code>apps/client/src/index.css</code>의 <code>@theme</code> 토큰과
+    타입 색 유틸을 실제로 교체한다.
+  </p>
+
+</div>
+</body>
+</html>
