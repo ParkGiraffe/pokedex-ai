@@ -2,6 +2,7 @@ import { analysis, findMegaByItem, NATURE_NAMES, TYPE_NAMES } from "@pokedex-age
 import { useState } from "react";
 
 import { cn } from "@/common/lib/cn";
+import { STAT_LABEL_KO } from "@/common/lib/stat";
 import { Button } from "@/common/ui/Button";
 import { Card } from "@/common/ui/Card";
 import { Field } from "@/common/ui/Field";
@@ -35,11 +36,11 @@ const PartySlot = ({ index, draft, onChange, onRemove }: SlotProps) => {
   return (
     <Card className="flex flex-col gap-3">
       <div className="flex items-center justify-between">
-        <span className="flex items-center gap-2 text-sm font-semibold text-neutral-300">
+        <span className="flex items-center gap-2 text-sm font-semibold text-foreground">
           슬롯 {index + 1}
           <PokemonIcon species={draft.species} className="h-9 w-9" />
         </span>
-        <button type="button" onClick={onRemove} className="text-xs text-neutral-500 hover:text-rose-400">
+        <button type="button" onClick={onRemove} className="text-xs text-muted-foreground hover:text-destructive">
           삭제
         </button>
       </div>
@@ -87,14 +88,14 @@ const PartySlot = ({ index, draft, onChange, onRemove }: SlotProps) => {
       </div>
 
       <div>
-        <div className="mb-1 flex items-center justify-between text-xs text-neutral-400">
+        <div className="mb-1 flex items-center justify-between text-xs text-muted-foreground">
           <span>노력치</span>
           <span>합계 {evSum}</span>
         </div>
         <div className="grid grid-cols-6 gap-1">
           {EV_KEYS.map((key) => (
             <label key={key} className="flex flex-col items-center gap-0.5">
-              <span className="text-[10px] text-neutral-500">{key}</span>
+              <span className="text-[10px] text-muted-foreground">{STAT_LABEL_KO[key]}</span>
               <NumberField
                 value={draft.evs[key]}
                 min={0}
@@ -108,7 +109,7 @@ const PartySlot = ({ index, draft, onChange, onRemove }: SlotProps) => {
         </div>
       </div>
 
-      {error && <p className="text-xs text-rose-400">{error}</p>}
+      {error && <p className="text-xs text-destructive">{error}</p>}
     </Card>
   );
 };
@@ -148,7 +149,7 @@ export const PartyPage = () => {
       </header>
 
       <Card>
-        <h2 className="mb-2 text-sm font-semibold text-neutral-300">파티 약점 (2배 이상으로 받는 멤버 수)</h2>
+        <h2 className="mb-2 text-sm font-semibold text-foreground">파티 약점 (2배 이상으로 받는 멤버 수)</h2>
         {weakness.length === 0 ? (
           <p className="text-sm text-muted-foreground">유효한 포켓몬을 입력하면 약점이 집계된다.</p>
         ) : (
@@ -173,13 +174,13 @@ export const PartyPage = () => {
       </Card>
 
       <Card className="flex flex-col gap-1.5 text-sm">
-        <h2 className="text-sm font-semibold text-neutral-300">분석 요약</h2>
-        <p className="text-neutral-300">
-          약점 분산 <span className="font-semibold text-emerald-400">{summary.synergy.dispersionScore}/100</span>
+        <h2 className="text-sm font-semibold text-foreground">분석 요약</h2>
+        <p className="text-foreground">
+          약점 분산 <span className="font-semibold text-primary">{summary.synergy.dispersionScore}/100</span>
           {" "}(피크 {summary.synergy.sharedWeaknessPeak}슬롯)
         </p>
-        <p className="text-neutral-400">역할 분포: {roleLine || "없음"}</p>
-        <p className="text-neutral-400">
+        <p className="text-muted-foreground">역할 분포: {roleLine || "없음"}</p>
+        <p className="text-muted-foreground">
           화력 합계: 물리 {summary.balance.physicalPower} · 특수 {summary.balance.specialPower} · 내구{" "}
           {summary.balance.bulk}
         </p>
@@ -216,7 +217,7 @@ export const PartyPage = () => {
 
       {analyze.isError && (
         <Card>
-          <p className="text-sm text-rose-400">
+          <p className="text-sm text-destructive">
             {analyze.error instanceof Error ? analyze.error.message : "분석 실패"}
           </p>
         </Card>

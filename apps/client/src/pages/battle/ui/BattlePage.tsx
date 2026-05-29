@@ -4,6 +4,7 @@ import { cn } from "@/common/lib/cn";
 import { Button } from "@/common/ui/Button";
 import { Card } from "@/common/ui/Card";
 import { Field } from "@/common/ui/Field";
+import { HpBar } from "@/common/ui/HpBar";
 import { NumberField } from "@/common/ui/NumberField";
 import { Select } from "@/common/ui/Select";
 import { Badge } from "@/common/ui/Badge";
@@ -210,6 +211,7 @@ export const BattlePage = () => {
                   onChange={battle.setOpponentMegaForm}
                 />
               )}
+              <HpBar percent={battle.opponentHpPercent} className="w-full" />
             </div>
           </div>
 
@@ -271,7 +273,7 @@ export const BattlePage = () => {
 
       {myParty.length > 0 && (
         <Card className="flex flex-col gap-3">
-          <h2 className="text-sm font-semibold text-neutral-300">랭크·상태</h2>
+          <h2 className="text-sm font-semibold text-foreground">랭크·상태</h2>
           <div className="grid gap-3 md:grid-cols-2">
             <div className="flex flex-col gap-2">
               <span className="text-xs font-medium text-muted-foreground">전투 중인 포켓몬</span>
@@ -334,7 +336,7 @@ export const BattlePage = () => {
 
       {myParty.length > 0 && (
         <Card className="flex flex-col gap-3">
-          <h2 className="text-sm font-semibold text-neutral-300">필드</h2>
+          <h2 className="text-sm font-semibold text-foreground">필드</h2>
           <div className="grid gap-4 md:grid-cols-3">
             <div className="flex flex-col gap-2">
               <span className="text-xs font-medium text-muted-foreground">내 진입 위험</span>
@@ -399,7 +401,7 @@ export const BattlePage = () => {
 
       {advise.isError && (
         <Card>
-          <p className="text-sm text-rose-400">
+          <p className="text-sm text-destructive">
             {advise.error instanceof Error ? advise.error.message : "추천 실패"}
           </p>
         </Card>

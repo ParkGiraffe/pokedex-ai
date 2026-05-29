@@ -7,6 +7,8 @@ import { Card } from "@/common/ui/Card";
 import { Field } from "@/common/ui/Field";
 import { Input } from "@/common/ui/Input";
 import { Select } from "@/common/ui/Select";
+import { StatBox } from "@/common/ui/StatBox";
+import { TypeBadge } from "@/common/ui/TypeBadge";
 import { PokemonIcon } from "@/features/pokemon-picker/ui/PokemonIcon";
 
 // 페이지 직접 입력. 사용자가 타이핑 중일 땐 부모 state로 즉시 반영 안 하고, blur/Enter에 commit한다.
@@ -60,18 +62,25 @@ const multiplierClass = (multiplier: number): string => {
   if (multiplier >= 4) return "bg-rose-700 text-rose-100";
   if (multiplier === 2) return "bg-rose-900 text-rose-300";
   if (multiplier < 1) return "bg-emerald-900 text-emerald-300";
-  return "bg-neutral-800 text-neutral-400";
+  return "bg-accent text-muted-foreground";
 };
 
 const TypeBadges = ({ types }: { types: ReadonlyArray<string> }) => (
   <span className="flex gap-1">
     {types.map((type) => (
-      <span key={type} className="rounded bg-neutral-800 px-1.5 py-0.5 text-xs text-neutral-200">
-        {type}
-      </span>
+      <TypeBadge key={type} type={type} />
     ))}
   </span>
 );
+
+const BASE_STAT_LABELS: ReadonlyArray<{ key: "H" | "A" | "B" | "C" | "D" | "S"; label: string }> = [
+  { key: "H", label: "HP" },
+  { key: "A", label: "공격" },
+  { key: "B", label: "방어" },
+  { key: "C", label: "특공" },
+  { key: "D", label: "특방" },
+  { key: "S", label: "스피드" },
+];
 
 export const DexPage = () => {
   const { query, type, generation, page, selectedNo, setQuery, setType, setGeneration, setPage, select } =
@@ -124,12 +133,17 @@ export const DexPage = () => {
               #{selected.no} {selected.ko}
             </span>
             <TypeBadges types={selected.types} />
-            <span className="text-sm text-neutral-400">
+            <span className="text-sm text-muted-foreground">
               종족값 합 {baseStatTotal(selected)} · {selected.generation}세대
             </span>
           </div>
+          <div className="grid grid-cols-6 gap-1.5">
+            {BASE_STAT_LABELS.map(({ key, label }) => (
+              <StatBox key={key} label={label} value={selected.base[key]} />
+            ))}
+          </div>
           <div>
-            <h3 className="mb-1.5 text-xs font-medium text-neutral-400">받는 상성 (방어 기준)</h3>
+            <h3 className="mb-1.5 text-xs font-medium text-muted-foreground">받는 상성 (방어 기준)</h3>
             <div className="grid grid-cols-6 gap-1">
               {weaknessTable(selected.types).map((entry) => (
                 <div
@@ -148,7 +162,7 @@ export const DexPage = () => {
         </Card>
       )}
 
-      <p className="text-xs text-neutral-500">
+      <p className="text-xs text-muted-foreground">
         {results.length === 0
           ? "결과 없음"
           : `${results.length}마리 중 ${startIndex + 1}~${Math.min(results.length, startIndex + PAGE_SIZE)} 표시 (페이지 ${safePage}/${totalPages})`}
@@ -163,13 +177,13 @@ export const DexPage = () => {
             className={cn(
               "flex items-center justify-between gap-2 rounded-lg border px-3 py-2 text-left transition",
               entry.no === selectedNo
-                ? "border-emerald-500 bg-neutral-900"
-                : "border-neutral-800 bg-neutral-900/40 hover:border-neutral-700"
+                ? "border-ring bg-card"
+                : "border-border bg-card/40 hover:border-border"
             )}
           >
             <span className="flex items-center gap-1.5">
               <PokemonIcon species={entry.ko} className="h-9 w-9" />
-              <span className="text-xs text-neutral-500">#{entry.no}</span>
+              <span className="text-xs text-muted-foreground">#{entry.no}</span>
               <span className="text-sm font-medium">{entry.ko}</span>
             </span>
             <TypeBadges types={entry.types} />
