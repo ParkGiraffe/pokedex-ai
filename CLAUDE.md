@@ -13,14 +13,14 @@
 4. `.claude/data-policy.md` — PokeAPI 기반 데이터 갱신 정책 (손편집 금지)
 5. `.claude/rules/` — 언어·프레임워크별 코드 가이드 (p2z에서 가져옴)
    - `type-script.md` · `react.md` · `i18n.md` · `git.md` — 본 프로젝트에서 그대로 적용
-   - `expo.md` · `react-native.md` — 참고용 (현재 본 프로젝트엔 mobile 없음)
-   - `nestjs.md` — 참고용. 현재 `apps/server`는 NestJS가 아니라 Fastify + tsx 경량 서버다(아래 구조 참고)
+   - `expo.md` · `react-native.md` — Phase F의 `apps/mobile`(Expo)에서 적용 예정
+   - `nestjs.md` — `apps/server`는 NestJS다(Fastify→NestJS 전환 완료, Phase A). 정식 적용 대상. `apps/server/CLAUDE.md` 참고
 6. `.claude/skills/` — p2z 표준 작업 절차 (스킬 카드)
    - `tanstack-router/SKILL.md` · `tanstack-query-api-client/SKILL.md` — `apps/client` 라우팅·API
    - `tailwind-cva-component/SKILL.md` — UI 컴포넌트 작성 표준
    - `testing-vitest/SKILL.md` — 테스트 작성 표준
    - `check-all/SKILL.md` · `pr-title/SKILL.md` — 일반 작업 절차
-   - 나머지(`dto-response`, `infra-up`, `nest-*`)는 NestJS/DB 인프라용이라 현재 Fastify 서버엔 비적용(참고용)
+   - `dto-response`·`infra-up`·`nest-*` — NestJS 전환에 따라 정식 적용(Phase A 이후)
 7. `docs/lexicon.md` — 한국 SV 커뮤니티 어휘 사전 (응답·UI 문구에 사용)
 8. `docs/p2z-refs/` — p2z의 루트·apps별 CLAUDE.md·README 사본 (원문 대조용)
 9. `docs/specs/` 아래 가장 최신 디자인 문서
@@ -32,6 +32,10 @@
 - **새 패키지 도입 전 사용자 승인.** 임의로 의존성 추가하지 않는다.
 - **데이터는 항상 PokeAPI 최신본에서 가져온다.** 한 글자도 손으로 입력하지 않는다.
 
+## 활성 로드맵
+
+계정(카카오·네이버 자체 OAuth)·프리셋 티어(무료 2/유료 20)·일일 쿼터(무료 2/유료 100)·웹 Stripe 결제·Expo 모바일(스크린샷 비전) 도입이 목표다. Supabase는 쓰지 않는다(네이버 미지원). 승인된 단계 계획: `~/.claude/plans/6-27-harmonic-lecun.md`. 진행: Phase 0~C 완료(2026-06-04: A NestJS전환·B 인증/DB·C 프리셋 티어 무료2/유료20) → **D(일일 쿼터, 다음)** → E(결제) → F(모바일). B에서 MikroORM+Postgres(docker)·내부 로그인(이메일+비번, OAuth 끼울 수 있게 추상화)·JWT 도입. 인증은 헥사고날 포트/어댑터라 카카오·네이버는 어댑터만 추가하면 된다. 로컬 인프라: `mise run infra up --env <development|test>`(Postgres 5435).
+
 ## 프로젝트 구조 (현재)
 
 ```
@@ -39,7 +43,7 @@ pokedex-agent/
 ├── .claude/                  컨텍스트·하드룰·데이터 임시 위치
 ├── apps/
 │   ├── client/               React + Vite 웹앱 (battle·calculator·dex·matchup·party·speed 페이지)
-│   └── server/               Fastify + tsx 경량 서버. Anthropic API 직접 호출(추천·이미지 OCR import)
+│   └── server/               NestJS 11 + Express + MikroORM/Postgres. Anthropic 직접 호출(추천·OCR) + 계정·인증(내부 로그인+JWT)
 ├── packages/
 │   ├── pokedex-core/         결정론적 도메인 라이브러리 (데이터·공식·타입·export·matchup·decision)
 │   ├── battle-engine/        배틀 상태·데미지 계산 엔진
