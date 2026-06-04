@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import { Button } from "@/common/ui/Button";
+import { QuotaBadge } from "@/features/quota";
 
 import { useAuthStore } from "../model/store";
 import { AuthSheet } from "./AuthSheet";
@@ -14,6 +15,7 @@ export const AuthMenu = () => {
     return (
       <div className="flex items-center gap-2 text-sm">
         <span className="text-muted-foreground">{user.nickname ?? user.email}</span>
+        <QuotaBadge />
         <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-semibold uppercase text-muted-foreground">
           {user.tier}
         </span>
