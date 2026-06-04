@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { buildImportResult, mergeMembers } from "../src/import";
+import { buildImportResult, mergeMembers } from "../src/import/import.service";
 
 describe("buildImportResult", () => {
   it("노력 포인트(0~32)를 환산 없이 그대로 보존한다", () => {

@@ -75,3 +75,11 @@ export const ImportPartyBody = z
   .refine((body) => Boolean(body.image) || Boolean(body.images?.length), {
     message: "이미지가 필요합니다",
   });
+
+export type AnalyzePartyInput = z.infer<typeof AnalyzePartyBody>;
+export type MatchupLeadrecInput = z.infer<typeof MatchupLeadrecBody>;
+export type BattleAdviceInput = z.infer<typeof BattleAdviceBody>;
+export type TeamSelectInput = z.infer<typeof TeamSelectBody>;
+export type DecideInput = z.infer<typeof DecideBody>;
+export type CounterInput = z.infer<typeof CounterBody>;
+export type ImportPartyInput = z.infer<typeof ImportPartyBody>;

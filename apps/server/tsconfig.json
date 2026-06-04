@@ -3,7 +3,10 @@
   "compilerOptions": {
     "outDir": "dist",
     "noEmit": true,
-    "types": ["node"]
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "ignoreDeprecations": "6.0",
+    "types": ["node", "vitest/globals"]
   },
   "include": ["src/**/*", "test/**/*"]
 }
