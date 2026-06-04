@@ -1,4 +1,5 @@
 import { type ReactNode, useEffect } from "react";
+import { createPortal } from "react-dom";
 
 import { cn } from "@/common/lib/cn";
 
@@ -28,7 +29,9 @@ export const Sheet = ({ open, title, onClose, className, children }: SheetProps)
     return null;
   }
 
-  return (
+  // body로 포털한다. 헤더의 backdrop-blur 같은 ancestor가 containing block을 만들면
+  // fixed가 viewport가 아니라 그 박스에 갇히므로(로그인 드로어가 헤더 안에서 납작해지던 버그).
+  return createPortal(
     <div className="fixed inset-0 z-50 flex justify-end">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} aria-hidden />
       <aside
@@ -52,6 +55,7 @@ export const Sheet = ({ open, title, onClose, className, children }: SheetProps)
         </div>
         {children}
       </aside>
-    </div>
+    </div>,
+    document.body
   );
 };

@@ -14,6 +14,7 @@ import { AnalysisResult } from "@/features/advisor/ui/AnalysisResult";
 import { PokemonDatalist } from "@/features/pokemon-picker/ui/PokemonDatalist";
 import { PokemonIcon } from "@/features/pokemon-picker/ui/PokemonIcon";
 import { PokemonPicker } from "@/features/pokemon-picker/ui/PokemonPicker";
+import { PresetManager } from "@/features/presets";
 
 import { buildParty, memberError, teamWeakness } from "../lib/party";
 import { MAX_PARTY, type MemberDraft, usePartyStore } from "../model/store";
@@ -115,7 +116,7 @@ const PartySlot = ({ index, draft, onChange, onRemove }: SlotProps) => {
 };
 
 export const PartyPage = () => {
-  const { members, addMember, removeMember, updateMember } = usePartyStore();
+  const { members, addMember, removeMember, updateMember, setMembers } = usePartyStore();
   const [importOpen, setImportOpen] = useState(false);
   const analyze = useAnalyzeParty();
 
@@ -147,6 +148,8 @@ export const PartyPage = () => {
           </Button>
         </div>
       </header>
+
+      <PresetManager currentParty={members} onLoad={(loaded) => setMembers(loaded)} />
 
       <Card>
         <h2 className="mb-2 text-sm font-semibold text-foreground">파티 약점 (2배 이상으로 받는 멤버 수)</h2>

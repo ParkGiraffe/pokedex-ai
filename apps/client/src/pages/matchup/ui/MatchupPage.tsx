@@ -1,4 +1,4 @@
-import { findMegasBySpecies, findPokemon, matchup, type BattleState, type MegaForm } from "@pokedex-agent/pokedex-core";
+import { findMegasBySpecies, findPokemon, matchup, speciesDisplayName, type BattleState, type MegaForm } from "@pokedex-agent/pokedex-core";
 import { Plus, Swords, Users, X } from "lucide-react";
 
 import { cn } from "@/common/lib/cn";
@@ -207,7 +207,7 @@ export const MatchupPage = () => {
                     <th key={opponent} className="p-2 align-bottom font-medium text-foreground">
                       <span className="flex flex-col items-center gap-1">
                         <PokemonIcon species={opponent} className="h-8 w-8" />
-                        <span className="text-xs">{opponent}</span>
+                        <span className="text-xs">{speciesDisplayName(opponent, opponentMegaForms[opponent])}</span>
                       </span>
                     </th>
                   ))}
@@ -219,7 +219,7 @@ export const MatchupPage = () => {
                     <td className="w-32 p-2 text-center font-medium text-foreground">
                       <span className="flex flex-col items-center gap-1">
                         <PokemonIcon species={member.species} className="h-8 w-8" />
-                        <span className="text-sm">{member.species}</span>
+                        <span className="text-sm">{speciesDisplayName(member.species, myMegaForms[member.species])}</span>
                       </span>
                     </td>
                     {validOpponents.map((opponent) => {
@@ -275,7 +275,7 @@ export const MatchupPage = () => {
                   >
                     <PokemonIcon species={member.species} className="h-11 w-11" />
                     <span className={cn("text-xs", selected ? "font-semibold text-foreground" : "text-muted-foreground")}>
-                      {member.species}
+                      {speciesDisplayName(member.species, myMegaForms[member.species])}
                     </span>
                   </button>
                 );
@@ -308,7 +308,7 @@ export const MatchupPage = () => {
                 <li key={lead.myPick} className="flex items-center justify-between py-2 first:pt-0 last:pb-0">
                   <span className="flex items-center gap-2 text-sm">
                     <PokemonIcon species={lead.myPick} className="h-8 w-8" />
-                    <span className="font-medium">{lead.myPick}</span>
+                    <span className="font-medium">{speciesDisplayName(lead.myPick, myMegaForms[lead.myPick])}</span>
                   </span>
                   <span className="flex items-center gap-2">
                     <Badge variant="muted">{lead.finalScore}점</Badge>

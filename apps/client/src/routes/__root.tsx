@@ -2,6 +2,7 @@ import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { Toaster } from "sonner";
 
+import { AuthMenu } from "@/features/auth";
 import { isLightTheme, ThemeSwitcher, useThemeStore } from "@/features/theme";
 
 const NAV = [
@@ -37,7 +38,8 @@ const RootLayout = () => {
               </Link>
             ))}
           </nav>
-          <div className="ml-auto">
+          <div className="ml-auto flex items-center gap-2">
+            <AuthMenu />
             <ThemeSwitcher />
           </div>
         </div>
