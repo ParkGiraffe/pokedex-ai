@@ -43,7 +43,8 @@ export class AdvisorService {
     const response = await this.anthropic.messages.parse({
       model: MODEL_BY_TASK[task],
       max_tokens: 1500,
-      system: SYSTEM,
+      // 정적 SYSTEM 프롬프트를 prompt caching — 같은 유저의 연속 호출에서 입력 토큰 비용 절감.
+      system: [{ type: "text", text: SYSTEM, cache_control: { type: "ephemeral" } }],
       messages: [{ role: "user", content: body }],
       output_config: { format: zodOutputFormat(ClaudeResponseSchema) },
     });

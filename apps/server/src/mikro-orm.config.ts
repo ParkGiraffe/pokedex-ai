@@ -5,6 +5,7 @@ import { SeedManager } from "@mikro-orm/seeder";
 import { config } from "dotenv";
 
 import { Preset } from "./presets/preset.entity";
+import { UsageDaily } from "./quota/usage-daily.entity";
 import { User } from "./users/user.entity";
 
 export const getEnvFilePath = (): string => `.env.${process.env.NODE_ENV ?? "development"}`;
@@ -21,7 +22,7 @@ export default defineConfig({
   port: Number(process.env.POSTGRES_PORT),
   user: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,
-  entities: [User, Preset],
+  entities: [User, Preset, UsageDaily],
   namingStrategy: UnderscoreNamingStrategy,
   metadataProvider: ReflectMetadataProvider,
   debug: false,
