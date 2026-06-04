@@ -62,6 +62,14 @@ for (const item of championsItems) {
 // 종족 한국어명으로 가능한 메가 폼 목록 (리자몽은 X/Y 두 개, 그 외는 보통 1개).
 export const findMegasBySpecies = (species: string): MegaForm[] => byBaseKo.get(species) ?? [];
 
+// 메가 폼(슬러그)이 선택돼 있으면 메가 표시명(예: 메가리자몽X), 아니면 종족명을 돌려준다.
+export const speciesDisplayName = (species: string, megaForm?: string): string => {
+  if (!megaForm) {
+    return species;
+  }
+  return byBaseKo.get(species)?.find((mega) => mega.form === megaForm)?.ko ?? species;
+};
+
 // 메가스톤 슬러그로 단일 메가 폼 결정.
 export const findMegaByStone = (stone: string): MegaForm | undefined => byStone.get(stone);
 

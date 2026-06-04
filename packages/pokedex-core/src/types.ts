@@ -73,6 +73,23 @@ export type PartyMember = z.infer<typeof PartyMember>;
 export const Party = z.array(PartyMember).min(1).max(6);
 export type Party = z.infer<typeof Party>;
 
+// 빌더 작업 상태(부분 입력 허용). 프리셋은 검증된 Party가 아니라 이 draft를 그대로 저장·복원한다.
+// species·ability·item·moves는 빈 문자열 허용(nature·teraType·evs는 셀렉트/스피너라 항상 유효).
+export const PartyDraftMember = z.object({
+  species: z.string(),
+  level: z.number().int().min(1).max(100),
+  nature: NatureName,
+  ability: z.string(),
+  item: z.string(),
+  teraType: TeraType,
+  moves: z.tuple([z.string(), z.string(), z.string(), z.string()]),
+  evs: StatBlock,
+});
+export type PartyDraftMember = z.infer<typeof PartyDraftMember>;
+
+export const PartyDraft = z.array(PartyDraftMember).min(1).max(6);
+export type PartyDraft = z.infer<typeof PartyDraft>;
+
 export const Weather = z.enum(["맑음", "비", "모래바람", "눈"]);
 export type Weather = z.infer<typeof Weather>;
 
