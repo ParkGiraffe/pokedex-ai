@@ -1,4 +1,4 @@
-import { type StatusCondition, type Weather } from "@pokedex-agent/pokedex-core";
+import { speciesDisplayName, type StatusCondition, type Weather } from "@pokedex-agent/pokedex-core";
 
 import { cn } from "@/common/lib/cn";
 import { Button } from "@/common/ui/Button";
@@ -59,8 +59,6 @@ export const BattlePage = () => {
   };
   const myMegas = activeMegaOptions(input);
   const opponentMegas = opponentMegaOptions(input);
-  const activeMyMega = myMegas.find((mega) => mega.form === battle.myMegaForm);
-  const activeOpponentMega = opponentMegas.find((mega) => mega.form === battle.opponentMegaForm);
   const options = battleOptions(input);
   const advice = battleAdvice(input);
   const state = buildBattleState(input);
@@ -159,8 +157,7 @@ export const BattlePage = () => {
               </Field>
               <PokemonIcon species={myParty[activeIndex]?.species ?? ""} className="h-20 w-20" />
               <span className="text-base font-semibold text-foreground">
-                {activeMyMega ? "메가 " : ""}
-                {myParty[activeIndex]?.species ?? ""}
+                {speciesDisplayName(myParty[activeIndex]?.species ?? "", battle.myMegaForm)}
               </span>
               {myMegas.length > 0 && myParty[activeIndex] && (
                 <MegaControl
@@ -201,8 +198,7 @@ export const BattlePage = () => {
               </Field>
               <PokemonIcon species={battle.opponentSpecies} className="h-20 w-20" />
               <span className="text-base font-semibold text-foreground">
-                {activeOpponentMega ? "메가 " : ""}
-                {battle.opponentSpecies || "?"}
+                {battle.opponentSpecies ? speciesDisplayName(battle.opponentSpecies, battle.opponentMegaForm) : "?"}
               </span>
               {opponentMegas.length > 0 && (
                 <MegaControl

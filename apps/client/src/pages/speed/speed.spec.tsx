@@ -11,7 +11,7 @@ describe("스피드 페이지", () => {
   it("선공 판정을 렌더한다", () => {
     render(<SpeedPage />);
     expect(screen.getByRole("heading", { name: "스피드" })).toBeInTheDocument();
-    expect(screen.getByText(/선공|동률/)).toBeInTheDocument();
+    expect(screen.getAllByText(/선공|동률/).length).toBeGreaterThan(0);
   });
 
   it("더 빠른 쪽이 선공이다", () => {
