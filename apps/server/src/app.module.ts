@@ -10,6 +10,7 @@ import { HealthController } from "./health/health.controller";
 import { ImportModule } from "./import/import.module";
 import mikroOrmConfig, { getEnvFilePath, isProduction } from "./mikro-orm.config";
 import { PresetsModule } from "./presets/presets.module";
+import { QuotaModule } from "./quota/quota.module";
 import { UsersModule } from "./users/users.module";
 
 @Module({
@@ -19,6 +20,7 @@ import { UsersModule } from "./users/users.module";
     UsersModule,
     AuthModule,
     PresetsModule,
+    QuotaModule,
     AdvisorModule,
     BattleModule,
     ImportModule,

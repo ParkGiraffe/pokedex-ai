@@ -1,16 +1,27 @@
-import { Body, Controller, HttpCode, Post } from "@nestjs/common";
+import { Body, Controller, HttpCode, Post, UseGuards } from "@nestjs/common";
 
-import { ImportPartyBody, type ImportPartyInput } from "../dto";
+import { JwtAuthGuard } from "../auth/auth.guard";
+import { CurrentUserId } from "../auth/current-user.decorator";
 import { ZodValidationPipe } from "../common/zod-validation.pipe";
+import { ImportPartyBody, type ImportPartyInput } from "../dto";
+import { QuotaService } from "../quota/quota.service";
 import { type ImportResult, ImportService } from "./import.service";
 
 @Controller()
+@UseGuards(JwtAuthGuard)
 export class ImportController {
-  constructor(private readonly importService: ImportService) {}
+  constructor(
+    private readonly importService: ImportService,
+    private readonly quota: QuotaService
+  ) {}
 
   @Post("import-party")
   @HttpCode(200)
-  importParty(@Body(new ZodValidationPipe(ImportPartyBody)) body: ImportPartyInput): Promise<ImportResult> {
+  async importParty(
+    @CurrentUserId() userId: string,
+    @Body(new ZodValidationPipe(ImportPartyBody)) body: ImportPartyInput
+  ): Promise<ImportResult> {
+    await this.quota.consumeOrThrow(userId);
     const sources = body.images ?? (body.image ? [body.image] : []);
     return this.importService.importParty(sources);
   }
