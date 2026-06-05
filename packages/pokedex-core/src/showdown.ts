@@ -1,7 +1,5 @@
 import naturesRaw from "../data/natures.json" with { type: "json" };
 import typesRaw from "../data/types.json" with { type: "json" };
-import setsRaw from "../data/meta/sets-gen9.json" with { type: "json" };
-import usageRaw from "../data/meta/usage-gen9.json" with { type: "json" };
 import { findPokemon } from "./lookup";
 
 // 한국어/영문/표시명 → Pokémon Showdown ID (소문자, 영숫자 외 제거).
@@ -44,12 +42,6 @@ export type SmogonUsage = {
   teammates: Array<[string, number]>;
 };
 
-type SetsFile = { sets: Record<string, { display: string; sets: SmogonSet[] }> };
-type UsageFile = { pokemon: Record<string, SmogonUsage> };
-
-const setsById = (setsRaw as unknown as SetsFile).sets;
-const usageById = (usageRaw as unknown as UsageFile).pokemon;
-
 // 입력이 한국어명/도감번호면 도감으로 영문명을 찾아 id화하고, 아니면 그대로 id화한다.
 const resolveId = (species: string): string => {
   const entry = findPokemon(species);
@@ -57,12 +49,3 @@ const resolveId = (species: string): string => {
 };
 
 export const showdownIdOf = (species: string): string => resolveId(species);
-
-export const smogonSets = (species: string): SmogonSet[] => setsById[resolveId(species)]?.sets ?? [];
-
-export const smogonUsage = (species: string): SmogonUsage | undefined => usageById[resolveId(species)];
-
-export const hasMeta = (species: string): boolean => {
-  const id = resolveId(species);
-  return Boolean(setsById[id] ?? usageById[id]);
-};
