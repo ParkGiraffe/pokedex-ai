@@ -1,4 +1,4 @@
-import { type FormEvent, useState } from 'react';
+import { type FormEvent, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
 import { Button } from '@/common/ui/Button';
@@ -11,7 +11,11 @@ import { useBattleLogs } from '@/features/battle-log/model/useBattleLogs';
 import { useBattleStats } from '@/features/battle-log/model/useBattleStats';
 import { useCreateBattleLog } from '@/features/battle-log/model/useCreateBattleLog';
 import { useDeleteBattleLog } from '@/features/battle-log/model/useDeleteBattleLog';
+import { type CounterPoolMon } from '@/features/counter/api';
 import { POKEMON_DATALIST_ID, PokemonDatalist } from '@/features/pokemon-picker/ui/PokemonDatalist';
+import { usePresets } from '@/features/presets/model/usePresets';
+
+import { CoachingPanel } from './CoachingPanel';
 
 const GIMMICK_OPTIONS = [
   { value: 'none', label: '안 씀' },
@@ -33,6 +37,22 @@ export const LogPage = () => {
   const stats = useBattleStats();
   const create = useCreateBattleLog();
   const remove = useDeleteBattleLog();
+  const presets = usePresets();
+  // 카운터 조회용 풀: 저장한 프리셋의 포켓몬을 종족 단위로 중복 제거해 모은다.
+  const pool = useMemo<CounterPoolMon[]>(() => {
+    const seen = new Set<string>();
+    const result: CounterPoolMon[] = [];
+    for (const preset of presets.data ?? []) {
+      for (const member of preset.party) {
+        const species = member.species.trim();
+        if (species && !seen.has(species)) {
+          seen.add(species);
+          result.push({ species, moves: member.moves.filter(Boolean) });
+        }
+      }
+    }
+    return result;
+  }, [presets.data]);
 
   const [myLead, setMyLead] = useState('');
   const [opponentLead, setOpponentLead] = useState('');
@@ -155,6 +175,8 @@ export const LogPage = () => {
           </div>
         )}
       </Card>
+
+      {stats.data && <CoachingPanel stats={stats.data} pool={pool} />}
 
       <Card className="flex flex-col gap-2">
         <h2 className="text-foreground text-sm font-semibold">기록 목록</h2>
