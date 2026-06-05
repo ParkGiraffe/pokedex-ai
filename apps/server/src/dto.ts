@@ -76,6 +76,12 @@ export const ImportPartyBody = z
     message: '이미지가 필요합니다',
   });
 
+// 배틀 화면 스크린샷 1장 + 선택 메모. Sonnet 비전으로 다음 한 수를 조언한다.
+export const BattleScreenshotBody = z.object({
+  image: z.string().min(1),
+  note: z.string().max(200).optional(),
+});
+
 export type AnalyzePartyInput = z.infer<typeof AnalyzePartyBody>;
 export type MatchupLeadrecInput = z.infer<typeof MatchupLeadrecBody>;
 export type BattleAdviceInput = z.infer<typeof BattleAdviceBody>;
@@ -83,3 +89,4 @@ export type TeamSelectInput = z.infer<typeof TeamSelectBody>;
 export type DecideInput = z.infer<typeof DecideBody>;
 export type CounterInput = z.infer<typeof CounterBody>;
 export type ImportPartyInput = z.infer<typeof ImportPartyBody>;
+export type BattleScreenshotInput = z.infer<typeof BattleScreenshotBody>;
