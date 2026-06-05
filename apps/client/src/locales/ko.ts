@@ -4,7 +4,10 @@ export const ko = {
   battleLog: '전적',
   calculator: '계산기',
   dex: '도감',
+  evCalc: '역산기',
+  leaderboard: '리더보드',
   matchup: '매치업',
+  matchupMatrix: '매트릭스',
   partyBuilder: '파티빌더',
   speed: '스피드',
 } as const;
