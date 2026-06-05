@@ -4,6 +4,7 @@ import { defineConfig, UnderscoreNamingStrategy } from '@mikro-orm/postgresql';
 import { SeedManager } from '@mikro-orm/seeder';
 import { config } from 'dotenv';
 
+import { BattleLog } from './battle-log/battle-log.entity';
 import { Preset } from './presets/preset.entity';
 import { UsageDaily } from './quota/usage-daily.entity';
 import { User } from './users/user.entity';
@@ -22,7 +23,7 @@ export default defineConfig({
   port: Number(process.env.POSTGRES_PORT),
   user: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,
-  entities: [User, Preset, UsageDaily],
+  entities: [User, Preset, UsageDaily, BattleLog],
   namingStrategy: UnderscoreNamingStrategy,
   metadataProvider: ReflectMetadataProvider,
   debug: false,

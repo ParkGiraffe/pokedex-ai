@@ -12,6 +12,7 @@ const NAV = [
   { to: '/party', labelKey: 'partyBuilder' },
   { to: '/matchup', labelKey: 'matchup' },
   { to: '/battle', labelKey: 'battle' },
+  { to: '/log', labelKey: 'battleLog' },
 ] as const;
 
 const RootLayout = () => {

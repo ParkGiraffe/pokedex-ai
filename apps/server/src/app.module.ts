@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AdvisorModule } from './advisor/advisor.module';
 import { AuthModule } from './auth/auth.module';
 import { BattleModule } from './battle/battle.module';
+import { BattleLogModule } from './battle-log/battle-log.module';
 import { HealthController } from './health/health.controller';
 import { ImportModule } from './import/import.module';
 import mikroOrmConfig, { getEnvFilePath, isProduction } from './mikro-orm.config';
@@ -23,6 +24,7 @@ import { UsersModule } from './users/users.module';
     QuotaModule,
     AdvisorModule,
     BattleModule,
+    BattleLogModule,
     ImportModule,
   ],
   controllers: [HealthController],
