@@ -16,6 +16,13 @@ export type SharedPresetRes = {
   party: PartyDraft;
 };
 
+export type LeaderboardEntry = {
+  shareToken: string;
+  name: string;
+  copyCount: number;
+  party: PartyDraft;
+};
+
 export const fetchPresets = (): Promise<PresetRes[]> => apiRequest('/presets', { method: 'GET' }, '프리셋 조회 실패');
 
 export const createPreset = (body: { name: string; party: PartyDraft }): Promise<PresetRes> =>
@@ -33,3 +40,11 @@ export const unsharePreset = (id: string): Promise<void> =>
 // 공개 조회 — 토큰만 있으면 비로그인도 호출 가능(서버가 가드 없이 받는다).
 export const fetchSharedPreset = (token: string): Promise<SharedPresetRes> =>
   apiRequest(`/shared-presets/${encodeURIComponent(token)}`, { method: 'GET' }, '공유된 프리셋을 찾을 수 없습니다');
+
+// 공유 토큰으로 원본을 내 프리셋으로 복사한다. 원본 copyCount가 1 증가한다.
+export const copyPreset = (token: string): Promise<PresetRes> =>
+  apiRequest('/presets/copy', { method: 'POST', body: JSON.stringify({ token }) }, '복사 실패');
+
+// 인기 파티 리더보드 — 비로그인도 호출 가능.
+export const fetchLeaderboard = (): Promise<LeaderboardEntry[]> =>
+  apiRequest('/leaderboard', { method: 'GET' }, '리더보드 조회 실패');

@@ -87,4 +87,33 @@ export class PresetsService {
     }
     return preset;
   }
+
+  // 공유 토큰으로 프리셋을 내 프리셋으로 복사한다. 원본의 copyCount를 1 증가시키고 새 프리셋을 반환한다.
+  copyFromShare(userId: string, token: string): Promise<Preset> {
+    return this.em.transactional(async (em) => {
+      const source = await em.findOne(Preset, { shareToken: token });
+      if (!source) {
+        throw new NotFoundException('공유된 프리셋을 찾을 수 없습니다');
+      }
+      const user = await em.findOne(User, { id: userId });
+      if (!user) {
+        throw new NotFoundException('사용자를 찾을 수 없습니다');
+      }
+      const tier = user.tier as UserTier;
+      const cap = PRESET_CAP_BY_TIER[tier];
+      if ((await em.count(Preset, { user: userId })) >= cap) {
+        const label = tier === UserTier.PAID ? '유료' : '무료';
+        throw new ForbiddenException(`${label} 계정은 프리셋을 최대 ${cap}개까지 저장할 수 있습니다`);
+      }
+      const copied = em.create(Preset, { user, name: source.name, party: source.party });
+      em.persist(copied);
+      source.copyCount += 1;
+      return copied;
+    });
+  }
+
+  // 복사수 내림차순으로 공유 프리셋 상위 limit개를 반환한다.
+  leaderboard(limit: number): Promise<Preset[]> {
+    return this.em.find(Preset, { shareToken: { $ne: null } }, { orderBy: { copyCount: 'desc' }, limit });
+  }
 }
