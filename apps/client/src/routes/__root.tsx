@@ -8,11 +8,14 @@ import { isLightTheme, ThemeSwitcher, useThemeStore } from '@/features/theme';
 const NAV = [
   { to: '/', labelKey: 'calculator' },
   { to: '/speed', labelKey: 'speed' },
+  { to: '/ev-calc', labelKey: 'evCalc' },
   { to: '/docs', labelKey: 'dex' },
   { to: '/party', labelKey: 'partyBuilder' },
   { to: '/matchup', labelKey: 'matchup' },
+  { to: '/matrix', labelKey: 'matchupMatrix' },
   { to: '/battle', labelKey: 'battle' },
   { to: '/log', labelKey: 'battleLog' },
+  { to: '/leaderboard', labelKey: 'leaderboard' },
 ] as const;
 
 const RootLayout = () => {
