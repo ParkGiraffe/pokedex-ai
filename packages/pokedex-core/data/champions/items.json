@@ -25,7 +25,7 @@
     },
     {
       "slug": "alakazite",
-      "ko": "후딘나이트",
+      "ko": "후디나이트",
       "isMega": true
     },
     {
@@ -105,13 +105,13 @@
     },
     {
       "slug": "charizardite-x",
-      "ko": "리자몽나이트 X",
+      "ko": "리자몽나이트X",
       "isMega": true,
       "megaForme": "X"
     },
     {
       "slug": "charizardite-y",
-      "ko": "리자몽나이트 Y",
+      "ko": "리자몽나이트Y",
       "isMega": true,
       "megaForme": "Y"
     },
@@ -412,13 +412,13 @@
     },
     {
       "slug": "mewtwonite-x",
-      "ko": "뮤츠나이트 X",
+      "ko": "뮤츠나이트X",
       "isMega": true,
       "megaForme": "X"
     },
     {
       "slug": "mewtwonite-y",
-      "ko": "뮤츠나이트 Y",
+      "ko": "뮤츠나이트Y",
       "isMega": true,
       "megaForme": "Y"
     },
@@ -489,13 +489,13 @@
     },
     {
       "slug": "raichunite-x",
-      "ko": "라이츄나이트 X",
+      "ko": "라이츄나이트X",
       "isMega": true,
       "megaForme": "X"
     },
     {
       "slug": "raichunite-y",
-      "ko": "라이츄나이트 Y",
+      "ko": "라이츄나이트Y",
       "isMega": true,
       "megaForme": "Y"
     },
