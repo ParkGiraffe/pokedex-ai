@@ -14,7 +14,9 @@ const NAV = [
   { to: '/matchup', labelKey: 'matchup' },
   { to: '/matrix', labelKey: 'matchupMatrix' },
   { to: '/battle', labelKey: 'battle' },
+  { to: '/battle-vision', labelKey: 'battleVision' },
   { to: '/log', labelKey: 'battleLog' },
+  { to: '/meta', labelKey: 'meta' },
   { to: '/leaderboard', labelKey: 'leaderboard' },
 ] as const;
 
