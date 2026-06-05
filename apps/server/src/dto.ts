@@ -1,5 +1,5 @@
-import { BattleState, Party } from "@pokedex-agent/pokedex-core";
-import { z } from "zod";
+import { BattleState, Party } from '@pokedex-agent/pokedex-core';
+import { z } from 'zod';
 
 const MegaFormSelection = z
   .object({
@@ -36,15 +36,15 @@ const MyMon = z.object({
   teraType: z.string().optional(),
   terastallized: z.boolean().optional(),
   mega: z.boolean().optional(),
-  megaForme: z.enum(["X", "Y"]).optional(),
+  megaForme: z.enum(['X', 'Y']).optional(),
   curHP: z.number().optional(),
-  status: z.enum(["", "slp", "psn", "brn", "frz", "par", "tox"]).optional(),
+  status: z.enum(['', 'slp', 'psn', 'brn', 'frz', 'par', 'tox']).optional(),
 });
 
 const Field = z
   .object({
-    weather: z.enum(["Rain", "Sun", "Sand", "Snow"]).optional(),
-    terrain: z.enum(["Electric", "Grassy", "Psychic", "Misty"]).optional(),
+    weather: z.enum(['Rain', 'Sun', 'Sand', 'Snow']).optional(),
+    terrain: z.enum(['Electric', 'Grassy', 'Psychic', 'Misty']).optional(),
   })
   .optional();
 
@@ -73,7 +73,7 @@ export const ImportPartyBody = z
     images: z.array(z.string().min(1)).optional(),
   })
   .refine((body) => Boolean(body.image) || Boolean(body.images?.length), {
-    message: "이미지가 필요합니다",
+    message: '이미지가 필요합니다',
   });
 
 export type AnalyzePartyInput = z.infer<typeof AnalyzePartyBody>;

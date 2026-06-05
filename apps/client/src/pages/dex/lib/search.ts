@@ -1,12 +1,6 @@
-import {
-  formula,
-  pokedex,
-  type PokedexEntry,
-  type TypeName,
-  TYPE_NAMES,
-} from "@pokedex-agent/pokedex-core";
+import { formula, pokedex, type PokedexEntry, TYPE_NAMES, type TypeName } from '@pokedex-agent/pokedex-core';
 
-export const ALL_TYPES = "전체";
+export const ALL_TYPES = '전체';
 export const ALL_GENERATIONS = 0;
 
 export type DexFilter = {
@@ -25,11 +19,7 @@ export const filterDex = (filter: DexFilter): PokedexEntry[] => {
       return false;
     }
     if (query) {
-      return (
-        entry.ko.includes(filter.query.trim()) ||
-        entry.en.includes(query) ||
-        String(entry.no) === query
-      );
+      return entry.ko.includes(filter.query.trim()) || entry.en.includes(query) || String(entry.no) === query;
     }
     return true;
   });
@@ -47,4 +37,3 @@ export const baseStatTotal = (entry: PokedexEntry): number => {
   const { H, A, B, C, D, S } = entry.base;
   return H + A + B + C + D + S;
 };
-

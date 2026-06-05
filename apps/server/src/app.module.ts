@@ -1,17 +1,17 @@
-import { MikroORM } from "@mikro-orm/core";
-import { MikroOrmModule } from "@mikro-orm/nestjs";
-import { Module, type OnModuleInit } from "@nestjs/common";
-import { ConfigModule } from "@nestjs/config";
+import { MikroORM } from '@mikro-orm/core';
+import { MikroOrmModule } from '@mikro-orm/nestjs';
+import { Module, type OnModuleInit } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 
-import { AdvisorModule } from "./advisor/advisor.module";
-import { AuthModule } from "./auth/auth.module";
-import { BattleModule } from "./battle/battle.module";
-import { HealthController } from "./health/health.controller";
-import { ImportModule } from "./import/import.module";
-import mikroOrmConfig, { getEnvFilePath, isProduction } from "./mikro-orm.config";
-import { PresetsModule } from "./presets/presets.module";
-import { QuotaModule } from "./quota/quota.module";
-import { UsersModule } from "./users/users.module";
+import { AdvisorModule } from './advisor/advisor.module';
+import { AuthModule } from './auth/auth.module';
+import { BattleModule } from './battle/battle.module';
+import { HealthController } from './health/health.controller';
+import { ImportModule } from './import/import.module';
+import mikroOrmConfig, { getEnvFilePath, isProduction } from './mikro-orm.config';
+import { PresetsModule } from './presets/presets.module';
+import { QuotaModule } from './quota/quota.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [

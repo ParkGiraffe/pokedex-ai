@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "lint": "eslint .",
     "type-check": "tsc --noEmit",
     "fetch:types": "tsx src/fetch-types.ts",
     "fetch:pokedex": "tsx src/fetch-pokedex.ts",

@@ -1,7 +1,7 @@
-import { writeFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { writeFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
-import { announce, concurrency, fetchJson, pickKo } from "./pokeapi";
+import { announce, concurrency, fetchJson, pickKo } from './pokeapi';
 
 type TypeResponse = {
   id: number;
@@ -16,16 +16,16 @@ type TypeResponse = {
 
 const TYPE_COUNT = 18;
 
-const OUT = resolve(import.meta.dirname, "../../pokedex-core/data/types.json");
+const OUT = resolve(import.meta.dirname, '../../pokedex-core/data/types.json');
 
 const main = async () => {
   const results = await Promise.all(
     Array.from({ length: TYPE_COUNT }, (_, i) => i + 1).map((i) =>
-      concurrency(() => fetchJson<TypeResponse>(`/type/${i}/`))
-    )
+      concurrency(() => fetchJson<TypeResponse>(`/type/${i}/`)),
+    ),
   );
 
-  for (let i = 0; i < results.length; i++) announce("types", i + 1, TYPE_COUNT);
+  for (let i = 0; i < results.length; i++) announce('types', i + 1, TYPE_COUNT);
 
   const slugToKo: Record<string, string> = {};
   for (const t of results) {
@@ -52,16 +52,14 @@ const main = async () => {
   }
 
   const payload = {
-    source: "PokeAPI v2",
+    source: 'PokeAPI v2',
     generated_at_utc: process.env.GENERATED_AT_UTC ?? new Date().toISOString(),
-    types_ko_to_en: Object.fromEntries(
-      Object.entries(slugToKo).map(([en, ko]) => [ko, en])
-    ),
+    types_ko_to_en: Object.fromEntries(Object.entries(slugToKo).map(([en, ko]) => [ko, en])),
     types_en_to_ko: slugToKo,
     matchup,
   };
 
-  writeFileSync(OUT, JSON.stringify(payload, null, 2) + "\n", "utf8");
+  writeFileSync(OUT, JSON.stringify(payload, null, 2) + '\n', 'utf8');
   process.stderr.write(`[done] ${OUT}\n`);
 };
 

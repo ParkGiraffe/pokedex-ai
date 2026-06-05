@@ -1,7 +1,7 @@
-import { type NatureName, type TeraType, type TypeName } from "@pokedex-agent/pokedex-core";
-import { create } from "zustand";
+import { type NatureName, type TeraType, type TypeName } from '@pokedex-agent/pokedex-core';
+import { create } from 'zustand';
 
-export type Category = "물리" | "특수";
+export type Category = '물리' | '특수';
 
 export type AttackerInput = {
   species: string;
@@ -37,16 +37,16 @@ type CalculatorState = {
 };
 
 const DEFAULT_ATTACKER: AttackerInput = {
-  species: "한카리아스",
+  species: '한카리아스',
   level: 50,
-  category: "물리",
+  category: '물리',
   ev: 32,
-  nature: "고집",
+  nature: '고집',
   rank: 0,
-  moveType: "땅",
+  moveType: '땅',
   movePower: 100,
   terastalized: false,
-  teraType: "땅",
+  teraType: '땅',
   itemMultiplier: 1,
   weatherBoost: 1,
   critical: false,
@@ -54,11 +54,11 @@ const DEFAULT_ATTACKER: AttackerInput = {
 };
 
 const DEFAULT_DEFENDER: DefenderInput = {
-  species: "한카리아스",
+  species: '한카리아스',
   level: 50,
   hpEv: 0,
   defEv: 0,
-  nature: "노력",
+  nature: '노력',
   rank: 0,
 };
 

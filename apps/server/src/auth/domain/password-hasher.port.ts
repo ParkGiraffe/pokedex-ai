@@ -4,4 +4,4 @@ export interface PasswordHasher {
   verify(plain: string, stored: string): Promise<boolean>;
 }
 
-export const PASSWORD_HASHER = Symbol("PASSWORD_HASHER");
+export const PASSWORD_HASHER = Symbol('PASSWORD_HASHER');

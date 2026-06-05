@@ -1,43 +1,43 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 
-import { buildParty, memberError, teamWeakness } from "./lib/party";
-import { createDraft, type MemberDraft } from "./model/store";
-import { PartyPage } from "./ui/PartyPage";
+import { buildParty, memberError, teamWeakness } from './lib/party';
+import { createDraft, type MemberDraft } from './model/store';
+import { PartyPage } from './ui/PartyPage';
 
 const validDraft: MemberDraft = {
-  species: "한카리아스",
+  species: '한카리아스',
   level: 50,
-  ability: "까칠한피부",
-  item: "",
-  nature: "고집",
-  teraType: "땅",
-  moves: ["지진", "역린", "스톤에지", "불꽃엄니"],
+  ability: '까칠한피부',
+  item: '',
+  nature: '고집',
+  teraType: '땅',
+  moves: ['지진', '역린', '스톤에지', '불꽃엄니'],
   evs: { H: 0, A: 32, B: 0, C: 0, D: 1, S: 32 },
 };
 
-describe("파티빌더 페이지", () => {
-  it("기본 슬롯과 분석 요약을 렌더한다", () => {
+describe('파티빌더 페이지', () => {
+  it('기본 슬롯과 분석 요약을 렌더한다', () => {
     render(
       <QueryClientProvider client={new QueryClient()}>
         <PartyPage />
-      </QueryClientProvider>
+      </QueryClientProvider>,
     );
-    expect(screen.getByRole("heading", { name: "파티빌더" })).toBeInTheDocument();
-    expect(screen.getByText("슬롯 1")).toBeInTheDocument();
-    expect(screen.getByText("분석 요약")).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '파티빌더' })).toBeInTheDocument();
+    expect(screen.getByText('슬롯 1')).toBeInTheDocument();
+    expect(screen.getByText('분석 요약')).toBeInTheDocument();
   });
 
-  it("유효한 멤버만 파티로 모은다", () => {
+  it('유효한 멤버만 파티로 모은다', () => {
     expect(buildParty([validDraft])).toHaveLength(1);
     expect(buildParty([createDraft()])).toHaveLength(0);
     expect(memberError(createDraft())).not.toBeNull();
     expect(memberError(validDraft)).toBeNull();
   });
 
-  it("한카리아스가 들어간 파티는 얼음에 약하다", () => {
-    const ice = teamWeakness([validDraft]).find((entry) => entry.type === "얼음");
+  it('한카리아스가 들어간 파티는 얼음에 약하다', () => {
+    const ice = teamWeakness([validDraft]).find((entry) => entry.type === '얼음');
     expect(ice?.weakCount).toBe(1);
   });
 });

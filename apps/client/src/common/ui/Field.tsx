@@ -1,6 +1,6 @@
-import { type ReactNode } from "react";
+import { type ReactNode } from 'react';
 
-import { cn } from "@/common/lib/cn";
+import { cn } from '@/common/lib/cn';
 
 type FieldProps = {
   label: string;
@@ -10,8 +10,8 @@ type FieldProps = {
 };
 
 export const Field = ({ label, htmlFor, className, children }: FieldProps) => (
-  <label htmlFor={htmlFor} className={cn("flex flex-col gap-1", className)}>
-    <span className="text-xs font-medium text-muted-foreground">{label}</span>
+  <label htmlFor={htmlFor} className={cn('flex flex-col gap-1', className)}>
+    <span className="text-muted-foreground text-xs font-medium">{label}</span>
     {children}
   </label>
 );

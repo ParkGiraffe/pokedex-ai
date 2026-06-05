@@ -1,5 +1,5 @@
-import { type NatureName } from "@pokedex-agent/pokedex-core";
-import { create } from "zustand";
+import { type NatureName } from '@pokedex-agent/pokedex-core';
+import { create } from 'zustand';
 
 export type SpeedSide = {
   species: string;
@@ -35,19 +35,19 @@ const makeSide = (species: string, nature: NatureName): SpeedSide => ({
   paralyzed: false,
   stickyWeb: false,
   tailwind: false,
-  megaForm: "",
+  megaForm: '',
 });
 
 export const useSpeedStore = create<SpeedState>((set) => ({
-  left: makeSide("한카리아스", "겁쟁이"),
-  right: makeSide("리자몽", "겁쟁이"),
+  left: makeSide('한카리아스', '겁쟁이'),
+  right: makeSide('리자몽', '겁쟁이'),
   trickRoom: false,
   setLeft: (patch) =>
     set((state) => {
       const next = { ...state.left, ...patch };
       // 종족 교체 시 메가 매핑 자동 해제.
       if (patch.species !== undefined && patch.species !== state.left.species) {
-        next.megaForm = "";
+        next.megaForm = '';
       }
       return { left: next };
     }),
@@ -55,7 +55,7 @@ export const useSpeedStore = create<SpeedState>((set) => ({
     set((state) => {
       const next = { ...state.right, ...patch };
       if (patch.species !== undefined && patch.species !== state.right.species) {
-        next.megaForm = "";
+        next.megaForm = '';
       }
       return { right: next };
     }),

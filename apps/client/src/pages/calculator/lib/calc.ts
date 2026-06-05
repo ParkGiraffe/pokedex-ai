@@ -1,6 +1,6 @@
-import { findPokemon, formula, type TypeName } from "@pokedex-agent/pokedex-core";
+import { findPokemon, formula, type TypeName } from '@pokedex-agent/pokedex-core';
 
-import { type AttackerInput, type DefenderInput } from "../model/store";
+import { type AttackerInput, type DefenderInput } from '../model/store';
 
 export type CalcResult = {
   damage: formula.DamageResult;
@@ -19,17 +19,14 @@ export type CalcResult = {
   defenderTypes: readonly TypeName[];
 };
 
-export const computeCalc = (
-  attacker: AttackerInput,
-  defender: DefenderInput
-): CalcResult | undefined => {
+export const computeCalc = (attacker: AttackerInput, defender: DefenderInput): CalcResult | undefined => {
   const attackerEntry = findPokemon(attacker.species);
   const defenderEntry = findPokemon(defender.species);
   if (!attackerEntry || !defenderEntry) {
     return undefined;
   }
 
-  const attackKey = attacker.category === "물리" ? "A" : "C";
+  const attackKey = attacker.category === '물리' ? 'A' : 'C';
   const rawAttack = formula.actualStat({
     stat: attackKey,
     base: attackerEntry.base[attackKey],
@@ -40,7 +37,7 @@ export const computeCalc = (
   });
   const attackStat = formula.applyRank(rawAttack, attacker.rank);
 
-  const defenseKey = attacker.category === "물리" ? "B" : "D";
+  const defenseKey = attacker.category === '물리' ? 'B' : 'D';
   const rawDefense = formula.actualStat({
     stat: defenseKey,
     base: defenderEntry.base[defenseKey],
@@ -52,7 +49,7 @@ export const computeCalc = (
   const defenseStat = formula.applyRank(rawDefense, defender.rank);
 
   const defenderHp = formula.actualStat({
-    stat: "H",
+    stat: 'H',
     base: defenderEntry.base.H,
     iv: 31,
     ev: defender.hpEv,
@@ -77,12 +74,10 @@ export const computeCalc = (
     burned: attacker.burned,
   });
 
-  const guaranteedHits =
-    damage.min > 0 ? Math.ceil(defenderHp / damage.min) : Number.POSITIVE_INFINITY;
-  const possibleHits =
-    damage.max > 0 ? Math.ceil(defenderHp / damage.max) : Number.POSITIVE_INFINITY;
+  const guaranteedHits = damage.min > 0 ? Math.ceil(defenderHp / damage.min) : Number.POSITIVE_INFINITY;
+  const possibleHits = damage.max > 0 ? Math.ceil(defenderHp / damage.max) : Number.POSITIVE_INFINITY;
   const hitsText = !Number.isFinite(guaranteedHits)
-    ? ""
+    ? ''
     : guaranteedHits === possibleHits
       ? `확정 ${guaranteedHits}타`
       : `난수 ${possibleHits}타`;
@@ -101,4 +96,3 @@ export const computeCalc = (
     defenderTypes: defenderEntry.types,
   };
 };
-

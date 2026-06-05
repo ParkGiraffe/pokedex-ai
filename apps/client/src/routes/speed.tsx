@@ -1,11 +1,11 @@
-import { createRoute } from "@tanstack/react-router";
+import { createRoute } from '@tanstack/react-router';
 
-import { SpeedPage } from "@/pages/speed/ui/SpeedPage";
+import { SpeedPage } from '@/pages/speed/ui/SpeedPage';
 
-import { rootRoute } from "./__root";
+import { rootRoute } from './__root';
 
 export const speedRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: "/speed",
+  path: '/speed',
   component: SpeedPage,
 });

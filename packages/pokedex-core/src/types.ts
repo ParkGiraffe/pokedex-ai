@@ -1,27 +1,61 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const TYPE_NAMES = [
-  "노말", "불꽃", "물", "풀", "전기", "얼음",
-  "격투", "독", "땅", "비행", "에스퍼", "벌레",
-  "바위", "고스트", "드래곤", "악", "강철", "페어리",
+  '노말',
+  '불꽃',
+  '물',
+  '풀',
+  '전기',
+  '얼음',
+  '격투',
+  '독',
+  '땅',
+  '비행',
+  '에스퍼',
+  '벌레',
+  '바위',
+  '고스트',
+  '드래곤',
+  '악',
+  '강철',
+  '페어리',
 ] as const;
 
 export const TypeName = z.enum(TYPE_NAMES);
 export type TypeName = z.infer<typeof TypeName>;
 
-export const isTypeName = (value: unknown): value is TypeName =>
-  TypeName.safeParse(value).success;
+export const isTypeName = (value: unknown): value is TypeName => TypeName.safeParse(value).success;
 
-export const TeraType = z.union([TypeName, z.literal("스텔라")]);
+export const TeraType = z.union([TypeName, z.literal('스텔라')]);
 export type TeraType = z.infer<typeof TeraType>;
 
 // 공식 한국어 표기(PokeAPI /nature/ 기준, 도감번호 순). 보정치는 natures.json에서 파생한다.
 export const NATURE_NAMES = [
-  "노력", "대담", "조심", "차분", "겁쟁이",
-  "외로움", "온순", "의젓", "얌전", "성급",
-  "고집", "장난꾸러기", "수줍음", "신중", "덜렁",
-  "명랑", "개구쟁이", "촐랑", "변덕", "천진난만",
-  "용감", "무사태평", "냉정", "건방", "성실",
+  '노력',
+  '대담',
+  '조심',
+  '차분',
+  '겁쟁이',
+  '외로움',
+  '온순',
+  '의젓',
+  '얌전',
+  '성급',
+  '고집',
+  '장난꾸러기',
+  '수줍음',
+  '신중',
+  '덜렁',
+  '명랑',
+  '개구쟁이',
+  '촐랑',
+  '변덕',
+  '천진난만',
+  '용감',
+  '무사태평',
+  '냉정',
+  '건방',
+  '성실',
 ] as const;
 
 export const NatureName = z.enum(NATURE_NAMES);
@@ -90,13 +124,13 @@ export type PartyDraftMember = z.infer<typeof PartyDraftMember>;
 export const PartyDraft = z.array(PartyDraftMember).min(1).max(6);
 export type PartyDraft = z.infer<typeof PartyDraft>;
 
-export const Weather = z.enum(["맑음", "비", "모래바람", "눈"]);
+export const Weather = z.enum(['맑음', '비', '모래바람', '눈']);
 export type Weather = z.infer<typeof Weather>;
 
-export const Terrain = z.enum(["그래스필드", "미스트필드", "사이코필드", "일렉트릭필드"]);
+export const Terrain = z.enum(['그래스필드', '미스트필드', '사이코필드', '일렉트릭필드']);
 export type Terrain = z.infer<typeof Terrain>;
 
-export const StatusCondition = z.enum(["화상", "독", "맹독", "마비", "잠듦", "얼음"]);
+export const StatusCondition = z.enum(['화상', '독', '맹독', '마비', '잠듦', '얼음']);
 export type StatusCondition = z.infer<typeof StatusCondition>;
 
 const RankNumber = z.number().int().min(-6).max(6);
@@ -116,7 +150,13 @@ export const FieldSlot = z.object({
   member: PartyMember,
   hpPercent: z.number().min(0).max(100).default(100),
   ranks: RankBlock.default({
-    A: 0, B: 0, C: 0, D: 0, S: 0, accuracy: 0, evasion: 0,
+    A: 0,
+    B: 0,
+    C: 0,
+    D: 0,
+    S: 0,
+    accuracy: 0,
+    evasion: 0,
   }),
   status: StatusCondition.optional(),
   terastalized: z.boolean().default(false),

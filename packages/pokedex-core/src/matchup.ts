@@ -1,12 +1,12 @@
-import { pokedexByKo } from "./data";
-import { typeEffectiveness } from "./formula/matchup";
-import { actualStat } from "./formula/stat";
-import { findMove } from "./lookup";
-import type { MegaForm } from "./megas";
-import type { Party, PartyMember, TypeName } from "./types";
+import { pokedexByKo } from './data';
+import { typeEffectiveness } from './formula/matchup';
+import { actualStat } from './formula/stat';
+import { findMove } from './lookup';
+import type { MegaForm } from './megas';
+import type { Party, PartyMember, TypeName } from './types';
 
-export type SpeedVerdict = "win" | "lose" | "tie";
-export type MatchupVerdict = "유리" | "불리" | "호각";
+export type SpeedVerdict = 'win' | 'lose' | 'tie';
+export type MatchupVerdict = '유리' | '불리' | '호각';
 
 export type PairwiseScore = {
   myPick: string;
@@ -21,10 +21,7 @@ export type PairwiseScore = {
 const FALLBACK_STAB_POWER = 100;
 
 // 자속 100위력 가정으로 (자속 × 상성) 점수를 만든다 — 디펜시브 추정과 오펜시브 폴백에 공유.
-const stabFallbackScore = (
-  attackerTypes: ReadonlyArray<TypeName>,
-  defenderTypes: ReadonlyArray<TypeName>
-): number => {
+const stabFallbackScore = (attackerTypes: ReadonlyArray<TypeName>, defenderTypes: ReadonlyArray<TypeName>): number => {
   let best = 0;
   for (const type of attackerTypes) {
     const eff = typeEffectiveness(type, defenderTypes);
@@ -42,12 +39,12 @@ const stabFallbackScore = (
 const offensiveScoreByMoves = (
   member: PartyMember,
   attackerTypes: ReadonlyArray<TypeName>,
-  defenderTypes: ReadonlyArray<TypeName>
+  defenderTypes: ReadonlyArray<TypeName>,
 ): number => {
   let best = 0;
   for (const moveName of member.moves) {
     const move = findMove(moveName);
-    if (!move || move.category === "변화" || move.power === null || move.power <= 0) {
+    if (!move || move.category === '변화' || move.power === null || move.power <= 0) {
       continue;
     }
     const moveType = move.type as TypeName;
@@ -68,7 +65,7 @@ const defensiveRiskByStab = stabFallbackScore;
 // 내 픽은 실투자 스피드, 상대는 최대 투자(32포인트·+성격·31)를 가정해 보수적으로 본다.
 const myActualSpeed = (member: PartyMember, baseSpeed: number): number =>
   actualStat({
-    stat: "S",
+    stat: 'S',
     base: baseSpeed,
     iv: member.ivs.S,
     ev: member.evs.S,
@@ -77,12 +74,12 @@ const myActualSpeed = (member: PartyMember, baseSpeed: number): number =>
   });
 
 const opponentMaxSpeed = (baseSpeed: number, level: number): number =>
-  actualStat({ stat: "S", base: baseSpeed, iv: 31, ev: 32, level, nature: "겁쟁이" });
+  actualStat({ stat: 'S', base: baseSpeed, iv: 31, ev: 32, level, nature: '겁쟁이' });
 
 // 메가 폼 종족값·타입으로 swap한 도감 항목을 반환한다.
 const applyMega = <T extends { base: { S: number }; types: ReadonlyArray<TypeName> }>(
   entry: T,
-  mega: MegaForm | undefined
+  mega: MegaForm | undefined,
 ): T => (mega ? { ...entry, base: { ...entry.base, ...mega.base }, types: mega.types } : entry);
 
 export type MatchupContext = {
@@ -95,7 +92,7 @@ export type MatchupContext = {
 export const pairwise = (
   myMember: PartyMember,
   opponentSpecies: string,
-  context: MatchupContext = {}
+  context: MatchupContext = {},
 ): PairwiseScore | undefined => {
   const myBase = pokedexByKo.get(myMember.species);
   const opponentBase = pokedexByKo.get(opponentSpecies);
@@ -107,14 +104,13 @@ export const pairwise = (
 
   const mySpeed = myActualSpeed(myMember, myEntry.base.S);
   const opponentSpeed = opponentMaxSpeed(opponentEntry.base.S, myMember.level);
-  const speedAdvantage: SpeedVerdict =
-    mySpeed > opponentSpeed ? "win" : mySpeed < opponentSpeed ? "lose" : "tie";
+  const speedAdvantage: SpeedVerdict = mySpeed > opponentSpeed ? 'win' : mySpeed < opponentSpeed ? 'lose' : 'tie';
 
   const offensivePressure = offensiveScoreByMoves(myMember, myEntry.types, opponentEntry.types);
   const defensiveRisk = defensiveRiskByStab(opponentEntry.types, myEntry.types);
-  const speedBias = speedAdvantage === "win" ? 0.5 : speedAdvantage === "lose" ? -0.5 : 0;
+  const speedBias = speedAdvantage === 'win' ? 0.5 : speedAdvantage === 'lose' ? -0.5 : 0;
   const raw = offensivePressure - defensiveRisk + speedBias;
-  const verdict: MatchupVerdict = raw > 0.5 ? "유리" : raw < -0.5 ? "불리" : "호각";
+  const verdict: MatchupVerdict = raw > 0.5 ? '유리' : raw < -0.5 ? '불리' : '호각';
 
   return {
     myPick: myMember.species,
@@ -129,7 +125,7 @@ export const pairwise = (
 export const speedAdvantage = (
   myMember: PartyMember,
   opponentSpecies: string,
-  context: MatchupContext = {}
+  context: MatchupContext = {},
 ): SpeedVerdict | undefined => pairwise(myMember, opponentSpecies, context)?.speedAdvantage;
 
 export type LeadScore = {
@@ -140,13 +136,12 @@ export type LeadScore = {
   finalScore: number;
 };
 
-const verdictValue = (verdict: MatchupVerdict): number =>
-  verdict === "유리" ? 1 : verdict === "불리" ? -1 : 0;
+const verdictValue = (verdict: MatchupVerdict): number => (verdict === '유리' ? 1 : verdict === '불리' ? -1 : 0);
 
 export const leadScore = (
   myMember: PartyMember,
   opponents: ReadonlyArray<string>,
-  context: MatchupContext = {}
+  context: MatchupContext = {},
 ): LeadScore => {
   const pairs = opponents
     .map((opponent) => pairwise(myMember, opponent, context))
@@ -156,8 +151,8 @@ export const leadScore = (
   return {
     myPick: myMember.species,
     pairs,
-    favorable: pairs.filter((pair) => pair.verdict === "유리").length,
-    unfavorable: pairs.filter((pair) => pair.verdict === "불리").length,
+    favorable: pairs.filter((pair) => pair.verdict === '유리').length,
+    unfavorable: pairs.filter((pair) => pair.verdict === '불리').length,
     finalScore,
   };
 };
@@ -170,28 +165,18 @@ export type Coverage = {
 // 위력 가중 모델: 자속 100위력 2배 ≈ 3.0이 "강하게 압박" 기준. 1.5 이상이면 카운터 가능.
 const COUNTER_THRESHOLD = 1.5;
 
-export const coverage = (
-  party: Party,
-  opponents: ReadonlyArray<string>,
-  context: MatchupContext = {}
-): Coverage => {
+export const coverage = (party: Party, opponents: ReadonlyArray<string>, context: MatchupContext = {}): Coverage => {
   const covered = opponents.filter((opponent) =>
     party.some((member) => {
       const pair = pairwise(member, opponent, context);
       return pair !== undefined && pair.offensivePressure >= COUNTER_THRESHOLD;
-    })
+    }),
   ).length;
   return { covered, total: opponents.length };
 };
 
-export const leadBoard = (
-  party: Party,
-  opponents: ReadonlyArray<string>,
-  context: MatchupContext = {}
-): LeadScore[] =>
-  party
-    .map((member) => leadScore(member, opponents, context))
-    .sort((a, b) => b.finalScore - a.finalScore);
+export const leadBoard = (party: Party, opponents: ReadonlyArray<string>, context: MatchupContext = {}): LeadScore[] =>
+  party.map((member) => leadScore(member, opponents, context)).sort((a, b) => b.finalScore - a.finalScore);
 
 const combinations = <T>(items: ReadonlyArray<T>, size: number): T[][] => {
   if (size === 0) {
@@ -201,10 +186,7 @@ const combinations = <T>(items: ReadonlyArray<T>, size: number): T[][] => {
     return [];
   }
   const [head, ...rest] = items;
-  return [
-    ...combinations(rest, size - 1).map((combo) => [head!, ...combo]),
-    ...combinations(rest, size),
-  ];
+  return [...combinations(rest, size - 1).map((combo) => [head!, ...combo]), ...combinations(rest, size)];
 };
 
 export type LineupScore = {
@@ -222,7 +204,7 @@ export const LINEUP_SIZE = 3;
 export const lineupBoard = (
   party: Party,
   opponents: ReadonlyArray<string>,
-  context: MatchupContext = {}
+  context: MatchupContext = {},
 ): LineupScore[] => {
   if (party.length < LINEUP_SIZE) {
     return [];

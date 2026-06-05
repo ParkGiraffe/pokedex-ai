@@ -1,11 +1,11 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { importPartyImages } from "../api";
+import { importPartyImages } from '../api';
 
 export const useImportParty = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (images: string[]) => importPartyImages(images),
-    onSettled: () => queryClient.invalidateQueries({ queryKey: ["quota"] }),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: ['quota'] }),
   });
 };

@@ -8,4 +8,4 @@ export interface TokenService {
   verify(token: string): Promise<AuthTokenPayload>;
 }
 
-export const TOKEN_SERVICE = Symbol("TOKEN_SERVICE");
+export const TOKEN_SERVICE = Symbol('TOKEN_SERVICE');

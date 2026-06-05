@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState } from 'react';
 
-import { Button } from "@/common/ui/Button";
-import { QuotaBadge } from "@/features/quota";
+import { Button } from '@/common/ui/Button';
+import { QuotaBadge } from '@/features/quota';
 
-import { useAuthStore } from "../model/store";
-import { AuthSheet } from "./AuthSheet";
+import { useAuthStore } from '../model/store';
+import { AuthSheet } from './AuthSheet';
 
 export const AuthMenu = () => {
   const user = useAuthStore((state) => state.user);
@@ -16,7 +16,7 @@ export const AuthMenu = () => {
       <div className="flex items-center gap-2 text-sm">
         <span className="text-muted-foreground">{user.nickname ?? user.email}</span>
         <QuotaBadge />
-        <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-semibold uppercase text-muted-foreground">
+        <span className="bg-muted text-muted-foreground rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase">
           {user.tier}
         </span>
         <Button variant="ghost" size="sm" onClick={clear}>

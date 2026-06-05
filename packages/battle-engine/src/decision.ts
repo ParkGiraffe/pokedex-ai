@@ -1,28 +1,21 @@
 import {
-  type ChampionsSet,
   championsAssumedSet,
   championsSamples,
+  type ChampionsSet,
   findItem,
   formula,
   toShowdownId,
-} from "@pokedex-agent/pokedex-core";
-import { smogonSets } from "@pokedex-agent/pokedex-core/fallback";
+} from '@pokedex-agent/pokedex-core';
+import { smogonSets } from '@pokedex-agent/pokedex-core/fallback';
 
-import {
-  calcDamage,
-  type CalcResult,
-  type EngineField,
-  type EngineSide,
-  toCalcPokemon,
-} from "./calc";
+import { calcDamage, type CalcResult, type EngineField, type EngineSide, toCalcPokemon } from './calc';
 
 export type MyMon = EngineSide & { moves: string[] };
 
 export type MoveResult = CalcResult & { move: string };
-export type MatchupVerdict = "유리" | "불리" | "호각";
+export type MatchupVerdict = '유리' | '불리' | '호각';
 
-const firstOf = <T>(value: T | T[] | undefined): T | undefined =>
-  Array.isArray(value) ? value[0] : value;
+const firstOf = <T>(value: T | T[] | undefined): T | undefined => (Array.isArray(value) ? value[0] : value);
 
 // 받침에 따라 조사 로/으로를 붙인다(예: 지진 → 지진으로, 한카리아스 → 한카리아스로).
 const withRo = (word: string): string => {
@@ -77,22 +70,14 @@ const safeCalc = (attacker: MyMon, defender: EngineSide, move: string, field?: E
   }
 };
 
-export const bestAttack = (
-  attacker: MyMon,
-  defender: EngineSide,
-  field?: EngineField
-): MoveResult | undefined => {
+export const bestAttack = (attacker: MyMon, defender: EngineSide, field?: EngineField): MoveResult | undefined => {
   let best: MoveResult | undefined;
   for (const move of attacker.moves) {
     const result = safeCalc(attacker, defender, move, field);
     if (!result) {
       continue;
     }
-    if (
-      !best ||
-      result.koChance > best.koChance ||
-      (result.koChance === best.koChance && result.max > best.max)
-    ) {
+    if (!best || result.koChance > best.koChance || (result.koChance === best.koChance && result.max > best.max)) {
       best = { move, ...result };
     }
   }
@@ -100,7 +85,7 @@ export const bestAttack = (
 };
 
 const isChoiceScarf = (item?: string): boolean =>
-  item ? toShowdownId(findItem(item)?.en ?? item) === "choicescarf" : false;
+  item ? toShowdownId(findItem(item)?.en ?? item) === 'choicescarf' : false;
 
 export const speedOf = (side: MyMon | EngineSide): number => {
   const base = toCalcPokemon(side).stats.spe;
@@ -108,7 +93,7 @@ export const speedOf = (side: MyMon | EngineSide): number => {
     base,
     rank: side.boosts?.spe ?? 0,
     itemMultiplier: isChoiceScarf(side.item) ? 1.5 : 1,
-    paralyzed: side.status === "par",
+    paralyzed: side.status === 'par',
   });
 };
 
@@ -116,29 +101,29 @@ export type Pairwise = {
   opponent: string;
   myBest?: MoveResult;
   oppBest?: MoveResult;
-  faster: "win" | "lose" | "tie";
+  faster: 'win' | 'lose' | 'tie';
   verdict: MatchupVerdict;
   hasSet: boolean;
 };
 
-const verdictOf = (myKo: number, oppKo: number, faster: "win" | "lose" | "tie"): MatchupVerdict => {
+const verdictOf = (myKo: number, oppKo: number, faster: 'win' | 'lose' | 'tie'): MatchupVerdict => {
   const iThreaten = myKo >= 0.5;
   const oppThreatens = oppKo >= 0.5;
   // 한쪽만 결정타가 있으면 그쪽이 유리/불리.
   if (iThreaten && !oppThreatens) {
-    return "유리";
+    return '유리';
   }
   if (oppThreatens && !iThreaten) {
-    return "불리";
+    return '불리';
   }
   // 둘 다 결정타가 있으면(공격 메타) 스피드가 승부를 가른다.
   if (iThreaten && oppThreatens) {
-    return faster === "win" ? "유리" : faster === "lose" ? "불리" : "호각";
+    return faster === 'win' ? '유리' : faster === 'lose' ? '불리' : '호각';
   }
   // 둘 다 결정타가 없으면 화력 + 스피드 미세 우위로 본다.
-  const speedBias = faster === "win" ? 0.15 : faster === "lose" ? -0.15 : 0;
+  const speedBias = faster === 'win' ? 0.15 : faster === 'lose' ? -0.15 : 0;
   const score = myKo - oppKo + speedBias;
-  return score > 0.2 ? "유리" : score < -0.2 ? "불리" : "호각";
+  return score > 0.2 ? '유리' : score < -0.2 ? '불리' : '호각';
 };
 
 export const pairwise = (mine: MyMon, opponentSpecies: string, field?: EngineField): Pairwise => {
@@ -148,7 +133,7 @@ export const pairwise = (mine: MyMon, opponentSpecies: string, field?: EngineFie
   const oppBest = opponentSet ? bestAttack(opponentSet, mine, field) : undefined;
   const mySpeed = speedOf(mine);
   const opponentSpeed = speedOf(opponentSide);
-  const faster = mySpeed > opponentSpeed ? "win" : mySpeed < opponentSpeed ? "lose" : "tie";
+  const faster = mySpeed > opponentSpeed ? 'win' : mySpeed < opponentSpeed ? 'lose' : 'tie';
   return {
     opponent: opponentSpecies,
     myBest,
@@ -159,8 +144,7 @@ export const pairwise = (mine: MyMon, opponentSpecies: string, field?: EngineFie
   };
 };
 
-const verdictValue = (verdict: MatchupVerdict): number =>
-  verdict === "유리" ? 1 : verdict === "불리" ? -1 : 0;
+const verdictValue = (verdict: MatchupVerdict): number => (verdict === '유리' ? 1 : verdict === '불리' ? -1 : 0);
 
 export type LeadScore = {
   myPick: string;
@@ -170,11 +154,7 @@ export type LeadScore = {
   score: number;
 };
 
-export const teamSelect = (
-  myTeam: MyMon[],
-  opponentTeam: ReadonlyArray<string>,
-  field?: EngineField
-): LeadScore[] =>
+export const teamSelect = (myTeam: MyMon[], opponentTeam: ReadonlyArray<string>, field?: EngineField): LeadScore[] =>
   myTeam
     .map((mine) => {
       const pairs = opponentTeam.map((opponent) => pairwise(mine, opponent, field));
@@ -182,8 +162,8 @@ export const teamSelect = (
       return {
         myPick: mine.species,
         pairs,
-        favorable: pairs.filter((pair) => pair.verdict === "유리").length,
-        unfavorable: pairs.filter((pair) => pair.verdict === "불리").length,
+        favorable: pairs.filter((pair) => pair.verdict === '유리').length,
+        unfavorable: pairs.filter((pair) => pair.verdict === '불리').length,
         score: pairs.length > 0 ? total / pairs.length : 0,
       };
     })
@@ -197,12 +177,7 @@ export type BattleAdvice = {
   recommendation: string;
 };
 
-export const inBattle = (
-  active: MyMon,
-  opponentSpecies: string,
-  bench: MyMon[],
-  field?: EngineField
-): BattleAdvice => {
+export const inBattle = (active: MyMon, opponentSpecies: string, bench: MyMon[], field?: EngineField): BattleAdvice => {
   const opponentSet = assumedSet(opponentSpecies);
   const opponentSide: EngineSide = opponentSet ?? { species: opponentSpecies };
 
@@ -219,7 +194,7 @@ export const inBattle = (
     matchup: pairwise(mon, opponentSpecies, field),
   }));
   const bestSwitch = [...switchOptions].sort(
-    (a, b) => verdictValue(b.matchup.verdict) - verdictValue(a.matchup.verdict)
+    (a, b) => verdictValue(b.matchup.verdict) - verdictValue(a.matchup.verdict),
   )[0];
 
   const topMove = moveOptions[0];
@@ -229,19 +204,19 @@ export const inBattle = (
   let recommendation: string;
   // 결정타가 있고, 내가 더 빠르거나 상대가 날 한 방에 못 잡으면 공격이 안전하다.
   if (topMove && topMove.koChance >= 0.5 && (faster || oppKoOnMe < 1)) {
-    recommendation = `${withRo(topMove.move)} 공격 (KO ${Math.round(topMove.koChance * 100)}%${faster ? ", 선공" : ""})`;
-  } else if (bestSwitch && bestSwitch.matchup.verdict === "유리") {
+    recommendation = `${withRo(topMove.move)} 공격 (KO ${Math.round(topMove.koChance * 100)}%${faster ? ', 선공' : ''})`;
+  } else if (bestSwitch && bestSwitch.matchup.verdict === '유리') {
     recommendation = `${withRo(bestSwitch.pick)} 교체가 유리`;
   } else if (topMove) {
     recommendation = `안전한 결정타가 없음 — ${topMove.move} 또는 교체 검토`;
   } else {
-    recommendation = "유효한 옵션 없음 (상대 종족 확인)";
+    recommendation = '유효한 옵션 없음 (상대 종족 확인)';
   }
 
   return { moveOptions, switchOptions, recommendation };
 };
 
-export type GimmickChoice = "none" | "mega" | "tera";
+export type GimmickChoice = 'none' | 'mega' | 'tera';
 export type GimmickOption = { gimmick: GimmickChoice; move: string; koChance: number; max: number; desc: string };
 export type GimmickPlan = { recommend: GimmickChoice; options: GimmickOption[] };
 
@@ -249,29 +224,27 @@ export type GimmickPlan = { recommend: GimmickChoice; options: GimmickOption[] }
 export const bestGimmick = (
   attacker: MyMon,
   defender: EngineSide,
-  opts: { canMega?: boolean; megaForme?: "X" | "Y"; canTera?: boolean; teraType?: string },
-  field?: EngineField
+  opts: { canMega?: boolean; megaForme?: 'X' | 'Y'; canTera?: boolean; teraType?: string },
+  field?: EngineField,
 ): GimmickPlan => {
-  const variants: Array<{ gimmick: GimmickChoice; mon: MyMon }> = [{ gimmick: "none", mon: attacker }];
+  const variants: Array<{ gimmick: GimmickChoice; mon: MyMon }> = [{ gimmick: 'none', mon: attacker }];
   if (opts.canMega) {
-    variants.push({ gimmick: "mega", mon: { ...attacker, mega: true, megaForme: opts.megaForme } });
+    variants.push({ gimmick: 'mega', mon: { ...attacker, mega: true, megaForme: opts.megaForme } });
   }
   if (opts.canTera && opts.teraType) {
     variants.push({
-      gimmick: "tera",
+      gimmick: 'tera',
       mon: { ...attacker, terastallized: true, teraType: opts.teraType },
     });
   }
   const options = variants
     .map(({ gimmick, mon }): GimmickOption | undefined => {
       const best = bestAttack(mon, defender, field);
-      return best
-        ? { gimmick, move: best.move, koChance: best.koChance, max: best.max, desc: best.desc }
-        : undefined;
+      return best ? { gimmick, move: best.move, koChance: best.koChance, max: best.max, desc: best.desc } : undefined;
     })
     .filter((option): option is GimmickOption => option !== undefined)
     .sort((a, b) => b.koChance - a.koChance || b.max - a.max);
-  return { recommend: options[0]?.gimmick ?? "none", options };
+  return { recommend: options[0]?.gimmick ?? 'none', options };
 };
 
 export type CounterEntry = {
@@ -289,7 +262,7 @@ const opponentSets = (species: string): LabeledSet[] => {
   const samples = championsSamples(species, 3);
   if (samples.length > 0) {
     return samples.map((set, index) => ({
-      label: `${set.mega ? "메가" : "샘플"}${index + 1}${set.item ? ` (${set.item})` : ""}`,
+      label: `${set.mega ? '메가' : '샘플'}${index + 1}${set.item ? ` (${set.item})` : ''}`,
       mon: fromChampions(set),
     }));
   }
@@ -311,11 +284,7 @@ const opponentSets = (species: string): LabeledSet[] => {
     }));
 };
 
-export const counterplay = (
-  opponentSpecies: string,
-  myPool: MyMon[],
-  field?: EngineField
-): CounterEntry[] =>
+export const counterplay = (opponentSpecies: string, myPool: MyMon[], field?: EngineField): CounterEntry[] =>
   opponentSets(opponentSpecies).map(({ label, mon: opponentMon }) => {
     const counters = myPool
       .map((mon) => {
