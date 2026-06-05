@@ -120,4 +120,70 @@ describe('프리셋 (티어 한도)', () => {
       .send({ name: '엉터리', party: [{ species: '한카리아스' }] });
     expect(res.status).toBe(400);
   });
+
+  it('공유 토큰을 발급하고 비로그인으로 읽기전용 조회한다', async () => {
+    const { token } = await newUser();
+    const created = await createPreset(token, '공유할 파티');
+    const id = created.body.id as string;
+    const auth = `Bearer ${token}`;
+
+    const shared = await request(app.getHttpServer()).post(`/presets/${id}/share`).set('authorization', auth);
+    expect(shared.status).toBe(200);
+    const shareToken = shared.body.shareToken as string;
+    expect(shareToken).toBeTruthy();
+
+    // 비로그인(토큰 헤더 없음)으로도 열람 가능, name·party만 노출.
+    const publicView = await request(app.getHttpServer()).get(`/shared-presets/${shareToken}`);
+    expect(publicView.status).toBe(200);
+    expect(publicView.body.name).toBe('공유할 파티');
+    expect(publicView.body.party).toHaveLength(1);
+    expect(publicView.body.id).toBeUndefined();
+    expect(publicView.body.shareToken).toBeUndefined();
+  });
+
+  it('같은 프리셋 재공유는 같은 토큰을 준다(멱등)', async () => {
+    const { token } = await newUser();
+    const created = await createPreset(token, '파티');
+    const auth = `Bearer ${token}`;
+    const first = await request(app.getHttpServer())
+      .post(`/presets/${created.body.id}/share`)
+      .set('authorization', auth);
+    const second = await request(app.getHttpServer())
+      .post(`/presets/${created.body.id}/share`)
+      .set('authorization', auth);
+    expect(second.body.shareToken).toBe(first.body.shareToken);
+  });
+
+  it('공유 취소 후에는 옛 링크가 404', async () => {
+    const { token } = await newUser();
+    const created = await createPreset(token, '파티');
+    const auth = `Bearer ${token}`;
+    const shared = await request(app.getHttpServer())
+      .post(`/presets/${created.body.id}/share`)
+      .set('authorization', auth);
+    const shareToken = shared.body.shareToken as string;
+
+    const unshared = await request(app.getHttpServer())
+      .delete(`/presets/${created.body.id}/share`)
+      .set('authorization', auth);
+    expect(unshared.status).toBe(204);
+
+    const gone = await request(app.getHttpServer()).get(`/shared-presets/${shareToken}`);
+    expect(gone.status).toBe(404);
+  });
+
+  it('없는 공유 토큰은 404', async () => {
+    const res = await request(app.getHttpServer()).get('/shared-presets/없는토큰');
+    expect(res.status).toBe(404);
+  });
+
+  it('남의 프리셋은 공유할 수 없다(404)', async () => {
+    const owner = await newUser();
+    const created = await createPreset(owner.token, '비밀 파티');
+    const intruder = await newUser();
+    const res = await request(app.getHttpServer())
+      .post(`/presets/${created.body.id}/share`)
+      .set('authorization', `Bearer ${intruder.token}`);
+    expect(res.status).toBe(404);
+  });
 });

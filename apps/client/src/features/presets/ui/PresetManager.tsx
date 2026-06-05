@@ -10,6 +10,8 @@ import { useAuthStore } from '@/features/auth';
 import { useDeletePreset } from '../model/useDeletePreset';
 import { usePresets } from '../model/usePresets';
 import { useSavePreset } from '../model/useSavePreset';
+import { useSharePreset } from '../model/useSharePreset';
+import { useUnsharePreset } from '../model/useUnsharePreset';
 
 const CAP_BY_TIER = { free: 2, paid: 20 } as const;
 
@@ -23,6 +25,21 @@ export const PresetManager = ({ currentParty, onLoad }: PresetManagerProps) => {
   const presets = usePresets();
   const save = useSavePreset();
   const remove = useDeletePreset();
+  const share = useSharePreset();
+  const unshare = useUnsharePreset();
+
+  const copyLink = (token: string) => {
+    void navigator.clipboard.writeText(`${window.location.origin}/shared/${token}`);
+    toast.success('공유 링크를 복사했습니다');
+  };
+
+  const handleShare = (id: string, shareToken: string | null) => {
+    if (shareToken) {
+      copyLink(shareToken);
+      return;
+    }
+    share.mutate(id, { onSuccess: (res) => copyLink(res.shareToken) });
+  };
 
   if (!user) {
     return (
@@ -90,6 +107,24 @@ export const PresetManager = ({ currentParty, onLoad }: PresetManagerProps) => {
                 <Button variant="ghost" size="sm" onClick={() => onLoad(preset.party)}>
                   불러오기
                 </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleShare(preset.id, preset.shareToken)}
+                  disabled={share.isPending}
+                >
+                  {preset.shareToken ? '링크 복사' : '공유'}
+                </Button>
+                {preset.shareToken && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => unshare.mutate(preset.id)}
+                    disabled={unshare.isPending}
+                  >
+                    공유 취소
+                  </Button>
+                )}
                 <Button variant="ghost" size="sm" onClick={() => remove.mutate(preset.id)} disabled={remove.isPending}>
                   삭제
                 </Button>

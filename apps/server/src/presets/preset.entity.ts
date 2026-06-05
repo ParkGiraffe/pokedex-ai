@@ -21,6 +21,10 @@ export class Preset {
   @Property({ type: 'jsonb' })
   party!: PartyDraft;
 
+  // 공유 토큰. 발급하면 누구나 읽기전용으로 열람 가능, null이면 비공개. unique로 토큰 충돌 방지.
+  @Property({ nullable: true, unique: true })
+  shareToken?: string;
+
   @Property({ type: 'datetime', onCreate: () => new Date() })
   createdAt!: Date & Opt;
 
