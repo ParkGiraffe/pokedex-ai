@@ -3,9 +3,10 @@ import { randomUUID } from 'node:crypto';
 import { MikroORM } from '@mikro-orm/core';
 import { type NestExpressApplication } from '@nestjs/platform-express';
 import request from 'supertest';
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 import { createApp } from '../src/app.factory';
+import { Preset } from '../src/presets/preset.entity';
 import { User } from '../src/users/user.entity';
 import { UserTier } from '../src/users/user.enums';
 
@@ -56,6 +57,12 @@ describe('리더보드 + 공유 복사 수 추적', () => {
   beforeAll(async () => {
     app = await createApp();
     await app.init();
+  });
+
+  // 리더보드는 전역 top-N이라 다른 테스트가 남긴 공유 프리셋이 누적·순서를 오염시킨다.
+  // 파일 순차 실행(fileParallelism:false)이므로 각 테스트 전에 프리셋을 비워 결정적으로 만든다.
+  beforeEach(async () => {
+    await app.get(MikroORM).em.fork().nativeDelete(Preset, {});
   });
 
   afterAll(async () => {
