@@ -63,7 +63,9 @@ const matchSpeciesKo = (stem: string): string | undefined => {
   return undefined;
 };
 
-// 메가스톤 슬러그(예: garchompite, dragonitite, raichunite-x) → 한국어 "종족명나이트 [X/Y]"
+// 메가스톤 슬러그(예: garchompite, dragonitite, raichunite-x) → 한국어 "종족명나이트[X/Y]"
+// X/Y는 공백 없이 붙인다(공식 표기: 리자몽나이트X). 이 파생값은 루트 items.json에 없는
+// 챔피언스 오리지널 메가에만 쓰이고, 루트에 있으면 main에서 루트(PokeAPI 공식)를 우선한다.
 const megaOf = (slug: string): { ko: string; megaForme?: 'X' | 'Y' } | undefined => {
   let core = toId(slug);
   let megaForme: 'X' | 'Y' | undefined;
@@ -75,7 +77,7 @@ const megaOf = (slug: string): { ko: string; megaForme?: 'X' | 'Y' } | undefined
     return undefined;
   }
   const ko = matchSpeciesKo(core.slice(0, -3));
-  return ko ? { ko: `${ko}나이트${megaForme ? ` ${megaForme}` : ''}`, megaForme } : undefined;
+  return ko ? { ko: `${ko}나이트${megaForme ?? ''}`, megaForme } : undefined;
 };
 
 const pokeapiKo = async (slug: string): Promise<string | undefined> => {
@@ -101,12 +103,15 @@ const main = async () => {
 
   const items: Item[] = [];
   for (const slug of slugs) {
+    // ko는 루트 items.json(PokeAPI 공식)을 항상 우선한다. 후딘나이트가 아닌 후디나이트,
+    // 공백 없는 리자몽나이트X 등 공식 표기를 단일 출처에서 가져오기 위함이다.
+    const rootKo = itemKoById.get(toId(slug));
     const mega = megaOf(slug);
     if (mega) {
-      items.push({ slug, ko: mega.ko, isMega: true, megaForme: mega.megaForme });
+      items.push({ slug, ko: rootKo ?? mega.ko, isMega: true, megaForme: mega.megaForme });
       continue;
     }
-    const ko = itemKoById.get(toId(slug)) ?? (await pokeapiKo(slug));
+    const ko = rootKo ?? (await pokeapiKo(slug));
     items.push({ slug, ko: ko ?? slug, isMega: false });
   }
 
