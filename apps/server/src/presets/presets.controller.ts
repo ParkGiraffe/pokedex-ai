@@ -3,7 +3,14 @@ import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Post, Pu
 import { JwtAuthGuard } from '../auth/auth.guard';
 import { CurrentUserId } from '../auth/current-user.decorator';
 import { ZodValidationPipe } from '../common/zod-validation.pipe';
-import { CreatePresetBody, type CreatePresetInput, UpdatePresetBody, type UpdatePresetInput } from './dto';
+import {
+  CopyPresetBody,
+  type CopyPresetInput,
+  CreatePresetBody,
+  type CreatePresetInput,
+  UpdatePresetBody,
+  type UpdatePresetInput,
+} from './dto';
 import { type Preset } from './preset.entity';
 import { PresetsService } from './presets.service';
 
@@ -33,6 +40,16 @@ export class PresetsController {
     @Body(new ZodValidationPipe(CreatePresetBody)) body: CreatePresetInput,
   ) {
     return toRes(await this.presets.create(userId, body.name, body.party));
+  }
+
+  // 공유 토큰으로 원본을 내 프리셋으로 복사한다. 원본 copyCount가 1 증가한다.
+  @Post('copy')
+  @HttpCode(201)
+  async copyFromShare(
+    @CurrentUserId() userId: string,
+    @Body(new ZodValidationPipe(CopyPresetBody)) body: CopyPresetInput,
+  ) {
+    return toRes(await this.presets.copyFromShare(userId, body.token));
   }
 
   @Get(':id')

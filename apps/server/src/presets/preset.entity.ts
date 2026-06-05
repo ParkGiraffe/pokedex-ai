@@ -25,6 +25,10 @@ export class Preset {
   @Property({ nullable: true, unique: true })
   shareToken?: string;
 
+  // 이 공유 프리셋을 다른 사용자가 내 프리셋으로 복사한 횟수.
+  @Property({ default: 0 })
+  copyCount: number & Opt = 0;
+
   @Property({ type: 'datetime', onCreate: () => new Date() })
   createdAt!: Date & Opt;
 
