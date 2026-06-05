@@ -53,6 +53,14 @@ describe('어드바이저 서버 (NestJS 동등성)', () => {
     expect(res.body.board).toHaveLength(1);
   });
 
+  it('/team-select: 없는 종족이 섞이면 크래시 대신 400으로 막는다', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/team-select')
+      .send({ myTeam: [{ species: '한카리아스' }], opponentTeam: ['없는포켓몬'] });
+    expect(res.status).toBe(400);
+    expect(String(res.body.error)).toContain('없는포켓몬');
+  });
+
   it('/counter: 상대 세트 카운터를 반환한다', async () => {
     const res = await request(app.getHttpServer())
       .post('/counter')
