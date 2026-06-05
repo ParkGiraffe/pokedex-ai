@@ -3,7 +3,7 @@
 박기린(op5321)의 개인 도구. 포켓몬 챔피언스 싱글배틀 분석 웹앱 + Claude API 기반 AI 분석.
 대상 게임: 포켓몬 챔피언스(9세대 SV 메커니즘 기반, 메가진화·테라스탈 공존, 노력치 0~32 포인트 시스템) 싱글배틀.
 
-새 Claude 세션이 시작되면 **이 파일 → 아래 4개 → docs/specs/ 최신본** 순서로 읽고 컨텍스트를 복원한다.
+새 Claude 세션이 시작되면 **이 파일 → 아래 컨텍스트 복원 순서** 대로 읽고 컨텍스트를 복원한다.
 
 ## 컨텍스트 복원 순서 (반드시 이 순서)
 
@@ -23,7 +23,6 @@
    - `dto-response`·`infra-up`·`nest-*` — NestJS 전환에 따라 정식 적용(Phase A 이후)
 7. `docs/lexicon.md` — 한국 SV 커뮤니티 어휘 사전 (응답·UI 문구에 사용)
 8. `docs/p2z-refs/` — p2z의 루트·apps별 CLAUDE.md·README 사본 (원문 대조용)
-9. `docs/specs/` 아래 가장 최신 디자인 문서
 
 ## 운영 원칙
 
@@ -49,9 +48,8 @@ pokedex-agent/
 │   ├── battle-engine/        배틀 상태·데미지 계산 엔진
 │   └── data-fetchers/        PokeAPI 수집 스크립트
 ├── docs/
-│   ├── specs/                Phase별 디자인 문서
-│   ├── plans/                Phase별 구현 계획
-│   └── lexicon.md            한국 SV 커뮤니티 어휘 사전
+│   ├── lexicon.md            한국 SV 커뮤니티 어휘 사전
+│   └── p2z-refs/             p2z CLAUDE.md·README 사본 (원문 대조용)
 ├── CLAUDE.md                 이 파일
 ├── README.md
 ├── package.json              pnpm workspace 루트
@@ -60,19 +58,7 @@ pokedex-agent/
 └── mise.toml
 ```
 
-> 주의: `docs/specs/`·`docs/plans/`의 2026-05-21자 문서는 SV·클립보드 paste 시대에 작성됐다. 노력치 0~252 EV, 스마트누오 클론, paste 왕복 UX 언급은 모두 폐기된 옛 설계다. 현재 진실은 코드(특히 `packages/pokedex-core/src/types.ts`)와 이 CLAUDE.md다.
-
-## Phase 분해 (전체 윤곽)
-
-| Phase | 산출물                                | spec | plan |
-|-------|-------------------------------------|------|------|
-| 0     | 데이터 파운데이션 + 공식 라이브러리         | `docs/specs/2026-05-21-foundation-design.md` | `docs/plans/2026-05-21-phase-0-foundation.md` |
-| 1     | 웹앱 UI (4페이지)              | `docs/specs/2026-05-21-phase-1-client-ui-outline.md` (윤곽) | Phase 0 완료 후 작성 |
-| 2     | 파티 분석 AI (정적)                      | `docs/specs/2026-05-21-phase-2-party-analysis-outline.md` (윤곽) | Phase 1 완료 후 작성 |
-| 3     | 매치업 추천 AI                          | `docs/specs/2026-05-21-phase-3-matchup-leadrec-outline.md` (윤곽) | Phase 2 완료 후 작성 |
-| 4     | 실시간 배틀 의사결정 AI                   | `docs/specs/2026-05-21-phase-4-battle-decision-outline.md` (윤곽) | Phase 3 완료 후 작성 |
-
-각 Phase 진입 절차는 `docs/specs/2026-05-21-foundation-design.md` 의 "9a. Phase 진행 메타룰" 참고. 윤곽 spec은 갱신 가능 — 앞 Phase에서 발견한 사실로 자유롭게 재설계한다.
+> 현재 설계의 진실은 코드(특히 `packages/pokedex-core/src/types.ts`)와 이 CLAUDE.md다. SV·클립보드 paste 시대(노력치 0~252 EV, paste 왕복 UX 등)에 작성된 2026-05-21자 spec·plan 문서는 폐기돼 제거됐다. 신규 기능 로드맵은 위 "활성 로드맵"과 `~/.claude/plans/6-27-harmonic-lecun.md`를 따른다.
 
 ## 외부 참조 컨벤션
 

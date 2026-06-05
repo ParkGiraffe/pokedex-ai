@@ -83,4 +83,4 @@ pnpm dev          # client(Vite 5173) + server(Fastify 3007) 병렬 기동
 
 ## 상세 설계
 
-Phase별 디자인 문서는 `docs/specs/`, 한국 SV 커뮤니티 어휘 사전은 `docs/lexicon.md` 참고.
+한국 SV 커뮤니티 어휘 사전은 `docs/lexicon.md` 참고. 신규 기능 로드맵은 `CLAUDE.md`의 "활성 로드맵" 참고.
