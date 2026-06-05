@@ -14,6 +14,10 @@
       "types": "./dist/paths.d.ts",
       "default": "./dist/paths.js"
     },
+    "./fallback": {
+      "types": "./dist/gen9-fallback.d.ts",
+      "default": "./dist/gen9-fallback.js"
+    },
     "./data/*": "./data/*.json"
   },
   "files": ["dist", "data"],

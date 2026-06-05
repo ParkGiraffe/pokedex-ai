@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import { hasMeta, showdownIdOf, smogonSets, smogonUsage, toShowdownId } from "../src/showdown";
+import { hasMeta, smogonSets, smogonUsage } from "../src/gen9-fallback";
+import { showdownIdOf, toShowdownId } from "../src/showdown";
 
 describe("Showdown ID 브리지", () => {
   it("표시명을 id로 정규화한다", () => {

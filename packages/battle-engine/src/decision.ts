@@ -4,9 +4,9 @@ import {
   championsSamples,
   findItem,
   formula,
-  smogonSets,
   toShowdownId,
 } from "@pokedex-agent/pokedex-core";
+import { smogonSets } from "@pokedex-agent/pokedex-core/fallback";
 
 import {
   calcDamage,
