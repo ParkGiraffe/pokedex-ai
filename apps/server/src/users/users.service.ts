@@ -1,8 +1,8 @@
-import { EntityManager } from "@mikro-orm/postgresql";
-import { Injectable } from "@nestjs/common";
+import { EntityManager } from '@mikro-orm/postgresql';
+import { Injectable } from '@nestjs/common';
 
-import { type ProviderName } from "../auth/domain/identity";
-import { User } from "./user.entity";
+import { type ProviderName } from '../auth/domain/identity';
+import { User } from './user.entity';
 
 // EntityManager만 사용(EntityRepository 금지). 조회/생성은 SRP로 분리한다.
 @Injectable()

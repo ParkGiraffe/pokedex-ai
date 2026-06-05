@@ -1,12 +1,12 @@
-import { createRouter } from "@tanstack/react-router";
+import { createRouter } from '@tanstack/react-router';
 
-import { rootRoute } from "./routes/__root";
-import { battleRoute } from "./routes/battle";
-import { calculatorRoute } from "./routes/calculator";
-import { docsRoute } from "./routes/docs";
-import { matchupRoute } from "./routes/matchup";
-import { partyRoute } from "./routes/party";
-import { speedRoute } from "./routes/speed";
+import { rootRoute } from './routes/__root';
+import { battleRoute } from './routes/battle';
+import { calculatorRoute } from './routes/calculator';
+import { docsRoute } from './routes/docs';
+import { matchupRoute } from './routes/matchup';
+import { partyRoute } from './routes/party';
+import { speedRoute } from './routes/speed';
 
 const routeTree = rootRoute.addChildren([
   calculatorRoute,
@@ -19,7 +19,7 @@ const routeTree = rootRoute.addChildren([
 
 export const router = createRouter({ routeTree });
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface Register {
     router: typeof router;
   }

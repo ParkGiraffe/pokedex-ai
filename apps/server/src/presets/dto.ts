@@ -1,5 +1,5 @@
-import { PartyDraft } from "@pokedex-agent/pokedex-core";
-import { z } from "zod";
+import { PartyDraft } from '@pokedex-agent/pokedex-core';
+import { z } from 'zod';
 
 // party는 검증된 Party가 아니라 빌더 작업 상태(PartyDraft) — 부분 입력도 그대로 저장한다.
 export const CreatePresetBody = z.object({
@@ -14,6 +14,6 @@ export const UpdatePresetBody = z
     party: PartyDraft.optional(),
   })
   .refine((body) => body.name !== undefined || body.party !== undefined, {
-    message: "변경할 내용이 없습니다",
+    message: '변경할 내용이 없습니다',
   });
 export type UpdatePresetInput = z.infer<typeof UpdatePresetBody>;

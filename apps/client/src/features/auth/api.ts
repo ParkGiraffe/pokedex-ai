@@ -1,7 +1,7 @@
-import { type AuthUser, useAuthStore } from "./model/store";
+import { type AuthUser, useAuthStore } from './model/store';
 
 // 서버는 Vite 프록시(/advisor)를 통해 같은 출처로 호출한다(/advisor/auth/... → 서버 /auth/...).
-const BASE = "/advisor";
+const BASE = '/advisor';
 
 export type AuthResult = { accessToken: string; user: AuthUser };
 
@@ -14,7 +14,7 @@ const authHeader = (): Record<string, string> => {
 export const apiRequest = async <T>(path: string, init: RequestInit, fallback: string): Promise<T> => {
   const response = await fetch(`${BASE}${path}`, {
     ...init,
-    headers: { "Content-Type": "application/json", ...authHeader(), ...init.headers },
+    headers: { 'Content-Type': 'application/json', ...authHeader(), ...init.headers },
   });
   if (response.status === 401) {
     useAuthStore.getState().clear();
@@ -30,9 +30,9 @@ export const apiRequest = async <T>(path: string, init: RequestInit, fallback: s
 };
 
 export const registerUser = (body: { email: string; password: string; nickname?: string }): Promise<AuthResult> =>
-  apiRequest("/auth/register", { method: "POST", body: JSON.stringify(body) }, "회원가입 실패");
+  apiRequest('/auth/register', { method: 'POST', body: JSON.stringify(body) }, '회원가입 실패');
 
 export const loginUser = (body: { email: string; password: string }): Promise<AuthResult> =>
-  apiRequest("/auth/login", { method: "POST", body: JSON.stringify(body) }, "로그인 실패");
+  apiRequest('/auth/login', { method: 'POST', body: JSON.stringify(body) }, '로그인 실패');
 
-export const fetchMe = (): Promise<AuthUser> => apiRequest("/auth/me", { method: "GET" }, "내 정보 조회 실패");
+export const fetchMe = (): Promise<AuthUser> => apiRequest('/auth/me', { method: 'GET' }, '내 정보 조회 실패');

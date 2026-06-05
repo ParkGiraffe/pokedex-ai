@@ -1,25 +1,25 @@
-import { EntityManager } from "@mikro-orm/postgresql";
-import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
-import { type PartyDraft } from "@pokedex-agent/pokedex-core";
+import { EntityManager } from '@mikro-orm/postgresql';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { type PartyDraft } from '@pokedex-agent/pokedex-core';
 
-import { User } from "../users/user.entity";
-import { UserTier } from "../users/user.enums";
-import { PRESET_CAP_BY_TIER } from "./preset-caps";
-import { Preset } from "./preset.entity";
+import { User } from '../users/user.entity';
+import { UserTier } from '../users/user.enums';
+import { Preset } from './preset.entity';
+import { PRESET_CAP_BY_TIER } from './preset-caps';
 
 @Injectable()
 export class PresetsService {
   constructor(private readonly em: EntityManager) {}
 
   list(userId: string): Promise<Preset[]> {
-    return this.em.find(Preset, { user: userId }, { orderBy: { createdAt: "asc" } });
+    return this.em.find(Preset, { user: userId }, { orderBy: { createdAt: 'asc' } });
   }
 
   // 소유자 본인 것만 조회 — 남의 프리셋은 존재 여부도 노출하지 않도록 404.
   async getOwned(userId: string, id: string): Promise<Preset> {
     const preset = await this.em.findOne(Preset, { id, user: userId });
     if (!preset) {
-      throw new NotFoundException("프리셋을 찾을 수 없습니다");
+      throw new NotFoundException('프리셋을 찾을 수 없습니다');
     }
     return preset;
   }
@@ -29,12 +29,12 @@ export class PresetsService {
     return this.em.transactional(async (em) => {
       const user = await em.findOne(User, { id: userId });
       if (!user) {
-        throw new NotFoundException("사용자를 찾을 수 없습니다");
+        throw new NotFoundException('사용자를 찾을 수 없습니다');
       }
       const tier = user.tier as UserTier;
       const cap = PRESET_CAP_BY_TIER[tier];
       if ((await em.count(Preset, { user: userId })) >= cap) {
-        const label = tier === UserTier.PAID ? "유료" : "무료";
+        const label = tier === UserTier.PAID ? '유료' : '무료';
         throw new ForbiddenException(`${label} 계정은 프리셋을 최대 ${cap}개까지 저장할 수 있습니다`);
       }
       const preset = em.create(Preset, { user, name, party });

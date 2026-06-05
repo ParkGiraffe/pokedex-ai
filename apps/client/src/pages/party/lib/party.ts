@@ -4,11 +4,11 @@ import {
   type Party,
   PartyMember,
   PERFECT_IVS,
-  type TypeName,
   TYPE_NAMES,
-} from "@pokedex-agent/pokedex-core";
+  type TypeName,
+} from '@pokedex-agent/pokedex-core';
 
-import { type MemberDraft } from "../model/store";
+import { type MemberDraft } from '../model/store';
 
 const normalize = (draft: MemberDraft) => ({
   ...draft,
@@ -18,13 +18,13 @@ const normalize = (draft: MemberDraft) => ({
 
 // Zod 기본 메시지(영어) 대신 어떤 칸이 비었는지 한국어로 안내한다.
 const FIELD_LABEL: Record<string, string> = {
-  species: "포켓몬",
-  ability: "특성",
-  item: "도구",
-  nature: "성격",
-  teraType: "테라",
-  evs: "노력치",
-  level: "레벨",
+  species: '포켓몬',
+  ability: '특성',
+  item: '도구',
+  nature: '성격',
+  teraType: '테라',
+  evs: '노력치',
+  level: '레벨',
 };
 
 export const memberError = (draft: MemberDraft): string | null => {
@@ -33,11 +33,11 @@ export const memberError = (draft: MemberDraft): string | null => {
     return null;
   }
   const field = parsed.error.issues[0]?.path[0];
-  if (field === "moves") {
-    return "기술 4개를 모두 입력하세요";
+  if (field === 'moves') {
+    return '기술 4개를 모두 입력하세요';
   }
-  const label = typeof field === "string" ? FIELD_LABEL[field] : undefined;
-  return label ? `${label} 칸을 채우세요` : "슬롯 정보를 확인하세요";
+  const label = typeof field === 'string' ? FIELD_LABEL[field] : undefined;
+  return label ? `${label} 칸을 채우세요` : '슬롯 정보를 확인하세요';
 };
 
 export const buildParty = (drafts: MemberDraft[]): Party => {

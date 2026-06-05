@@ -1,21 +1,37 @@
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
-import { announce, concurrency, fetchJson, pickKo } from "./pokeapi";
-import type { PokedexEntry } from "@pokedex-agent/pokedex-core";
+import type { PokedexEntry } from '@pokedex-agent/pokedex-core';
+
+import { announce, concurrency, fetchJson, pickKo } from './pokeapi';
 
 // 챔피언스 합법 메가만 다룬다. 이미 받아둔 champions/samples-singles.json의
 // megaForm 슬러그를 출발점으로 잡고, PokeAPI에서 pokemon-form/pokemon/pokemon-species를
 // 모아 종족값·타입·특성·한국어 명칭을 채운다.
 // 챔피언스 신규 메가는 PokeAPI에 없을 수 있으므로 누락은 skipped에 남기고 진행한다.
-const CORE = resolve(import.meta.dirname, "../../pokedex-core/data");
-const SAMPLES_PATH = resolve(CORE, "champions/samples-singles.json");
-const OUT = resolve(CORE, "champions/megas.json");
+const CORE = resolve(import.meta.dirname, '../../pokedex-core/data');
+const SAMPLES_PATH = resolve(CORE, 'champions/samples-singles.json');
+const OUT = resolve(CORE, 'champions/megas.json');
 
 const TYPE_KO_FALLBACK: Record<string, string> = {
-  normal: "노말", fire: "불꽃", water: "물", grass: "풀", electric: "전기", ice: "얼음",
-  fighting: "격투", poison: "독", ground: "땅", flying: "비행", psychic: "에스퍼", bug: "벌레",
-  rock: "바위", ghost: "고스트", dragon: "드래곤", dark: "악", steel: "강철", fairy: "페어리",
+  normal: '노말',
+  fire: '불꽃',
+  water: '물',
+  grass: '풀',
+  electric: '전기',
+  ice: '얼음',
+  fighting: '격투',
+  poison: '독',
+  ground: '땅',
+  flying: '비행',
+  psychic: '에스퍼',
+  bug: '벌레',
+  rock: '바위',
+  ghost: '고스트',
+  dragon: '드래곤',
+  dark: '악',
+  steel: '강철',
+  fairy: '페어리',
 };
 
 type PokemonForm = {
@@ -56,14 +72,14 @@ type TypeResource = {
 
 // 메가 폼 슬러그(scizor-mega, charizard-mega-x) → 메가 폼 정보.
 // `-mega-x|y` 또는 `-mega`만 인정. 나머지(region form 등)는 undefined.
-const parseMegaForm = (form: string): { megaForme: "X" | "Y" | null } | undefined => {
-  if (form.endsWith("-mega-x")) {
-    return { megaForme: "X" };
+const parseMegaForm = (form: string): { megaForme: 'X' | 'Y' | null } | undefined => {
+  if (form.endsWith('-mega-x')) {
+    return { megaForme: 'X' };
   }
-  if (form.endsWith("-mega-y")) {
-    return { megaForme: "Y" };
+  if (form.endsWith('-mega-y')) {
+    return { megaForme: 'Y' };
   }
-  if (form.endsWith("-mega")) {
+  if (form.endsWith('-mega')) {
     return { megaForme: null };
   }
   return undefined;
@@ -81,17 +97,17 @@ const formToStone = (form: string): string => {
   return suffix ? `${base}ite-${suffix}` : `${base}ite`;
 };
 
-const STAT_KEY_MAP: Record<string, "H" | "A" | "B" | "C" | "D" | "S"> = {
-  hp: "H",
-  attack: "A",
-  defense: "B",
-  "special-attack": "C",
-  "special-defense": "D",
-  speed: "S",
+const STAT_KEY_MAP: Record<string, 'H' | 'A' | 'B' | 'C' | 'D' | 'S'> = {
+  hp: 'H',
+  attack: 'A',
+  defense: 'B',
+  'special-attack': 'C',
+  'special-defense': 'D',
+  speed: 'S',
 };
 
-const baseStatBlock = (stats: Pokemon["stats"]) => {
-  const block: Record<"H" | "A" | "B" | "C" | "D" | "S", number> = { H: 0, A: 0, B: 0, C: 0, D: 0, S: 0 };
+const baseStatBlock = (stats: Pokemon['stats']) => {
+  const block: Record<'H' | 'A' | 'B' | 'C' | 'D' | 'S', number> = { H: 0, A: 0, B: 0, C: 0, D: 0, S: 0 };
   for (const entry of stats) {
     const key = STAT_KEY_MAP[entry.stat.name];
     if (key) {
@@ -116,10 +132,10 @@ type MegaEntry = {
   baseKo: string;
   ko: string;
   en: string;
-  types: PokedexEntry["types"];
-  base: PokedexEntry["base"];
+  types: PokedexEntry['types'];
+  base: PokedexEntry['base'];
   ability: string;
-  megaForme: "X" | "Y" | null;
+  megaForme: 'X' | 'Y' | null;
 };
 
 const buildAbilityKoMap = async (slugs: Iterable<string>): Promise<Map<string, string>> => {
@@ -133,8 +149,8 @@ const buildAbilityKoMap = async (slugs: Iterable<string>): Promise<Map<string, s
         } catch {
           return [slug, slug] as const;
         }
-      })
-    )
+      }),
+    ),
   );
   return new Map(results);
 };
@@ -149,17 +165,17 @@ const buildTypeKoMap = async (): Promise<Map<string, string>> => {
         } catch {
           return [slug, TYPE_KO_FALLBACK[slug]!] as const;
         }
-      })
-    )
+      }),
+    ),
   );
   return new Map(results);
 };
 
 const main = async () => {
-  mkdirSync(resolve(OUT, ".."), { recursive: true });
+  mkdirSync(resolve(OUT, '..'), { recursive: true });
 
   // 1. 이미 받아둔 챔피언스 samples-singles에서 메가 폼만 추출.
-  const samplesFile = JSON.parse(readFileSync(SAMPLES_PATH, "utf8")) as {
+  const samplesFile = JSON.parse(readFileSync(SAMPLES_PATH, 'utf8')) as {
     byPokemon: Record<string, Array<{ megaForm?: string }>>;
   };
   const forms = new Set<string>();
@@ -170,7 +186,7 @@ const main = async () => {
       }
     }
   }
-  const candidates: Array<{ stone: string; form: string; megaForme: "X" | "Y" | null }> = [];
+  const candidates: Array<{ stone: string; form: string; megaForme: 'X' | 'Y' | null }> = [];
   for (const form of [...forms].sort()) {
     const parsed = parseMegaForm(form);
     if (parsed) {
@@ -186,7 +202,14 @@ const main = async () => {
   const megas: MegaEntry[] = [];
   const skipped: Array<{ stone: string; form: string; reason: string }> = [];
   const abilitySlugsToResolve = new Set<string>();
-  type Pending = { stone: string; form: string; megaForme: "X" | "Y" | null; pokemon: Pokemon; formData: PokemonForm; species: Species };
+  type Pending = {
+    stone: string;
+    form: string;
+    megaForme: 'X' | 'Y' | null;
+    pokemon: Pokemon;
+    formData: PokemonForm;
+    species: Species;
+  };
   const pending: Pending[] = [];
 
   let done = 0;
@@ -207,10 +230,10 @@ const main = async () => {
           skipped.push({ stone: candidate.stone, form: candidate.form, reason: String(error) });
         } finally {
           done += 1;
-          announce("megas-fetch", done, candidates.length);
+          announce('megas-fetch', done, candidates.length);
         }
-      })
-    )
+      }),
+    ),
   );
 
   const abilityKo = await buildAbilityKoMap(abilitySlugsToResolve);
@@ -218,15 +241,15 @@ const main = async () => {
   for (const entry of pending) {
     const primary = entry.pokemon.abilities.find((a) => !a.is_hidden) ?? entry.pokemon.abilities[0];
     if (!primary) {
-      skipped.push({ stone: entry.stone, form: entry.form, reason: "abilities 비어있음" });
+      skipped.push({ stone: entry.stone, form: entry.form, reason: 'abilities 비어있음' });
       continue;
     }
     const baseKo = pickKo(entry.species.names) ?? entry.species.name;
     const formKo = pickKo(entry.formData.form_names);
-    const ko = formKo ?? `메가${baseKo}${entry.megaForme ? ` ${entry.megaForme}` : ""}`;
+    const ko = formKo ?? `메가${baseKo}${entry.megaForme ? ` ${entry.megaForme}` : ''}`;
     const types = (entry.formData.types.length > 0 ? entry.formData.types : entry.pokemon.types)
       .sort((a, b) => a.slot - b.slot)
-      .map((t) => typeKo.get(t.type.name) ?? TYPE_KO_FALLBACK[t.type.name] ?? t.type.name) as PokedexEntry["types"];
+      .map((t) => typeKo.get(t.type.name) ?? TYPE_KO_FALLBACK[t.type.name] ?? t.type.name) as PokedexEntry['types'];
     megas.push({
       stone: entry.stone,
       form: entry.form,
@@ -241,18 +264,18 @@ const main = async () => {
     });
   }
 
-  megas.sort((a, b) => a.baseNo - b.baseNo || (a.megaForme ?? "").localeCompare(b.megaForme ?? ""));
+  megas.sort((a, b) => a.baseNo - b.baseNo || (a.megaForme ?? '').localeCompare(b.megaForme ?? ''));
 
   const payload = {
-    source: "pkmnchamps season_allowed(items) + PokeAPI v2 (pokemon-form/pokemon/pokemon-species)",
+    source: 'pkmnchamps season_allowed(items) + PokeAPI v2 (pokemon-form/pokemon/pokemon-species)',
     generated_at_utc: process.env.GENERATED_AT_UTC ?? new Date().toISOString(),
     count: megas.length,
     skipped,
     megas,
   };
-  writeFileSync(OUT, JSON.stringify(payload, null, 2) + "\n", "utf8");
+  writeFileSync(OUT, JSON.stringify(payload, null, 2) + '\n', 'utf8');
   process.stderr.write(
-    `[done] ${OUT} (${megas.length}개 수집, ${skipped.length}개 누락: ${skipped.map((s) => s.form).join(", ")})\n`
+    `[done] ${OUT} (${megas.length}개 수집, ${skipped.length}개 누락: ${skipped.map((s) => s.form).join(', ')})\n`,
   );
 };
 

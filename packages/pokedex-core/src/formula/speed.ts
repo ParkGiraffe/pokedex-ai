@@ -34,13 +34,10 @@ export const effectiveSpeed = (input: SpeedInput): number => {
   return value;
 };
 
-export type FasterResult = "left" | "right" | "tie";
+export type FasterResult = 'left' | 'right' | 'tie';
 
-export const fasterSide = (
-  speeds: { left: number; right: number },
-  options: { trickRoom: boolean }
-): FasterResult => {
-  if (speeds.left === speeds.right) return "tie";
+export const fasterSide = (speeds: { left: number; right: number }, options: { trickRoom: boolean }): FasterResult => {
+  if (speeds.left === speeds.right) return 'tie';
   const leftWins = options.trickRoom ? speeds.left < speeds.right : speeds.left > speeds.right;
-  return leftWins ? "left" : "right";
+  return leftWins ? 'left' : 'right';
 };

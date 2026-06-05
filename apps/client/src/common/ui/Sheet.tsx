@@ -1,7 +1,7 @@
-import { type ReactNode, useEffect } from "react";
-import { createPortal } from "react-dom";
+import { type ReactNode, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 
-import { cn } from "@/common/lib/cn";
+import { cn } from '@/common/lib/cn';
 
 type SheetProps = {
   open: boolean;
@@ -17,12 +17,12 @@ export const Sheet = ({ open, title, onClose, className, children }: SheetProps)
       return;
     }
     const handleKeydown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
+      if (event.key === 'Escape') {
         onClose();
       }
     };
-    window.addEventListener("keydown", handleKeydown);
-    return () => window.removeEventListener("keydown", handleKeydown);
+    window.addEventListener('keydown', handleKeydown);
+    return () => window.removeEventListener('keydown', handleKeydown);
   }, [open, onClose]);
 
   if (!open) {
@@ -39,8 +39,8 @@ export const Sheet = ({ open, title, onClose, className, children }: SheetProps)
         aria-modal="true"
         aria-label={title}
         className={cn(
-          "relative flex h-full w-full max-w-md flex-col gap-4 overflow-y-auto border-l border-border bg-popover p-5 shadow-xl",
-          className
+          'border-border bg-popover relative flex h-full w-full max-w-md flex-col gap-4 overflow-y-auto border-l p-5 shadow-xl',
+          className,
         )}
       >
         <div className="flex items-center justify-between">
@@ -48,7 +48,7 @@ export const Sheet = ({ open, title, onClose, className, children }: SheetProps)
           <button
             type="button"
             onClick={onClose}
-            className="rounded-md px-2 py-1 text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+            className="text-muted-foreground hover:bg-accent hover:text-accent-foreground rounded-md px-2 py-1 text-sm"
           >
             닫기
           </button>
@@ -56,6 +56,6 @@ export const Sheet = ({ open, title, onClose, className, children }: SheetProps)
         {children}
       </aside>
     </div>,
-    document.body
+    document.body,
   );
 };

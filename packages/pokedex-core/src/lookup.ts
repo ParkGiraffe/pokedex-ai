@@ -1,9 +1,8 @@
-import type { PokedexEntry } from "./types";
-import { pokedex, pokedexByEn, pokedexByKo, pokedexByNo } from "./data";
-
-import movesRaw from "../data/moves.json" with { type: "json" };
-import abilitiesRaw from "../data/abilities.json" with { type: "json" };
-import itemsRaw from "../data/items.json" with { type: "json" };
+import abilitiesRaw from '../data/abilities.json' with { type: 'json' };
+import itemsRaw from '../data/items.json' with { type: 'json' };
+import movesRaw from '../data/moves.json' with { type: 'json' };
+import { pokedex, pokedexByEn, pokedexByKo, pokedexByNo } from './data';
+import type { PokedexEntry } from './types';
 
 type MoveData = {
   id: number;
@@ -11,7 +10,7 @@ type MoveData = {
   en: string;
   type: string;
   type_en: string;
-  category: "물리" | "특수" | "변화";
+  category: '물리' | '특수' | '변화';
   power: number | null;
   accuracy: number | null;
   pp: number;
@@ -39,18 +38,16 @@ export const abilityKoByEn = (en: string): string | undefined => abilityByEn.get
 export const itemKoByEn = (en: string): string | undefined => itemByEn.get(en)?.ko;
 
 export const findPokemon = (key: string | number): PokedexEntry | undefined => {
-  if (typeof key === "number") return pokedexByNo.get(key);
+  if (typeof key === 'number') return pokedexByNo.get(key);
   return pokedexByKo.get(key) ?? pokedexByEn.get(key.toLowerCase());
 };
 
-export const findMove = (key: string): MoveData | undefined =>
-  moveByKo.get(key) ?? moveByEn.get(key.toLowerCase());
+export const findMove = (key: string): MoveData | undefined => moveByKo.get(key) ?? moveByEn.get(key.toLowerCase());
 
 export const findAbility = (key: string): AbilityData | undefined =>
   abilityByKo.get(key) ?? abilityByEn.get(key.toLowerCase());
 
-export const findItem = (key: string): ItemData | undefined =>
-  itemByKo.get(key) ?? itemByEn.get(key.toLowerCase());
+export const findItem = (key: string): ItemData | undefined => itemByKo.get(key) ?? itemByEn.get(key.toLowerCase());
 
 const editDistance = (a: string, b: string): number => {
   const m = a.length;
@@ -61,9 +58,7 @@ const editDistance = (a: string, b: string): number => {
   for (let i = 1; i <= m; i++) {
     for (let j = 1; j <= n; j++) {
       dp[i]![j] =
-        a[i - 1] === b[j - 1]
-          ? dp[i - 1]![j - 1]!
-          : 1 + Math.min(dp[i - 1]![j]!, dp[i]![j - 1]!, dp[i - 1]![j - 1]!);
+        a[i - 1] === b[j - 1] ? dp[i - 1]![j - 1]! : 1 + Math.min(dp[i - 1]![j]!, dp[i]![j - 1]!, dp[i - 1]![j - 1]!);
     }
   }
   return dp[m]![n]!;
@@ -91,7 +86,7 @@ export const isKnownTerm = (name: string): boolean => {
   if (knownTerms.has(trimmed)) {
     return true;
   }
-  const base = trimmed.replace(/^메가\s*/, "").replace(/\s*[XY]$/, "");
+  const base = trimmed.replace(/^메가\s*/, '').replace(/\s*[XY]$/, '');
   return knownTerms.has(base);
 };
 

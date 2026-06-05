@@ -1,1 +1,1 @@
-export { QuotaBadge } from "./ui/QuotaBadge";
+export { QuotaBadge } from './ui/QuotaBadge';

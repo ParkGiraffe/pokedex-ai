@@ -1,6 +1,6 @@
-import setsRaw from "../data/gen9-fallback/sets-gen9.json" with { type: "json" };
-import usageRaw from "../data/gen9-fallback/usage-gen9.json" with { type: "json" };
-import { type SmogonSet, type SmogonUsage, showdownIdOf } from "./showdown";
+import setsRaw from '../data/gen9-fallback/sets-gen9.json' with { type: 'json' };
+import usageRaw from '../data/gen9-fallback/usage-gen9.json' with { type: 'json' };
+import { showdownIdOf, type SmogonSet, type SmogonUsage } from './showdown';
 
 // gen9 Smogon 폴백 데이터(약 2MB)는 브라우저가 쓰지 않고 서버측 battle-engine만 소비한다.
 // 메인 배럴(index)에 넣지 않고 node 전용 ./fallback 서브패스로만 노출해 클라이언트 번들에서 제외한다.

@@ -6,6 +6,7 @@
     "build": "nest build",
     "dev": "nest start --watch",
     "start": "node dist/main.js",
+    "lint": "eslint .",
     "type-check": "tsc --noEmit",
     "test": "NODE_ENV=test vitest run",
     "migration:create": "NODE_ENV=development mikro-orm migration:create",

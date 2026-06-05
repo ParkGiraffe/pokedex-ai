@@ -1,48 +1,48 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from 'vitest';
 
-import { Party, PartyMember, StatBlock, TypeName, isTypeName } from "../src/types";
-import { pokedex, pokedexByKo } from "../src/data";
+import { pokedex, pokedexByKo } from '../src/data';
+import { isTypeName, Party, PartyMember, StatBlock, type TypeName } from '../src/types';
 
-describe("타입 스키마", () => {
-  it("정상 PartyMember를 파싱한다", () => {
+describe('타입 스키마', () => {
+  it('정상 PartyMember를 파싱한다', () => {
     const member = PartyMember.parse({
-      species: "어써러셔",
+      species: '어써러셔',
       level: 50,
-      nature: "신중",
-      ability: "재생력",
-      item: "구애조끼",
-      teraType: "강철",
-      moves: ["지진", "스톤에지", "기합구슬", "탁쳐서떨구기"],
+      nature: '신중',
+      ability: '재생력',
+      item: '구애조끼',
+      teraType: '강철',
+      moves: ['지진', '스톤에지', '기합구슬', '탁쳐서떨구기'],
       evs: { H: 32, A: 1, B: 0, C: 0, D: 32, S: 0 },
       ivs: { H: 31, A: 31, B: 31, C: 31, D: 31, S: 31 },
     });
-    expect(member.species).toBe("어써러셔");
+    expect(member.species).toBe('어써러셔');
     expect(member.evs.H).toBe(32);
   });
 
-  it("스탯당 노력 포인트는 32를 넘을 수 없다", () => {
+  it('스탯당 노력 포인트는 32를 넘을 수 없다', () => {
     expect(() =>
       PartyMember.parse({
-        species: "어써러셔",
+        species: '어써러셔',
         level: 50,
-        nature: "신중",
-        ability: "재생력",
-        teraType: "강철",
-        moves: ["지진", "스톤에지", "기합구슬", "탁쳐서떨구기"],
+        nature: '신중',
+        ability: '재생력',
+        teraType: '강철',
+        moves: ['지진', '스톤에지', '기합구슬', '탁쳐서떨구기'],
         evs: { H: 33, A: 0, B: 0, C: 0, D: 0, S: 0 },
         ivs: { H: 31, A: 31, B: 31, C: 31, D: 31, S: 31 },
-      })
+      }),
     ).toThrow();
   });
 
-  it("Party는 최대 6마리까지 허용한다", () => {
+  it('Party는 최대 6마리까지 허용한다', () => {
     const member = {
-      species: "어써러셔",
+      species: '어써러셔',
       level: 50,
-      nature: "신중",
-      ability: "재생력",
-      teraType: "강철",
-      moves: ["지진", "스톤에지", "기합구슬", "탁쳐서떨구기"],
+      nature: '신중',
+      ability: '재생력',
+      teraType: '강철',
+      moves: ['지진', '스톤에지', '기합구슬', '탁쳐서떨구기'],
       evs: { H: 32, A: 1, B: 0, C: 0, D: 32, S: 0 },
       ivs: { H: 31, A: 31, B: 31, C: 31, D: 31, S: 31 },
     };
@@ -50,61 +50,96 @@ describe("타입 스키마", () => {
     expect(() => Party.parse(Array(6).fill(member))).not.toThrow();
   });
 
-  it("isTypeName이 한국어 18타입을 모두 통과시킨다", () => {
+  it('isTypeName이 한국어 18타입을 모두 통과시킨다', () => {
     const all: TypeName[] = [
-      "노말", "불꽃", "물", "풀", "전기", "얼음", "격투", "독",
-      "땅", "비행", "에스퍼", "벌레", "바위", "고스트", "드래곤", "악",
-      "강철", "페어리",
+      '노말',
+      '불꽃',
+      '물',
+      '풀',
+      '전기',
+      '얼음',
+      '격투',
+      '독',
+      '땅',
+      '비행',
+      '에스퍼',
+      '벌레',
+      '바위',
+      '고스트',
+      '드래곤',
+      '악',
+      '강철',
+      '페어리',
     ];
     for (const t of all) expect(isTypeName(t)).toBe(true);
-    expect(isTypeName("스텔라")).toBe(false);
-    expect(isTypeName("Steel")).toBe(false);
+    expect(isTypeName('스텔라')).toBe(false);
+    expect(isTypeName('Steel')).toBe(false);
   });
 
-  it("StatBlock의 모든 값은 0 이상 32 이하의 정수다", () => {
+  it('StatBlock의 모든 값은 0 이상 32 이하의 정수다', () => {
     expect(() => StatBlock.parse({ H: -1, A: 0, B: 0, C: 0, D: 0, S: 0 })).toThrow();
     expect(() => StatBlock.parse({ H: 33, A: 0, B: 0, C: 0, D: 0, S: 0 })).toThrow();
     expect(() => StatBlock.parse({ H: 32, A: 0, B: 0, C: 0, D: 0, S: 0 })).not.toThrow();
   });
 });
 
-describe("도감 데이터", () => {
-  it("1025마리가 로드된다", () => {
+describe('도감 데이터', () => {
+  it('1025마리가 로드된다', () => {
     expect(pokedex.count).toBe(1025);
     expect(pokedex.entries).toHaveLength(1025);
   });
 
-  it("한국어명으로 조회한다", () => {
-    expect(pokedexByKo.get("이상해씨")?.no).toBe(1);
-    expect(pokedexByKo.get("피카츄")?.no).toBe(25);
-    expect(pokedexByKo.get("뮤츠")?.no).toBe(150);
-    expect(pokedexByKo.get("복숭악동")?.no).toBe(1025);
+  it('한국어명으로 조회한다', () => {
+    expect(pokedexByKo.get('이상해씨')?.no).toBe(1);
+    expect(pokedexByKo.get('피카츄')?.no).toBe(25);
+    expect(pokedexByKo.get('뮤츠')?.no).toBe(150);
+    expect(pokedexByKo.get('복숭악동')?.no).toBe(1025);
   });
 
-  it("모든 엔트리가 한국어명을 갖는다", () => {
+  it('모든 엔트리가 한국어명을 갖는다', () => {
     for (const entry of pokedex.entries) {
       expect(entry.ko).toBeTruthy();
       expect(entry.ko.length).toBeGreaterThan(0);
     }
   });
 
-  it("모든 엔트리의 타입이 18타입 중 하나다", () => {
+  it('모든 엔트리의 타입이 18타입 중 하나다', () => {
     for (const entry of pokedex.entries) {
       for (const t of entry.types) {
         expect([
-          "노말", "불꽃", "물", "풀", "전기", "얼음", "격투", "독",
-          "땅", "비행", "에스퍼", "벌레", "바위", "고스트", "드래곤", "악",
-          "강철", "페어리",
+          '노말',
+          '불꽃',
+          '물',
+          '풀',
+          '전기',
+          '얼음',
+          '격투',
+          '독',
+          '땅',
+          '비행',
+          '에스퍼',
+          '벌레',
+          '바위',
+          '고스트',
+          '드래곤',
+          '악',
+          '강철',
+          '페어리',
         ]).toContain(t);
       }
     }
   });
 
-  it("종족값을 갖는다", () => {
-    expect(pokedexByKo.get("한카리아스")?.base).toEqual({
-      H: 108, A: 130, B: 95, C: 80, D: 85, S: 102,
+  it('종족값을 갖는다', () => {
+    expect(pokedexByKo.get('한카리아스')?.base).toEqual({
+      H: 108,
+      A: 130,
+      B: 95,
+      C: 80,
+      D: 85,
+      S: 102,
     });
-    expect(pokedexByKo.get("피카츄")?.base.S).toBe(90);
+    expect(pokedexByKo.get('피카츄')?.base.S).toBe(90);
     for (const entry of pokedex.entries) {
       expect(entry.base.H).toBeGreaterThanOrEqual(1);
     }

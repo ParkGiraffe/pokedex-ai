@@ -1,8 +1,8 @@
-import { Body, Controller, HttpCode, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, HttpCode, Post, UseGuards } from '@nestjs/common';
 
-import { JwtAuthGuard } from "../auth/auth.guard";
-import { CurrentUserId } from "../auth/current-user.decorator";
-import { ZodValidationPipe } from "../common/zod-validation.pipe";
+import { JwtAuthGuard } from '../auth/auth.guard';
+import { CurrentUserId } from '../auth/current-user.decorator';
+import { ZodValidationPipe } from '../common/zod-validation.pipe';
 import {
   AnalyzePartyBody,
   type AnalyzePartyInput,
@@ -10,9 +10,9 @@ import {
   type BattleAdviceInput,
   MatchupLeadrecBody,
   type MatchupLeadrecInput,
-} from "../dto";
-import { QuotaService } from "../quota/quota.service";
-import { AdvisorService } from "./advisor.service";
+} from '../dto';
+import { QuotaService } from '../quota/quota.service';
+import { AdvisorService } from './advisor.service';
 
 // 추천 시스템: 로그인 + 일일 쿼터 소비 후 Anthropic 호출.
 @Controller()
@@ -20,26 +20,35 @@ import { AdvisorService } from "./advisor.service";
 export class AdvisorController {
   constructor(
     private readonly advisor: AdvisorService,
-    private readonly quota: QuotaService
+    private readonly quota: QuotaService,
   ) {}
 
-  @Post("analyze-party")
+  @Post('analyze-party')
   @HttpCode(200)
-  async analyzeParty(@CurrentUserId() userId: string, @Body(new ZodValidationPipe(AnalyzePartyBody)) body: AnalyzePartyInput) {
+  async analyzeParty(
+    @CurrentUserId() userId: string,
+    @Body(new ZodValidationPipe(AnalyzePartyBody)) body: AnalyzePartyInput,
+  ) {
     await this.quota.consumeOrThrow(userId);
     return this.advisor.adviseParty(body.party);
   }
 
-  @Post("matchup-leadrec")
+  @Post('matchup-leadrec')
   @HttpCode(200)
-  async matchupLeadrec(@CurrentUserId() userId: string, @Body(new ZodValidationPipe(MatchupLeadrecBody)) body: MatchupLeadrecInput) {
+  async matchupLeadrec(
+    @CurrentUserId() userId: string,
+    @Body(new ZodValidationPipe(MatchupLeadrecBody)) body: MatchupLeadrecInput,
+  ) {
     await this.quota.consumeOrThrow(userId);
     return this.advisor.adviseMatchup(body.state, body.megaForms);
   }
 
-  @Post("battle-advice")
+  @Post('battle-advice')
   @HttpCode(200)
-  async battleAdvice(@CurrentUserId() userId: string, @Body(new ZodValidationPipe(BattleAdviceBody)) body: BattleAdviceInput) {
+  async battleAdvice(
+    @CurrentUserId() userId: string,
+    @Body(new ZodValidationPipe(BattleAdviceBody)) body: BattleAdviceInput,
+  ) {
     await this.quota.consumeOrThrow(userId);
     return this.advisor.adviseBattle(body.state);
   }

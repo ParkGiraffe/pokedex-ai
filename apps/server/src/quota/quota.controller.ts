@@ -1,10 +1,10 @@
-import { Controller, Get, UseGuards } from "@nestjs/common";
+import { Controller, Get, UseGuards } from '@nestjs/common';
 
-import { JwtAuthGuard } from "../auth/auth.guard";
-import { CurrentUserId } from "../auth/current-user.decorator";
-import { type QuotaStatus, QuotaService } from "./quota.service";
+import { JwtAuthGuard } from '../auth/auth.guard';
+import { CurrentUserId } from '../auth/current-user.decorator';
+import { QuotaService, type QuotaStatus } from './quota.service';
 
-@Controller("quota")
+@Controller('quota')
 @UseGuards(JwtAuthGuard)
 export class QuotaController {
   constructor(private readonly quota: QuotaService) {}

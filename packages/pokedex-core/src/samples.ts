@@ -1,6 +1,6 @@
-import samplesRaw from "../data/champions/samples-singles.json" with { type: "json" };
-import { pokedexByKo } from "./data";
-import { abilityKoByEn, moveKoByEn } from "./lookup";
+import samplesRaw from '../data/champions/samples-singles.json' with { type: 'json' };
+import { pokedexByKo } from './data';
+import { abilityKoByEn, moveKoByEn } from './lookup';
 
 type SampleSet = {
   nameKo: string;
@@ -20,7 +20,10 @@ export type OpponentHint = {
 };
 
 const topByCount = (counts: Map<string, number>, limit: number): string[] =>
-  [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, limit).map(([key]) => key);
+  [...counts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, limit)
+    .map(([key]) => key);
 
 // 종족(한국명)의 흔한 특성·기술을 샘플 세트에서 집계해 정식 한국명으로 반환한다.
 // 영문→한국 변환에 실패한 항목은 버려서(undefined) 음역·미검증 명칭이 프롬프트에 새지 않게 한다.

@@ -1,1 +1,1 @@
-export { PresetManager } from "./ui/PresetManager";
+export { PresetManager } from './ui/PresetManager';

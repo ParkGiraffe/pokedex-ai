@@ -1,7 +1,7 @@
-import { writeFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { writeFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
-import { announce, concurrency, fetchJson, pickKo } from "./pokeapi";
+import { announce, concurrency, fetchJson, pickKo } from './pokeapi';
 
 type ItemListResponse = {
   count: number;
@@ -20,19 +20,32 @@ type ItemResponse = {
   }>;
 };
 
-const OUT = resolve(import.meta.dirname, "../../pokedex-core/data/items.json");
+const OUT = resolve(import.meta.dirname, '../../pokedex-core/data/items.json');
 
 // SV 배틀에서 의미 있는 카테고리 (배틀용 도구·구애·메가스톤 등)
 const BATTLE_CATEGORIES = new Set([
-  "held-items", "choice", "type-enhancement", "stat-boosts",
-  "training", "plates", "mega-stones", "memories", "z-crystals",
-  "species-specific", "type-protection", "all-mail", "in-a-pinch",
-  "picky-healing", "type-boosters", "loot", "bad-held-items",
-  "effort-training",
+  'held-items',
+  'choice',
+  'type-enhancement',
+  'stat-boosts',
+  'training',
+  'plates',
+  'mega-stones',
+  'memories',
+  'z-crystals',
+  'species-specific',
+  'type-protection',
+  'all-mail',
+  'in-a-pinch',
+  'picky-healing',
+  'type-boosters',
+  'loot',
+  'bad-held-items',
+  'effort-training',
 ]);
 
 const main = async () => {
-  const list = await fetchJson<ItemListResponse>("/item/?limit=1");
+  const list = await fetchJson<ItemListResponse>('/item/?limit=1');
   const total = list.count;
   process.stderr.write(`[1/1] items 1..${total}\n`);
 
@@ -49,7 +62,7 @@ const main = async () => {
           const ko = pickKo(data.names);
           if (!ko) return;
           const flavorKo = data.flavor_text_entries.find(
-            (f) => f.language.name === "ko" && f.version_group.name === "scarlet-violet"
+            (f) => f.language.name === 'ko' && f.version_group.name === 'scarlet-violet',
           )?.text;
           items.push({
             id: data.id,
@@ -61,9 +74,9 @@ const main = async () => {
         } catch (e) {
           process.stderr.write(`[skip item ${i}]: ${String(e)}\n`);
         }
-        announce("items", ++done, total);
-      })
-    )
+        announce('items', ++done, total);
+      }),
+    ),
   );
 
   items.sort((a, b) => Number(a.id) - Number(b.id));
@@ -72,15 +85,15 @@ const main = async () => {
     OUT,
     JSON.stringify(
       {
-        source: "PokeAPI v2",
+        source: 'PokeAPI v2',
         generated_at_utc: process.env.GENERATED_AT_UTC ?? new Date().toISOString(),
         count: items.length,
         items,
       },
       null,
-      2
-    ) + "\n",
-    "utf8"
+      2,
+    ) + '\n',
+    'utf8',
   );
   process.stderr.write(`[done] ${OUT} (${items.length} items)\n`);
 };

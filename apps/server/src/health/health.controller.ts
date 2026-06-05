@@ -1,8 +1,8 @@
-import { Controller, Get } from "@nestjs/common";
+import { Controller, Get } from '@nestjs/common';
 
 @Controller()
 export class HealthController {
-  @Get("health")
+  @Get('health')
   health(): { ok: true } {
     return { ok: true };
   }

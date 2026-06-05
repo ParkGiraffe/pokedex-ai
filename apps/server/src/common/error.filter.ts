@@ -1,5 +1,5 @@
-import { type ArgumentsHost, Catch, type ExceptionFilter, HttpException } from "@nestjs/common";
-import { type Response } from "express";
+import { type ArgumentsHost, Catch, type ExceptionFilter, HttpException } from '@nestjs/common';
+import { type Response } from 'express';
 
 // 기존 Fastify 서버와 동일한 응답 계약을 유지한다: 본문은 항상 { error: message }.
 // 검증 실패(BadRequestException)는 400, Anthropic 인증·한도 등 기타 오류는 500.

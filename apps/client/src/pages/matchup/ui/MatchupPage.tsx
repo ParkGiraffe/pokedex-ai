@@ -1,26 +1,32 @@
-import { findMegasBySpecies, findPokemon, matchup, speciesDisplayName, type BattleState, type MegaForm } from "@pokedex-agent/pokedex-core";
-import { Plus, Swords, Users, X } from "lucide-react";
+import {
+  type BattleState,
+  findMegasBySpecies,
+  findPokemon,
+  matchup,
+  type MegaForm,
+  speciesDisplayName,
+} from '@pokedex-agent/pokedex-core';
+import { Plus, Swords, Users, X } from 'lucide-react';
 
-import { cn } from "@/common/lib/cn";
-import { Badge } from "@/common/ui/Badge";
-import { Button } from "@/common/ui/Button";
-import { Card } from "@/common/ui/Card";
-import { MegaControl } from "@/features/pokemon-picker/ui/MegaControl";
+import { cn } from '@/common/lib/cn';
+import { Badge } from '@/common/ui/Badge';
+import { Button } from '@/common/ui/Button';
+import { Card } from '@/common/ui/Card';
+import { useMatchupLeadrec } from '@/features/advisor/model/useMatchupLeadrec';
+import { MegaControl } from '@/features/pokemon-picker/ui/MegaControl';
+import { PokemonDatalist } from '@/features/pokemon-picker/ui/PokemonDatalist';
+import { PokemonIcon } from '@/features/pokemon-picker/ui/PokemonIcon';
+import { PokemonPicker } from '@/features/pokemon-picker/ui/PokemonPicker';
+import { buildParty } from '@/pages/party/lib/party';
+import { usePartyStore } from '@/pages/party/model/store';
 
-import { useMatchupLeadrec } from "@/features/advisor/model/useMatchupLeadrec";
-import { PokemonDatalist } from "@/features/pokemon-picker/ui/PokemonDatalist";
-import { PokemonIcon } from "@/features/pokemon-picker/ui/PokemonIcon";
-import { PokemonPicker } from "@/features/pokemon-picker/ui/PokemonPicker";
-import { buildParty } from "@/pages/party/lib/party";
-import { usePartyStore } from "@/pages/party/model/store";
-
-import { MAX_OPPONENTS, useMatchupStore } from "../model/store";
-import { type LeadRank, LeadrecResult } from "./LeadrecResult";
+import { MAX_OPPONENTS, useMatchupStore } from '../model/store';
+import { type LeadRank, LeadrecResult } from './LeadrecResult';
 
 // 종족명 → 메가 폼 슬러그 매핑을 Map<species, MegaForm>으로 해석한다 (matchup context용).
 const resolveMegaContext = (
   speciesList: ReadonlyArray<string>,
-  formBySpecies: Record<string, string>
+  formBySpecies: Record<string, string>,
 ): Map<string, MegaForm> => {
   const result = new Map<string, MegaForm>();
   for (const species of speciesList) {
@@ -36,8 +42,8 @@ const resolveMegaContext = (
   return result;
 };
 
-const verdictVariant = (verdict: matchup.MatchupVerdict): "success" | "destructive" | "muted" =>
-  verdict === "유리" ? "success" : verdict === "불리" ? "destructive" : "muted";
+const verdictVariant = (verdict: matchup.MatchupVerdict): 'success' | 'destructive' | 'muted' =>
+  verdict === '유리' ? 'success' : verdict === '불리' ? 'destructive' : 'muted';
 
 export const MatchupPage = () => {
   const members = usePartyStore((state) => state.members);
@@ -57,7 +63,10 @@ export const MatchupPage = () => {
 
   const myParty = buildParty(members);
   const validOpponents = opponents.filter((name) => findPokemon(name));
-  const myMegaByPick = resolveMegaContext(myParty.map((m) => m.species), myMegaForms);
+  const myMegaByPick = resolveMegaContext(
+    myParty.map((m) => m.species),
+    myMegaForms,
+  );
   const opponentMegaBySpecies = resolveMegaContext(validOpponents, opponentMegaForms);
   const matchupContext = { myMegaByPick, opponentMegaBySpecies };
   const board = matchup.leadBoard(myParty, validOpponents, matchupContext);
@@ -99,17 +108,19 @@ export const MatchupPage = () => {
 
   return (
     <section className="flex flex-col gap-5">
-      <header className="flex flex-wrap items-center gap-3 border-b border-border pb-3">
-        <Swords className="size-6 text-primary" />
+      <header className="border-border flex flex-wrap items-center gap-3 border-b pb-3">
+        <Swords className="text-primary size-6" />
         <h1 className="text-2xl font-bold tracking-tight">매치업</h1>
-        <p className="ml-auto text-xs text-muted-foreground">상대 공개분 → 선출 → 선두 추천</p>
+        <p className="text-muted-foreground ml-auto text-xs">상대 공개분 → 선출 → 선두 추천</p>
       </header>
 
       <Card className="flex flex-col gap-3">
         <div className="flex items-center gap-2">
-          <Users className="size-4 text-muted-foreground" />
+          <Users className="text-muted-foreground size-4" />
           <h2 className="text-sm font-semibold">상대 공개분</h2>
-          <Badge variant="muted" className="ml-1">{opponents.length}/{MAX_OPPONENTS}</Badge>
+          <Badge variant="muted" className="ml-1">
+            {opponents.length}/{MAX_OPPONENTS}
+          </Badge>
         </div>
         <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-3">
           {opponents.map((opponent, index) => (
@@ -124,7 +135,7 @@ export const MatchupPage = () => {
                 size="icon"
                 onClick={() => removeOpponent(index)}
                 aria-label="상대 삭제"
-                className="size-8 text-muted-foreground hover:text-destructive"
+                className="text-muted-foreground hover:text-destructive size-8"
               >
                 <X className="size-4" />
               </Button>
@@ -141,7 +152,7 @@ export const MatchupPage = () => {
 
       {myParty.length === 0 || validOpponents.length === 0 ? (
         <Card>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             파티빌더에서 내 파티를, 위에서 상대 포켓몬을 입력하면 매치업이 계산된다.
           </p>
         </Card>
@@ -150,15 +161,17 @@ export const MatchupPage = () => {
           <Card className="flex flex-col gap-4 overflow-x-auto">
             <div className="flex flex-wrap items-center gap-2">
               <h2 className="text-sm font-semibold">매치업 매트릭스</h2>
-              <Badge variant="muted">커버리지 {cover.covered}/{cover.total}</Badge>
+              <Badge variant="muted">
+                커버리지 {cover.covered}/{cover.total}
+              </Badge>
             </div>
 
             {/* 메가 설정 영역. 매트릭스에서 메가 컨트롤을 분리해 컬럼 width를 균등하게 유지한다. */}
             {(myMegaPicks.length > 0 || opponentMegaPicks.length > 0) && (
-              <div className="grid gap-4 rounded-lg border border-border/60 bg-muted/20 p-4 sm:grid-cols-2">
+              <div className="border-border/60 bg-muted/20 grid gap-4 rounded-lg border p-4 sm:grid-cols-2">
                 {myMegaPicks.length > 0 && (
                   <div className="flex flex-col gap-3">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">내 메가</p>
+                    <p className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">내 메가</p>
                     <div className="flex flex-col gap-3">
                       {myMegaPicks.map((species) => (
                         <div key={species} className="flex flex-col gap-1.5">
@@ -168,7 +181,7 @@ export const MatchupPage = () => {
                           </div>
                           <MegaControl
                             species={species}
-                            value={myMegaForms[species] ?? ""}
+                            value={myMegaForms[species] ?? ''}
                             onChange={(form) => setMyMegaForm(species, form)}
                           />
                         </div>
@@ -178,7 +191,7 @@ export const MatchupPage = () => {
                 )}
                 {opponentMegaPicks.length > 0 && (
                   <div className="flex flex-col gap-3">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">상대 메가</p>
+                    <p className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">상대 메가</p>
                     <div className="flex flex-col gap-3">
                       {opponentMegaPicks.map((species) => (
                         <div key={species} className="flex flex-col gap-1.5">
@@ -188,7 +201,7 @@ export const MatchupPage = () => {
                           </div>
                           <MegaControl
                             species={species}
-                            value={opponentMegaForms[species] ?? ""}
+                            value={opponentMegaForms[species] ?? ''}
                             onChange={(form) => setOpponentMegaForm(species, form)}
                           />
                         </div>
@@ -201,10 +214,10 @@ export const MatchupPage = () => {
 
             <table className="w-full table-fixed border-collapse text-xs">
               <thead>
-                <tr className="border-b border-border">
-                  <th className="w-32 p-2 text-left text-xs font-medium text-muted-foreground">내 픽 \ 상대</th>
+                <tr className="border-border border-b">
+                  <th className="text-muted-foreground w-32 p-2 text-left text-xs font-medium">내 픽 \ 상대</th>
                   {validOpponents.map((opponent) => (
-                    <th key={opponent} className="p-2 align-bottom font-medium text-foreground">
+                    <th key={opponent} className="text-foreground p-2 align-bottom font-medium">
                       <span className="flex flex-col items-center gap-1">
                         <PokemonIcon species={opponent} className="h-8 w-8" />
                         <span className="text-xs">{speciesDisplayName(opponent, opponentMegaForms[opponent])}</span>
@@ -215,11 +228,13 @@ export const MatchupPage = () => {
               </thead>
               <tbody>
                 {myParty.map((member, rowIndex) => (
-                  <tr key={`${member.species}-${rowIndex}`} className="border-b border-border/40 hover:bg-muted/40">
-                    <td className="w-32 p-2 text-center font-medium text-foreground">
+                  <tr key={`${member.species}-${rowIndex}`} className="border-border/40 hover:bg-muted/40 border-b">
+                    <td className="text-foreground w-32 p-2 text-center font-medium">
                       <span className="flex flex-col items-center gap-1">
                         <PokemonIcon species={member.species} className="h-8 w-8" />
-                        <span className="text-sm">{speciesDisplayName(member.species, myMegaForms[member.species])}</span>
+                        <span className="text-sm">
+                          {speciesDisplayName(member.species, myMegaForms[member.species])}
+                        </span>
                       </span>
                     </td>
                     {validOpponents.map((opponent) => {
@@ -244,16 +259,12 @@ export const MatchupPage = () => {
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-2">
                 <h2 className="text-sm font-semibold">선출</h2>
-                <Badge variant={isReady ? "success" : "muted"}>
+                <Badge variant={isReady ? 'success' : 'muted'}>
                   {selectedParty.length}/{matchup.LINEUP_SIZE}
                 </Badge>
               </div>
               {selectedSpecies.length > 0 && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setSelectedSpecies([])}
-                >
+                <Button variant="ghost" size="sm" onClick={() => setSelectedSpecies([])}>
                   자동 추천으로 복귀
                 </Button>
               )}
@@ -267,28 +278,29 @@ export const MatchupPage = () => {
                     type="button"
                     onClick={() => handleToggleSelected(member.species)}
                     className={cn(
-                      "flex flex-col items-center gap-1.5 rounded-lg border px-2 py-3 transition",
+                      'flex flex-col items-center gap-1.5 rounded-lg border px-2 py-3 transition',
                       selected
-                        ? "border-primary/60 bg-primary/10 shadow-[0_0_0_1px_var(--color-primary)]/30"
-                        : "border-border bg-card hover:border-foreground/30 hover:bg-muted/40"
+                        ? 'border-primary/60 bg-primary/10 shadow-[0_0_0_1px_var(--color-primary)]/30'
+                        : 'border-border bg-card hover:border-foreground/30 hover:bg-muted/40',
                     )}
                   >
                     <PokemonIcon species={member.species} className="h-11 w-11" />
-                    <span className={cn("text-xs", selected ? "font-semibold text-foreground" : "text-muted-foreground")}>
+                    <span
+                      className={cn('text-xs', selected ? 'text-foreground font-semibold' : 'text-muted-foreground')}
+                    >
                       {speciesDisplayName(member.species, myMegaForms[member.species])}
                     </span>
                   </button>
                 );
               })}
             </div>
-            <p className="text-xs text-muted-foreground">
-              자동 추천 · {autoPicks.length > 0 ? `${autoPicks.join(", ")} (${lineups[0]?.finalScore ?? 0}점)` : "(불가)"}
+            <p className="text-muted-foreground text-xs">
+              자동 추천 ·{' '}
+              {autoPicks.length > 0 ? `${autoPicks.join(', ')} (${lineups[0]?.finalScore ?? 0}점)` : '(불가)'}
             </p>
             <div className="flex flex-wrap items-center justify-between gap-2">
               {!isReady ? (
-                <p className="text-xs text-warning">
-                  정확히 {matchup.LINEUP_SIZE}마리를 골라야 추천을 요청할 수 있다.
-                </p>
+                <p className="text-warning text-xs">정확히 {matchup.LINEUP_SIZE}마리를 골라야 추천을 요청할 수 있다.</p>
               ) : (
                 <span />
               )}
@@ -296,14 +308,16 @@ export const MatchupPage = () => {
                 onClick={() => advise.mutate({ state, megaForms: { my: myMegaForms, opponent: opponentMegaForms } })}
                 disabled={advise.isPending || !isReady || validOpponents.length === 0}
               >
-                {advise.isPending ? "추천 중..." : "선두 추천 요청"}
+                {advise.isPending ? '추천 중...' : '선두 추천 요청'}
               </Button>
             </div>
           </Card>
 
           <Card>
-            <h2 className="mb-3 text-sm font-semibold">선두 추천 점수 <span className="ml-1 text-xs font-normal text-muted-foreground">참고용</span></h2>
-            <ul className="flex flex-col divide-y divide-border/40">
+            <h2 className="mb-3 text-sm font-semibold">
+              선두 추천 점수 <span className="text-muted-foreground ml-1 text-xs font-normal">참고용</span>
+            </h2>
+            <ul className="divide-border/40 flex flex-col divide-y">
               {board.map((lead) => (
                 <li key={lead.myPick} className="flex items-center justify-between py-2 first:pt-0 last:pb-0">
                   <span className="flex items-center gap-2 text-sm">
@@ -312,8 +326,9 @@ export const MatchupPage = () => {
                   </span>
                   <span className="flex items-center gap-2">
                     <Badge variant="muted">{lead.finalScore}점</Badge>
-                    <span className="text-xs text-muted-foreground">
-                      유리 <span className="text-success">{lead.favorable}</span> · 불리 <span className="text-destructive">{lead.unfavorable}</span>
+                    <span className="text-muted-foreground text-xs">
+                      유리 <span className="text-success">{lead.favorable}</span> · 불리{' '}
+                      <span className="text-destructive">{lead.unfavorable}</span>
                     </span>
                   </span>
                 </li>
@@ -325,8 +340,8 @@ export const MatchupPage = () => {
 
       {advise.isError && (
         <Card className="border-destructive/40 bg-destructive/5">
-          <p className="text-sm text-destructive">
-            {advise.error instanceof Error ? advise.error.message : "추천 실패"}
+          <p className="text-destructive text-sm">
+            {advise.error instanceof Error ? advise.error.message : '추천 실패'}
           </p>
         </Card>
       )}

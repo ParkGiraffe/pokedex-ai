@@ -1,11 +1,11 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 export type AuthUser = {
   id: string;
   email?: string;
   nickname?: string;
-  tier: "free" | "paid";
+  tier: 'free' | 'paid';
 };
 
 type AuthState = {
@@ -24,6 +24,6 @@ export const useAuthStore = create<AuthState>()(
       setSession: (token, user) => set({ token, user }),
       clear: () => set({ token: null, user: null }),
     }),
-    { name: "pokedex-auth" }
-  )
+    { name: 'pokedex-auth' },
+  ),
 );

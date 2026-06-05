@@ -1,9 +1,9 @@
-import rosterRaw from "../data/champions/roster.json" with { type: "json" };
-import samplesRaw from "../data/champions/samples-singles.json" with { type: "json" };
-import usageRaw from "../data/champions/usage-singles.json" with { type: "json" };
-import { findPokemon } from "./lookup";
+import rosterRaw from '../data/champions/roster.json' with { type: 'json' };
+import samplesRaw from '../data/champions/samples-singles.json' with { type: 'json' };
+import usageRaw from '../data/champions/usage-singles.json' with { type: 'json' };
+import { findPokemon } from './lookup';
 
-const STAT_KEYS = ["hp", "atk", "def", "spa", "spd", "spe"] as const;
+const STAT_KEYS = ['hp', 'atk', 'def', 'spa', 'spd', 'spe'] as const;
 type StatKey = (typeof STAT_KEYS)[number];
 type StatPoints = Partial<Record<StatKey, number>>;
 export type EvSpread = Partial<Record<StatKey, number>>;
@@ -35,9 +35,11 @@ type Sample = {
 
 const usageByNo = (usageRaw as unknown as { pokemon: Record<string, UsageForm[]> }).pokemon;
 const samplesByNo = (samplesRaw as unknown as { byPokemon: Record<string, Sample[]> }).byPokemon;
-const rosterList = (rosterRaw as unknown as {
-  pokemon: Array<{ id: number; megaForm: string; regionForm: string }>;
-}).pokemon;
+const rosterList = (
+  rosterRaw as unknown as {
+    pokemon: Array<{ id: number; megaForm: string; regionForm: string }>;
+  }
+).pokemon;
 
 // pkmnchamps의 EV(sps)는 0~32 노력 포인트다. 우리도 같은 포챔스 단위를 그대로 쓴다.
 const toEvs = (sps?: StatPoints): EvSpread => {
@@ -60,8 +62,8 @@ const megaFormOfItem = (no: number, item?: string): string | undefined => {
   return sample?.megaForm;
 };
 
-const megaFormeOf = (megaForm: string): "X" | "Y" | undefined =>
-  megaForm.endsWith("-mega-x") ? "X" : megaForm.endsWith("-mega-y") ? "Y" : undefined;
+const megaFormeOf = (megaForm: string): 'X' | 'Y' | undefined =>
+  megaForm.endsWith('-mega-x') ? 'X' : megaForm.endsWith('-mega-y') ? 'Y' : undefined;
 
 const noOf = (species: string): number | undefined => findPokemon(species)?.no;
 
@@ -74,7 +76,7 @@ export type ChampionsSet = {
   evs: EvSpread;
   moves: string[];
   mega?: boolean;
-  megaForme?: "X" | "Y";
+  megaForme?: 'X' | 'Y';
 };
 
 export const inChampionsRoster = (species: string): boolean => {

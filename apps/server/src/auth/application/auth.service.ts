@@ -1,11 +1,11 @@
-import { ConflictException, Inject, Injectable, UnauthorizedException } from "@nestjs/common";
+import { ConflictException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 
-import { type User } from "../../users/user.entity";
-import { UsersService } from "../../users/users.service";
-import { AUTH_PROVIDERS, type AuthProvider } from "../domain/auth-provider.port";
-import { type ProviderName, type VerifiedIdentity } from "../domain/identity";
-import { PASSWORD_HASHER, type PasswordHasher } from "../domain/password-hasher.port";
-import { TOKEN_SERVICE, type TokenService } from "../domain/token-service.port";
+import { type User } from '../../users/user.entity';
+import { UsersService } from '../../users/users.service';
+import { AUTH_PROVIDERS, type AuthProvider } from '../domain/auth-provider.port';
+import { type ProviderName, type VerifiedIdentity } from '../domain/identity';
+import { PASSWORD_HASHER, type PasswordHasher } from '../domain/password-hasher.port';
+import { TOKEN_SERVICE, type TokenService } from '../domain/token-service.port';
 
 export interface AuthResult {
   accessToken: string;
@@ -22,7 +22,7 @@ export class AuthService {
     private readonly users: UsersService,
     @Inject(PASSWORD_HASHER) private readonly hasher: PasswordHasher,
     @Inject(TOKEN_SERVICE) private readonly tokens: TokenService,
-    @Inject(AUTH_PROVIDERS) providers: AuthProvider[]
+    @Inject(AUTH_PROVIDERS) providers: AuthProvider[],
   ) {
     this.providers = new Map(providers.map((provider) => [provider.name, provider]));
   }
@@ -30,11 +30,11 @@ export class AuthService {
   // 내부 회원가입: 이메일+비밀번호. OAuth 제공자는 가입 단계 없이 첫 로그인 시 자동 프로비저닝된다.
   async register(email: string, password: string, nickname?: string): Promise<AuthResult> {
     if (await this.users.findByEmail(email)) {
-      throw new ConflictException("이미 가입된 이메일입니다");
+      throw new ConflictException('이미 가입된 이메일입니다');
     }
     const passwordHash = await this.hasher.hash(password);
     const user = await this.users.create({
-      provider: "internal",
+      provider: 'internal',
       providerUserId: email,
       email,
       passwordHash,
@@ -47,7 +47,7 @@ export class AuthService {
   async login(provider: ProviderName, credentials: unknown): Promise<AuthResult> {
     const adapter = this.providers.get(provider);
     if (!adapter) {
-      throw new UnauthorizedException("지원하지 않는 로그인 방식입니다");
+      throw new UnauthorizedException('지원하지 않는 로그인 방식입니다');
     }
     const identity = await adapter.authenticate(credentials);
     return this.issue(await this.resolveUser(identity));

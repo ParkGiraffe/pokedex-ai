@@ -1,15 +1,14 @@
-import naturesRaw from "../data/natures.json" with { type: "json" };
-import typesRaw from "../data/types.json" with { type: "json" };
-import { findPokemon } from "./lookup";
+import naturesRaw from '../data/natures.json' with { type: 'json' };
+import typesRaw from '../data/types.json' with { type: 'json' };
+import { findPokemon } from './lookup';
 
 // 한국어/영문/표시명 → Pokémon Showdown ID (소문자, 영숫자 외 제거).
-export const toShowdownId = (name: string): string => name.toLowerCase().replace(/[^a-z0-9]/g, "");
+export const toShowdownId = (name: string): string => name.toLowerCase().replace(/[^a-z0-9]/g, '');
 
-const capitalize = (value: string): string =>
-  value ? value.charAt(0).toUpperCase() + value.slice(1) : value;
+const capitalize = (value: string): string => (value ? value.charAt(0).toUpperCase() + value.slice(1) : value);
 
 const natureEnByKo = new Map(
-  (naturesRaw as { natures: Array<{ ko: string; en: string }> }).natures.map((n) => [n.ko, capitalize(n.en)])
+  (naturesRaw as { natures: Array<{ ko: string; en: string }> }).natures.map((n) => [n.ko, capitalize(n.en)]),
 );
 const typeEnByKo = (typesRaw as { types_ko_to_en: Record<string, string> }).types_ko_to_en;
 
