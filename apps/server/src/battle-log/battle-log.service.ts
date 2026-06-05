@@ -16,6 +16,15 @@ export type BattleStats = {
   vsOpponent: OpponentRecord[];
 };
 
+export type MetaLeadRecord = { species: string; games: number; wins: number; winRate: number; usage: number };
+export type MetaGimmickRecord = { gimmick: string; games: number; share: number };
+export type MetaSummary = {
+  totalGames: number;
+  topLeads: MetaLeadRecord[];
+  topOpponents: MetaLeadRecord[];
+  gimmickUsage: MetaGimmickRecord[];
+};
+
 // 승률은 백분율(소수 1자리)로 돌려준다. 0판이면 0.
 const winRate = (wins: number, games: number): number => (games > 0 ? Math.round((wins / games) * 1000) / 10 : 0);
 
@@ -64,6 +73,59 @@ export class BattleLogService {
     const log = await this.getOwned(userId, id);
     this.em.remove(log);
     await this.em.flush();
+  }
+
+  // 전체 사용자 대전 로그를 집계해 리빙 메타 요약을 반환한다. 유저 식별자는 포함하지 않는다.
+  async meta(limit = 15): Promise<MetaSummary> {
+    const logs = await this.em.find(BattleLog, {});
+    const totalGames = logs.length;
+
+    if (totalGames === 0) {
+      return { totalGames: 0, topLeads: [], topOpponents: [], gimmickUsage: [] };
+    }
+
+    const tally = (keyOf: (log: BattleLog) => string): Map<string, { games: number; wins: number }> => {
+      const map = new Map<string, { games: number; wins: number }>();
+      for (const log of logs) {
+        const key = keyOf(log);
+        const entry = map.get(key) ?? { games: 0, wins: 0 };
+        entry.games += 1;
+        if (log.result === 'win') {
+          entry.wins += 1;
+        }
+        map.set(key, entry);
+      }
+      return map;
+    };
+
+    const toMetaRecords = (map: Map<string, { games: number; wins: number }>): MetaLeadRecord[] =>
+      [...map.entries()]
+        .map(([species, { games, wins }]) => ({
+          species,
+          games,
+          wins,
+          winRate: winRate(wins, games),
+          usage: Math.round((games / totalGames) * 1000) / 10,
+        }))
+        .sort((a, b) => b.games - a.games)
+        .slice(0, limit);
+
+    const gimmickMap = new Map<string, number>();
+    for (const log of logs) {
+      gimmickMap.set(log.gimmick, (gimmickMap.get(log.gimmick) ?? 0) + 1);
+    }
+    const gimmickUsage: MetaGimmickRecord[] = [...gimmickMap.entries()].map(([gimmick, games]) => ({
+      gimmick,
+      games,
+      share: Math.round((games / totalGames) * 1000) / 10,
+    }));
+
+    return {
+      totalGames,
+      topLeads: toMetaRecords(tally((log) => log.myLead)),
+      topOpponents: toMetaRecords(tally((log) => log.opponentLead)),
+      gimmickUsage,
+    };
   }
 
   // 전체 승률 + 내 선발별 / 상대 선발별 전적. 개인 규모라 메모리 집계로 충분하다.
