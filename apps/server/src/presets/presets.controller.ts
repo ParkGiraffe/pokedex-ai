@@ -11,6 +11,7 @@ const toRes = (preset: Preset) => ({
   id: preset.id,
   name: preset.name,
   party: preset.party,
+  shareToken: preset.shareToken ?? null,
   createdAt: preset.createdAt,
   updatedAt: preset.updatedAt,
 });
@@ -52,5 +53,17 @@ export class PresetsController {
   @HttpCode(204)
   async remove(@CurrentUserId() userId: string, @Param('id', ParseUUIDPipe) id: string): Promise<void> {
     await this.presets.remove(userId, id);
+  }
+
+  @Post(':id/share')
+  @HttpCode(200)
+  async share(@CurrentUserId() userId: string, @Param('id', ParseUUIDPipe) id: string) {
+    return { shareToken: await this.presets.share(userId, id) };
+  }
+
+  @Delete(':id/share')
+  @HttpCode(204)
+  async unshare(@CurrentUserId() userId: string, @Param('id', ParseUUIDPipe) id: string): Promise<void> {
+    await this.presets.unshare(userId, id);
   }
 }

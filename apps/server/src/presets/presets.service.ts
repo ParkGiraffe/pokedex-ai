@@ -1,6 +1,7 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { type PartyDraft } from '@pokedex-agent/pokedex-core';
+import { uuidv7 } from 'uuidv7';
 
 import { User } from '../users/user.entity';
 import { UserTier } from '../users/user.enums';
@@ -59,5 +60,31 @@ export class PresetsService {
     const preset = await this.getOwned(userId, id);
     this.em.remove(preset);
     await this.em.flush();
+  }
+
+  // 공유 토큰을 발급한다. 이미 발급돼 있으면 그대로 돌려준다(멱등 — 같은 링크 유지).
+  async share(userId: string, id: string): Promise<string> {
+    const preset = await this.getOwned(userId, id);
+    if (!preset.shareToken) {
+      preset.shareToken = uuidv7();
+      await this.em.flush();
+    }
+    return preset.shareToken;
+  }
+
+  // 공유를 취소한다 — 기존 링크는 이후 404가 된다.
+  async unshare(userId: string, id: string): Promise<void> {
+    const preset = await this.getOwned(userId, id);
+    preset.shareToken = undefined;
+    await this.em.flush();
+  }
+
+  // 공유 토큰으로 누구나(비로그인 포함) 조회 — 소유자 필터 없음. 없으면 404.
+  async getByShareToken(token: string): Promise<Preset> {
+    const preset = await this.em.findOne(Preset, { shareToken: token });
+    if (!preset) {
+      throw new NotFoundException('공유된 프리셋을 찾을 수 없습니다');
+    }
+    return preset;
   }
 }
