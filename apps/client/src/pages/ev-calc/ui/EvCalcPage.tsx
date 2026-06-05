@@ -84,7 +84,7 @@ const ResultRow = ({ label, value, strong }: { label: string; value: string; str
 const BulkMode = () => {
   const [state, setState] = useState<BulkState>({
     ...DEFAULT_ATTACK,
-    defenderSpecies: '도가스',
+    defenderSpecies: '크레세리아',
     defenderLevel: 50,
     defenderNature: '신중',
     hits: 1,
@@ -353,7 +353,7 @@ const SpeedMode = () => {
 const PowerMode = () => {
   const [state, setState] = useState({
     ...DEFAULT_ATTACK,
-    defenderSpecies: '도가스',
+    defenderSpecies: '크레세리아',
     defenderLevel: 50,
     defenderNature: '신중' as NatureName,
     defenderHpEv: 0,
