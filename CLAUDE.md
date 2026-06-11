@@ -30,6 +30,7 @@
 - **AI 추천은 서버가 Anthropic API로 직접 호출한다.** `serializeForClaude`로 프롬프트 본문을 만들고 `ClaudeResponseSchema`로 구조화 응답을 받는다. 클립보드 paste 왕복 UX는 폐기됨.
 - **새 패키지 도입 전 사용자 승인.** 임의로 의존성 추가하지 않는다.
 - **데이터는 항상 PokeAPI 최신본에서 가져온다.** 한 글자도 손으로 입력하지 않는다.
+- **굵직한 기능·버그 수정이 끝나면 `/devlog`로 개발일지를 남긴다.** 컨텍스트가 살아 있을 때(실제 에러 원문·기각한 대안·막힌 지점) `docs/blog/devlog/`에 적고, 화면이 바뀌었으면 스크린샷을 `docs/blog/devlog/img/`에 캡처한다. 절차·표현 규칙은 `.claude/skills/devlog/SKILL.md`.
 
 ## 활성 로드맵
 
