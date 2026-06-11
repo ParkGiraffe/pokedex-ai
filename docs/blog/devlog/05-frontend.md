@@ -114,6 +114,69 @@ export const QuotaBadge = () => {
 
 ![배틀 페이지 — 리자몽 대 마기라스 대면 카드. 내 선공 표시, 기술별 데미지·타수 표](./img/battle-vs.jpg)
 
+## 테마 — 색을 고를 수 있게 하다
+
+같은 시기에 테마 시스템도 넣었다. 헤더 우측의 셀렉터에서 네 가지를 고른다 — 기본인
+Pokédex Crimson(포켓몬 레드 계열 다크), Scarlet · Violet, 밝은 배경의 Pokédex Light,
+그리고 테마 도입 전의 기존 다크를 보존한 미드나이트.
+
+![테마 셀렉터 — 네 테마와 대표색 스와치, 현재 테마 체크 표시](./img/theme-switcher-open.jpg)
+
+구현은 CSS 토큰 한 겹으로 끝냈다. 2편에서 모든 컴포넌트가 색을 디자인 토큰으로만 쓰게
+해뒀기 때문에, 테마는 `<html data-theme="...">` 속성 하나에 따라 토큰 값을 오버라이드하는
+CSS 블록일 뿐이다. 컴포넌트는 한 줄도 안 바뀌었다.
+
+```ts
+// apps/client/src/features/theme/model/store.ts
+// <html data-theme="..."> 를 설정하면 index.css의 토큰 오버라이드가 즉시 적용된다.
+const applyTheme = (theme: ThemeId): void => {
+  if (typeof document !== 'undefined') {
+    document.documentElement.dataset.theme = theme;
+  }
+};
+```
+
+선택은 localStorage에 저장한다. 여기엔 작은 함정이 하나 있었다 — React가 마운트된 뒤에
+저장된 테마를 적용하면, 새로고침 순간 기본 테마가 한 프레임 번쩍이고 나서 바뀐다(다크를
+쓰는 사람에게 흰 화면이 번쩍이는, 흔히 FOUC라 부르는 문제). 그래서 React가 뜨기 전에
+실행되는 인라인 스크립트를 HTML에 박아 저장값을 먼저 읽는다.
+
+```html
+<!-- apps/client/index.html — React 마운트 전에 실행 -->
+<script>
+  try {
+    var raw = localStorage.getItem("pokedex-theme");
+    var theme = raw ? JSON.parse(raw).state.theme : "crimson";
+    document.documentElement.dataset.theme = theme || "crimson";
+  } catch (e) {
+    document.documentElement.dataset.theme = "crimson";
+  }
+</script>
+```
+
+Pokédex Light를 고른 화면이다. 같은 계산기인데 토큰만 바뀌었다.
+
+![Pokédex Light 적용 — 같은 화면, 밝은 토큰셋](./img/theme-light.jpg)
+
+## 잔가지들 — 작지만 넣어둔 것들
+
+큰 절로 다룰 정도는 아니지만 실제로 손이 갔던 디테일들이다.
+
+- **트릭룸 토글(스피드 페이지)**: 선공 판정 함수가 트릭룸 옵션을 받게 돼 있어(1편),
+  토글 하나로 "느린 쪽이 선공"인 세계의 판정을 같은 화면에서 본다.
+- **종족 입력 즉시 피드백**: 입력칸 옆 미니 스프라이트가 도감 인식 여부를 알려준다(2편).
+  오타면 아이콘이 안 뜬다.
+- **본문 한도 12MB**: 파티 스크린샷을 base64로 받는 import 때문에 서버 본문 한도를
+  12MB로 잡았다. Fastify에서 NestJS로 옮길 때 이 한도를 그대로 보존했다(놓치면 큰
+  이미지에서만 터지는 회귀가 된다).
+- **에러 응답 계약 고정**: 어떤 예외든 응답 본문은 항상 `{ error: message }` 한 형태다.
+  전환 전 Fastify 시절의 계약을 전역 예외 필터로 유지해, 클라이언트 에러 처리를 한 줄도
+  안 바꿨다.
+- **쿼터 소진 경고색**: 헤더 배지가 0이 되면 경고색으로 바뀐다. 한도를 숫자가 아니라
+  색으로 먼저 알아차리게.
+- **AI 완료 토스트**: 추천이 끝나면 토스트로 알린다. 응답이 10초 넘게 걸리는 기능이라
+  스크롤을 내려두고 기다리는 사용자에게 필요했다.
+
 ## 정리
 
 이 편의 일은 전부 "이미 있는 것을 보이게 만들기"였다. 쿼터는 4편에서 이미 강제되고 있었고,
