@@ -13,7 +13,29 @@
 교체"로 범위를 좁혀 회귀 위험을 최소화한 것이다. DB 도입은 다음 단계로 미뤘다.
 
 검증은 class-validator 대신 Zod 파이프를 만들어 썼다. 도메인 스키마가 이미 `pokedex-core`에
-Zod로 있으니 그걸 재사용하는 편이 자연스러웠다.
+Zod로 있으니 그걸 재사용하는 편이 자연스러웠다. 파이프 전문이 이게 전부다.
+
+```ts
+// apps/server/src/common/zod-validation.pipe.ts
+// 도메인 스키마는 pokedex-core에 Zod로 정의돼 있어, class-validator로 재작성하지 않고
+// 그대로 재사용한다. 검증 실패는 BadRequestException(400)으로 변환된다.
+@Injectable()
+export class ZodValidationPipe<T> implements PipeTransform {
+  constructor(private readonly schema: ZodType<T>) {}
+
+  transform(value: unknown): T {
+    const result = this.schema.safeParse(value);
+    if (!result.success) {
+      throw new BadRequestException(result.error.message);
+    }
+    return result.data;
+  }
+}
+```
+
+NestJS 표준대로라면 class-validator DTO를 썼겠지만, 같은 검증을 두 군데(도메인 Zod + DTO
+데코레이터)에 이중 유지하는 비용이 프레임워크 순응보다 크다고 판단했다. 파이프 하나로
+프레임워크 메커니즘(파이프 단계에서 400 변환)은 그대로 지키면서 스키마는 단일 출처로 남는다.
 
 ### 발목 잡은 함정: 워크스페이스 패키지 번들링
 
@@ -56,22 +78,62 @@ DB는 MikroORM 7 + Postgres다. 로컬은 docker compose로 띄우는데, 로컬
 
 ## Phase C·D: 프리셋 티어와 일일 쿼터
 
-프리셋(저장한 파티)에는 티어별 개수 제한을 뒀다(무료 2, 유료 20). 개수 검사와 생성을 한
-트랜잭션으로 묶어, 동시 요청이 제한을 넘기지 못하게 했다.
+프리셋(저장한 파티)에는 티어별 개수 제한을 뒀다(무료 2, 유료 20). 단순히 "개수 세고
+넘으면 거부"로 짜면, 동시에 두 요청이 들어왔을 때 둘 다 "1개네, 통과"를 보고 캡을 뚫는다.
+그래서 개수 검사와 생성을 한 트랜잭션으로 묶었다.
+
+```ts
+// apps/server/src/presets/presets.service.ts
+return this.em.transactional(async (em) => {
+  const user = await em.findOne(User, { id: userId });
+  if (!user) {
+    throw new NotFoundException('사용자를 찾을 수 없습니다');
+  }
+  const cap = PRESET_CAP_BY_TIER[user.tier as UserTier];
+  if ((await em.count(Preset, { user: userId })) >= cap) {
+    throw new ForbiddenException(`... 프리셋을 최대 ${cap}개까지 저장할 수 있습니다`);
+  }
+  const preset = em.create(Preset, { user, name, party });
+  em.persist(preset);
+  return preset;
+});
+```
 
 일일 쿼터는 더 까다로웠다. AI 호출은 비용이 드니, 호출 직전에 원자적으로 소비량을 올리고
-한도를 넘으면 막아야 한다. 레이스 컨디션 없이 이걸 하려고 단일 upsert로 처리했다.
+한도를 넘으면 막아야 한다. 트랜잭션조차 쓰지 않고, 레이스가 원천 불가능한 단일 upsert
+한 방으로 처리했다. 실제 서비스 코드다.
 
-```sql
-insert into usage_daily (user_id, usage_date, count) values (?, ?, 1)
-on conflict (user_id, usage_date) do update set count = usage_daily.count + 1
-where usage_daily.count < ?
-returning count
+```ts
+// apps/server/src/quota/quota.service.ts
+// KST 기준 오늘(YYYY-MM-DD). en-CA 로캘이 ISO 형식을 준다.
+private today(): string {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul' }).format(new Date());
+}
+
+// 단일 upsert로 원자적 소비. cap 미만이면 +1 후 새 count, 한도면 null(레이스에도 초과 0건).
+private async consume(userId: string, cap: number): Promise<number | null> {
+  const rows = await this.em.getConnection().execute<Array<{ count: number }>>(
+    `insert into usage_daily (user_id, usage_date, count) values (?, ?, 1)
+     on conflict (user_id, usage_date) do update set count = usage_daily.count + 1
+     where usage_daily.count < ?
+     returning count`,
+    [userId, this.today(), cap],
+  );
+  return rows[0]?.count ?? null;
+}
+
+// AI 호출 직전 게이트. 한도 초과면 429.
+async consumeOrThrow(userId: string): Promise<void> {
+  const cap = await this.capOf(userId);
+  if ((await this.consume(userId, cap)) === null) {
+    throw new HttpException(`오늘 질의 한도(${cap}회)를 모두 사용했습니다`, HttpStatus.TOO_MANY_REQUESTS);
+  }
+}
 ```
 
 한도 미만일 때만 증가하고 새 값을 돌려준다. 한도면 아무 행도 안 돌아오므로, 동시에 여러 요청이
-들어와도 초과 소비가 0건이다. 리셋은 KST 자정 기준으로, 날짜를 `Asia/Seoul`로 서버에서 계산해
-클라이언트 시계를 믿지 않게 했다.
+들어와도 초과 소비가 0건이다. 리셋은 KST 자정 기준 — 날짜 문자열 자체를 서울 타임존으로
+서버에서 만들기 때문에 클라이언트 시계도, 서버 머신의 타임존도 믿을 필요가 없다.
 
 ### MikroORM 7 함정 모음
 

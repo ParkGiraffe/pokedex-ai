@@ -27,8 +27,22 @@ export class SharedPresetsController {
 }
 ```
 
-토큰은 프리셋에 귀속된 `shareToken`(nullable·unique)이고, 발급은 멱등(이미 있으면 그대로),
-취소는 `null`로 되돌린다. 비로그인으로 연 화면은 읽기전용 카드만 보여준다.
+토큰은 프리셋에 귀속된 `shareToken`(nullable·unique)이고, 발급은 멱등 — 같은 프리셋의
+공유 버튼을 몇 번 눌러도 URL이 바뀌지 않는다. 취소는 토큰을 비워 기존 링크를 즉시 무효화한다.
+
+```ts
+// apps/server/src/presets/presets.service.ts
+async share(userId: string, id: string): Promise<string> {
+  const preset = await this.getOwned(userId, id);
+  if (!preset.shareToken) {
+    preset.shareToken = uuidv7();   // 이미 있으면 재발급하지 않는다(멱등)
+  }
+  await this.em.flush();
+  return preset.shareToken;
+}
+```
+
+비로그인으로 연 화면은 읽기전용 카드만 보여준다.
 
 ![공유 뷰(비로그인) — 읽기전용 3마리 카드, "로그인하면 내 프리셋으로 저장할 수 있어요"](./img/shared-view.jpg)
 

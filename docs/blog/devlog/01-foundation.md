@@ -39,7 +39,37 @@ pokedex-agent/
 도감·기술·특성·도구·타입·성격 데이터는 전부 `data-fetchers`가 PokeAPI에서 수집해 JSON으로
 떨군다. 하드룰을 하나 정했다. **데이터는 한 글자도 손으로 입력하지 않는다.** 오타나 임의
 보정이 끼어들 여지를 처음부터 차단하기 위해서다. 1025마리 도감을 수집했고, 한국어명 누락은
-0건이었다.
+0건이었다. 수집된 항목 하나의 실물은 이렇게 생겼다 — 한국어명·영문 슬러그·타입·종족값이
+한 레코드다.
+
+```json
+{
+  "no": 445,
+  "ko": "한카리아스",
+  "en": "garchomp",
+  "generation": 4,
+  "types": ["드래곤", "땅"],
+  "base": { "H": 108, "A": 130, "B": 95, "C": 80, "D": 85, "S": 102 }
+}
+```
+
+이 위에 조회 계층을 얹었다. 정확한 이름 매칭과 별개로, 오타가 섞인 입력도 가장 가까운
+이름으로 이어주는 퍼지 검색이다. 편집 거리(레벤슈타인)를 한국어명·영문명 양쪽에 대해 재서
+가장 가까운 후보를 돌려준다.
+
+```ts
+// packages/pokedex-core/src/lookup.ts
+export const fuzzyPokemon = (query: string, limit = 5): PokedexEntry[] =>
+  pokedex.entries
+    .map((e) => ({ entry: e, score: Math.min(editDistance(query, e.ko), editDistance(query, e.en)) }))
+    .sort((a, b) => a.score - b.score)
+    .slice(0, limit)
+    .map((x) => x.entry);
+```
+
+그리고 같은 파일에서, 수집한 네 사전(종족·기술·특성·도구)의 한국어명을 합쳐 "검증된 명칭
+집합"을 만들어두었다. 이때는 단순한 유틸이었는데, 나중에 AI가 한국어 이름을 지어내는 문제
+(3편)를 잡는 핵심 방어선이 된다.
 
 이 원칙은 나중에 실제로 값을 했다. 데이터가 틀렸을 때 "코드를 고치고 다시 수집한다"가
 "손으로 고친다"보다 항상 우선이라는 기준이 분명했기 때문이다. (그 사례는 6편에서 다룬다.)
@@ -78,17 +108,72 @@ const applyMod = (damage: number, mod: number): number => pokeRound((damage * mo
 ```
 
 자속 보정도 테라스탈 때문에 단순하지 않다. 원래 자속과 테라 타입이 겹치면 2.0배, 한쪽만이면
-1.5배, 스텔라 테라는 또 다른 규칙이다. 이런 분기를 공식 안에 명시적으로 박아두었다.
+1.5배, 스텔라 테라는 또 다른 규칙이다. 이런 분기를 4096 기반 정수 모디파이어로 공식 안에
+명시적으로 박아두었다. 실제 구현이다.
 
-여기에 타입 상성, 스피드(랭크·도구·특성·마비·끈적네트 보정), 16가지 난수 롤까지 더해
-결정론 계산기의 토대를 만들었다.
+```ts
+// packages/pokedex-core/src/formula/damage.ts
+const stabMod = (input: DamageInput): number => {
+  const isOriginalStab = input.attackerTypes.includes(input.moveType);
+  const tera = input.attackerTerastalized ? input.attackerTeraType : undefined;
+
+  if (tera === '스텔라') {
+    return isOriginalStab ? 8192 : 4915; // 자속 2.0, 비자속 1.2
+  }
+  if (tera) {
+    const isTeraStab = input.moveType === tera;
+    if (isTeraStab && isOriginalStab) return 8192; // 테라 자속 + 원본 자속 = 2.0
+    if (isTeraStab || isOriginalStab) return 6144; // 한쪽만 자속 = 1.5
+    return 4096;
+  }
+  return isOriginalStab ? 6144 : 4096;
+};
+```
+
+스피드도 같은 방식으로 한 함수에 모았다. 랭크 배율 → 도구 배율 → 특성 배율 순으로 매번
+내림하고, 끈적네트·마비·순풍을 마지막에 적용한다. 적용 순서와 내림 위치가 틀리면 실수치가
+1 어긋나고, 스피드 1 차이는 선공이 뒤집히는 문제라 대충 곱해선 안 된다.
+
+```ts
+// packages/pokedex-core/src/formula/speed.ts
+export const effectiveSpeed = (input: SpeedInput): number => {
+  let value = Math.floor(base * rankMultiplier(rank));
+  value = Math.floor(value * itemMultiplier);     // 구애스카프 1.5, 두꺼운자루 0.5 등
+  value = Math.floor(value * abilityMultiplier);  // 가속 1.5, 모래헤치기 2.0 등
+  // 끈적네트는 스피드 1랭크 다운(= 2/3배), 1/3배가 아니다.
+  if (stickyWeb) value = Math.floor((value * 2) / 3);
+  if (paralyzed) value = Math.floor(value / 2);
+  if (tailwind) value *= 2;
+  return value;
+};
+```
+
+트릭룸까지 고려한 "누가 먼저 움직이나"의 최종 판정도 도메인 함수다. UI는 이 결과를 그릴
+뿐 비교 로직을 갖지 않는다.
+
+여기에 타입 상성과 16가지 난수 롤까지 더해 결정론 계산기의 토대를 만들었다.
 
 ## 검증을 먼저
 
 공식은 틀리면 조용히 틀린다. 그래서 데미지 계산에 대해 30개 케이스의 fixture를 만들고 통합
-검증부터 깔았다. 입력과 기대 출력을 고정해두면, 이후 공식을 손댈 때마다 회귀를 즉시 잡을 수
-있다. 데이터·공식·타입이라는 결정론 3종 세트를 이렇게 테스트로 묶어두고 나서야 그 위에 UI와
-AI를 올리기 시작했다.
+검증부터 깔았다. fixture는 계산 입력과 기대 출력을 그대로 잠근 JSON이다.
+
+```json
+{
+  "id": "basic-1",
+  "label": "일반 물리, 자속 없음, 효과보통",
+  "input": {
+    "level": 50, "attack": 130, "defense": 100, "basePower": 80,
+    "category": "물리", "attackerTypes": ["격투"], "defenderTypes": ["노말"],
+    "moveType": "노말", "attackerTerastalized": false, "stab": false
+  },
+  "expected": { "min": 39, "max": 47 }
+}
+```
+
+이렇게 입력과 기대 출력을 고정해두면, 이후 공식을 손댈 때마다 회귀를 즉시 잡을 수 있다.
+데이터·공식·타입이라는 결정론 3종 세트를 테스트로 묶어두고 나서야 그 위에 UI와 AI를 올리기
+시작했다.
 
 ## 정리
 
