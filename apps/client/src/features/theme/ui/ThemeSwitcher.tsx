@@ -1,16 +1,13 @@
-import { Select } from "@/common/ui/Select";
+import { Select } from '@/common/ui/Select';
 
-import { useThemeStore } from "../model/store";
-import { THEMES, type ThemeId } from "../model/themes";
+import { useThemeStore } from '../model/store';
+import { type ThemeId, THEMES } from '../model/themes';
 
 const OPTIONS = THEMES.map((meta) => ({
   value: meta.id,
   label: (
     <span className="flex items-center gap-2">
-      <span
-        className="size-3 shrink-0 rounded-full border border-border"
-        style={{ backgroundColor: meta.swatch }}
-      />
+      <span className="border-border size-3 shrink-0 rounded-full border" style={{ backgroundColor: meta.swatch }} />
       {meta.label}
     </span>
   ),

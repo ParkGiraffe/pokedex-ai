@@ -1,8 +1,7 @@
-import type { TeraType, TypeName } from "../types";
+import type { TeraType, TypeName } from '../types';
+import { typeEffectiveness } from './matchup';
 
-import { typeEffectiveness } from "./matchup";
-
-export type DamageCategory = "물리" | "특수";
+export type DamageCategory = '물리' | '특수';
 
 export type DamageInput = {
   level: number;
@@ -43,7 +42,7 @@ const stabMod = (input: DamageInput): number => {
   const isOriginalStab = input.attackerTypes.includes(input.moveType);
   const tera = input.attackerTerastalized ? input.attackerTeraType : undefined;
 
-  if (tera === "스텔라") {
+  if (tera === '스텔라') {
     return isOriginalStab ? 8192 : 4915; // 자속 2.0, 비자속 1.2
   }
 
@@ -78,12 +77,10 @@ export const calculateDamage = (input: DamageInput): DamageResult => {
     return { min: 0, max: 0, rolls: Array(16).fill(0), effectiveness: 0 };
   }
 
-  const effectiveAttack = burned && category === "물리" ? Math.floor(attack / 2) : attack;
+  const effectiveAttack = burned && category === '물리' ? Math.floor(attack / 2) : attack;
 
   const base =
-    Math.floor(
-      Math.floor((Math.floor((2 * level) / 5 + 2) * basePower * effectiveAttack) / defense) / 50
-    ) + 2;
+    Math.floor(Math.floor((Math.floor((2 * level) / 5 + 2) * basePower * effectiveAttack) / defense) / 50) + 2;
 
   let damage = base;
   const weatherMod = weatherBoost === 1.5 ? 6144 : weatherBoost === 0.5 ? 2048 : 4096;
@@ -114,21 +111,14 @@ export const calculateDamage = (input: DamageInput): DamageResult => {
 };
 
 // 스텔스록 진입 데미지(최대 HP 비율). 바위 타입 상성 × 1/8. 비행 2배=1/4, 4배=1/2.
-export const stealthRockDamage = (
-  defenderTypes: ReadonlyArray<TypeName>,
-  maxHp: number
-): number => {
-  const eff = typeEffectiveness("바위", defenderTypes);
+export const stealthRockDamage = (defenderTypes: ReadonlyArray<TypeName>, maxHp: number): number => {
+  const eff = typeEffectiveness('바위', defenderTypes);
   return Math.floor((maxHp * eff) / 8);
 };
 
 // 압정 진입 데미지(최대 HP 비율). 층수별 1/8·1/6·1/4. 비행 타입은 무효(0).
-export const spikesDamage = (
-  defenderTypes: ReadonlyArray<TypeName>,
-  maxHp: number,
-  layers: 1 | 2 | 3
-): number => {
-  if (defenderTypes.includes("비행")) {
+export const spikesDamage = (defenderTypes: ReadonlyArray<TypeName>, maxHp: number, layers: 1 | 2 | 3): number => {
+  if (defenderTypes.includes('비행')) {
     return 0;
   }
   const fraction = layers === 1 ? 8 : layers === 2 ? 6 : 4;

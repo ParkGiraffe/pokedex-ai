@@ -1,6 +1,6 @@
-import { pokedex } from "@pokedex-agent/pokedex-core";
+import { pokedex } from '@pokedex-agent/pokedex-core';
 
-export const POKEMON_DATALIST_ID = "pokemon-options";
+export const POKEMON_DATALIST_ID = 'pokemon-options';
 
 export const PokemonDatalist = () => (
   <datalist id={POKEMON_DATALIST_ID}>

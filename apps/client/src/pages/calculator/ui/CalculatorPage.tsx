@@ -1,29 +1,29 @@
-import { NATURE_NAMES, TYPE_NAMES } from "@pokedex-agent/pokedex-core";
+import { NATURE_NAMES, TYPE_NAMES } from '@pokedex-agent/pokedex-core';
 
-import { cn } from "@/common/lib/cn";
-import { Card } from "@/common/ui/Card";
-import { Checkbox } from "@/common/ui/Checkbox";
-import { Field } from "@/common/ui/Field";
-import { NumberField } from "@/common/ui/NumberField";
-import { Select } from "@/common/ui/Select";
-import { PokemonDatalist } from "@/features/pokemon-picker/ui/PokemonDatalist";
-import { PokemonIcon } from "@/features/pokemon-picker/ui/PokemonIcon";
-import { PokemonPicker } from "@/features/pokemon-picker/ui/PokemonPicker";
+import { cn } from '@/common/lib/cn';
+import { Card } from '@/common/ui/Card';
+import { Checkbox } from '@/common/ui/Checkbox';
+import { Field } from '@/common/ui/Field';
+import { NumberField } from '@/common/ui/NumberField';
+import { Select } from '@/common/ui/Select';
+import { PokemonDatalist } from '@/features/pokemon-picker/ui/PokemonDatalist';
+import { PokemonIcon } from '@/features/pokemon-picker/ui/PokemonIcon';
+import { PokemonPicker } from '@/features/pokemon-picker/ui/PokemonPicker';
 
-import { computeCalc } from "../lib/calc";
-import { useCalculatorStore } from "../model/store";
+import { computeCalc } from '../lib/calc';
+import { useCalculatorStore } from '../model/store';
 
 const ITEM_OPTIONS = [
-  { value: 1, label: "없음" },
-  { value: 1.2, label: "안경/구애머리띠 등 1.2배" },
-  { value: 1.3, label: "생명의구슬 1.3배" },
-  { value: 1.5, label: "구애 1.5배" },
+  { value: 1, label: '없음' },
+  { value: 1.2, label: '안경/구애머리띠 등 1.2배' },
+  { value: 1.3, label: '생명의구슬 1.3배' },
+  { value: 1.5, label: '구애 1.5배' },
 ] as const;
 
 const WEATHER_OPTIONS = [
-  { value: 1, label: "없음" },
-  { value: 1.5, label: "강화 1.5배" },
-  { value: 0.5, label: "약화 0.5배" },
+  { value: 1, label: '없음' },
+  { value: 1.5, label: '강화 1.5배' },
+  { value: 0.5, label: '약화 0.5배' },
 ] as const;
 
 const RollBar = ({ rolls, max }: { rolls: number[]; max: number }) => (
@@ -51,7 +51,7 @@ export const CalculatorPage = () => {
 
       <div className="grid gap-4 md:grid-cols-2">
         <Card className="flex flex-col gap-3">
-          <h2 className="text-sm font-semibold text-primary">공격</h2>
+          <h2 className="text-primary text-sm font-semibold">공격</h2>
           <Field label="포켓몬">
             <div className="flex items-center gap-2">
               <PokemonIcon species={attacker.species} />
@@ -66,10 +66,10 @@ export const CalculatorPage = () => {
             <Field label="분류">
               <Select
                 value={attacker.category}
-                onValueChange={(value) => setAttacker({ category: value as "물리" | "특수" })}
+                onValueChange={(value) => setAttacker({ category: value as '물리' | '특수' })}
                 options={[
-                  { value: "물리", label: "물리" },
-                  { value: "특수", label: "특수" },
+                  { value: '물리', label: '물리' },
+                  { value: '특수', label: '특수' },
                 ]}
               />
             </Field>
@@ -138,7 +138,7 @@ export const CalculatorPage = () => {
                 className="w-auto"
                 value={attacker.teraType}
                 onValueChange={(value) => setAttacker({ teraType: value as typeof attacker.teraType })}
-                options={[...TYPE_NAMES, "스텔라"].map((type) => ({ value: type, label: type }))}
+                options={[...TYPE_NAMES, '스텔라'].map((type) => ({ value: type, label: type }))}
               />
             )}
             <Checkbox
@@ -155,7 +155,7 @@ export const CalculatorPage = () => {
         </Card>
 
         <Card className="flex flex-col gap-3">
-          <h2 className="text-sm font-semibold text-info">방어</h2>
+          <h2 className="text-info text-sm font-semibold">방어</h2>
           <Field label="포켓몬">
             <div className="flex items-center gap-2">
               <PokemonIcon species={defender.species} />
@@ -208,26 +208,23 @@ export const CalculatorPage = () => {
         {result ? (
           <div className="flex flex-col gap-3">
             <div className="flex flex-wrap items-baseline gap-x-6 gap-y-1">
-              <span className="text-2xl font-bold text-primary">
+              <span className="text-primary text-2xl font-bold">
                 {result.minPercent.toFixed(1)}% ~ {result.maxPercent.toFixed(1)}%
               </span>
-              <span className="text-sm text-muted-foreground">
+              <span className="text-muted-foreground text-sm">
                 데미지 {result.damage.min} ~ {result.damage.max} / HP {result.defenderHp}
               </span>
-              <span className="text-sm text-muted-foreground">상성 {result.damage.effectiveness}배</span>
+              <span className="text-muted-foreground text-sm">상성 {result.damage.effectiveness}배</span>
               <span
-                className={cn(
-                  "text-sm font-medium",
-                  result.maxPercent >= 100 ? "text-destructive" : "text-foreground"
-                )}
+                className={cn('text-sm font-medium', result.maxPercent >= 100 ? 'text-destructive' : 'text-foreground')}
               >
-                {result.hitsText || "데미지 없음"}
+                {result.hitsText || '데미지 없음'}
               </span>
             </div>
             <RollBar rolls={result.damage.rolls} max={result.damage.max} />
           </div>
         ) : (
-          <p className="text-sm text-muted-foreground">공격·방어 포켓몬을 정확히 입력하라.</p>
+          <p className="text-muted-foreground text-sm">공격·방어 포켓몬을 정확히 입력하라.</p>
         )}
       </Card>
 

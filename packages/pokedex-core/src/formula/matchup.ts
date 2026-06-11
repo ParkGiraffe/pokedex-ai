@@ -1,5 +1,5 @@
-import typesRaw from "../../data/types.json" with { type: "json" };
-import type { TypeName } from "../types";
+import typesRaw from '../../data/types.json' with { type: 'json' };
+import type { TypeName } from '../types';
 
 type TypesFile = {
   matchup: Record<string, Record<string, number>>;
@@ -7,10 +7,7 @@ type TypesFile = {
 
 const matchup = (typesRaw as TypesFile).matchup;
 
-export const typeEffectiveness = (
-  attackType: TypeName,
-  defenderTypes: ReadonlyArray<TypeName>
-): number => {
+export const typeEffectiveness = (attackType: TypeName, defenderTypes: ReadonlyArray<TypeName>): number => {
   let result = 1;
   for (const defender of defenderTypes) {
     const v = matchup[attackType]?.[defender];

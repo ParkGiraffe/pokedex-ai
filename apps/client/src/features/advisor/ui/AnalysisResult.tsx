@@ -1,22 +1,22 @@
-import { type ClaudeResponse } from "@pokedex-agent/pokedex-core";
+import { type ClaudeResponse } from '@pokedex-agent/pokedex-core';
 
-import { Card } from "@/common/ui/Card";
+import { Card } from '@/common/ui/Card';
 
 const KIND_LABEL: Record<string, string> = {
-  strength: "장점",
-  weakness: "단점",
-  warning: "주의",
-  recommendation: "추천",
+  strength: '장점',
+  weakness: '단점',
+  warning: '주의',
+  recommendation: '추천',
 };
 
 const KIND_ACCENT: Record<string, string> = {
-  strength: "text-primary",
-  weakness: "text-destructive",
-  warning: "text-warning",
-  recommendation: "text-info",
+  strength: 'text-primary',
+  weakness: 'text-destructive',
+  warning: 'text-warning',
+  recommendation: 'text-info',
 };
 
-const KIND_ORDER: Array<keyof typeof KIND_LABEL> = ["strength", "weakness", "warning", "recommendation"];
+const KIND_ORDER: Array<keyof typeof KIND_LABEL> = ['strength', 'weakness', 'warning', 'recommendation'];
 
 type AnalysisResultProps = {
   result: ClaudeResponse;
@@ -31,15 +31,15 @@ export const AnalysisResult = ({ result }: AnalysisResultProps) => {
   return (
     <div className="flex flex-col gap-3">
       <Card className="flex flex-col gap-3">
-        <p className="text-sm font-semibold text-primary">{result.summary}</p>
+        <p className="text-primary text-sm font-semibold">{result.summary}</p>
         {grouped.length > 0 && (
-          <div className="flex flex-col gap-2 border-t border-border pt-2.5">
+          <div className="border-border flex flex-col gap-2 border-t pt-2.5">
             {grouped.map((group) => (
               <section key={group.kind} className="flex flex-col gap-1">
-                <h3 className={`text-xs font-semibold ${KIND_ACCENT[group.kind] ?? "text-foreground"}`}>
+                <h3 className={`text-xs font-semibold ${KIND_ACCENT[group.kind] ?? 'text-foreground'}`}>
                   {KIND_LABEL[group.kind] ?? group.kind}
                 </h3>
-                <ul className="flex flex-col gap-0.5 text-sm text-foreground">
+                <ul className="text-foreground flex flex-col gap-0.5 text-sm">
                   {group.items.map((item, index) => (
                     <li key={`${group.kind}-${index}`}>
                       {item.target && <span className="text-muted-foreground">{item.target}: </span>}
@@ -55,12 +55,12 @@ export const AnalysisResult = ({ result }: AnalysisResultProps) => {
 
       {result.actionable.length > 0 && (
         <Card>
-          <h3 className="text-sm font-semibold text-foreground">제안</h3>
-          <ul className="mt-1.5 flex flex-col gap-1 text-sm text-foreground">
+          <h3 className="text-foreground text-sm font-semibold">제안</h3>
+          <ul className="text-foreground mt-1.5 flex flex-col gap-1 text-sm">
             {result.actionable.map((action, index) => (
               <li key={`${action.kind}-${index}`}>
                 {action.reason}
-                {action.from && action.to ? ` (${action.from} → ${action.to})` : ""}
+                {action.from && action.to ? ` (${action.from} → ${action.to})` : ''}
               </li>
             ))}
           </ul>

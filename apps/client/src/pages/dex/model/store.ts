@@ -1,7 +1,7 @@
-import { type TypeName } from "@pokedex-agent/pokedex-core";
-import { create } from "zustand";
+import { type TypeName } from '@pokedex-agent/pokedex-core';
+import { create } from 'zustand';
 
-import { ALL_GENERATIONS, ALL_TYPES } from "../lib/search";
+import { ALL_GENERATIONS, ALL_TYPES } from '../lib/search';
 
 type DexState = {
   query: string;
@@ -18,7 +18,7 @@ type DexState = {
 
 // filter 바뀌면 페이지를 1로 리셋한다. select는 페이지 위치를 보존한다.
 export const useDexStore = create<DexState>((set) => ({
-  query: "",
+  query: '',
   type: ALL_TYPES,
   generation: ALL_GENERATIONS,
   page: 1,

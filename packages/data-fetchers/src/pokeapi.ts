@@ -1,17 +1,17 @@
-import pLimit from "p-limit";
+import pLimit from 'p-limit';
 
-const BASE = "https://pokeapi.co/api/v2";
-const USER_AGENT = "pokedex-agent/data-fetchers";
+const BASE = 'https://pokeapi.co/api/v2';
+const USER_AGENT = 'pokedex-agent/data-fetchers';
 const RETRIES = 4;
 
 export const concurrency = pLimit(32);
 
 export const fetchJson = async <T>(path: string): Promise<T> => {
-  const url = path.startsWith("http") ? path : `${BASE}${path}`;
+  const url = path.startsWith('http') ? path : `${BASE}${path}`;
   let lastError: unknown;
   for (let attempt = 0; attempt < RETRIES; attempt++) {
     try {
-      const response = await fetch(url, { headers: { "User-Agent": USER_AGENT } });
+      const response = await fetch(url, { headers: { 'User-Agent': USER_AGENT } });
       if (!response.ok) throw new Error(`HTTP ${response.status} ${url}`);
       return (await response.json()) as T;
     } catch (error) {
@@ -23,10 +23,10 @@ export const fetchJson = async <T>(path: string): Promise<T> => {
 };
 
 export const pickKo = (names: ReadonlyArray<{ language: { name: string }; name: string }>): string | undefined =>
-  names.find((n) => n.language.name === "ko")?.name;
+  names.find((n) => n.language.name === 'ko')?.name;
 
 export const generationToInt = (slug: string): number => {
-  const roman = slug.replace(/^generation-/, "").toUpperCase();
+  const roman = slug.replace(/^generation-/, '').toUpperCase();
   const table: Record<string, number> = { I: 1, V: 5, X: 10 };
   let total = 0;
   let prev = 0;

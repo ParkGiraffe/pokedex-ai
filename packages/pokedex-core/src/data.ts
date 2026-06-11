@@ -1,5 +1,5 @@
-import { PokedexFile } from "./types";
-import pokedexRaw from "../data/pokedex.json" with { type: "json" };
+import pokedexRaw from '../data/pokedex.json' with { type: 'json' };
+import { PokedexFile } from './types';
 
 export const pokedex = PokedexFile.parse(pokedexRaw);
 

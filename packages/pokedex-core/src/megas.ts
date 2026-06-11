@@ -1,10 +1,10 @@
-import megasRaw from "../data/champions/megas.json" with { type: "json" };
-import championsItemsRaw from "../data/champions/items.json" with { type: "json" };
-import type { BaseStatBlock, TypeName } from "./types";
+import championsItemsRaw from '../data/champions/items.json' with { type: 'json' };
+import megasRaw from '../data/champions/megas.json' with { type: 'json' };
+import type { BaseStatBlock, TypeName } from './types';
 
 // 메가 의무도. Smogon 챔피언스 사용률(2026-04) 기반.
 // obligatory: 메가 안 하면 거의 안 쓰임 / flexible: 비메가도 흔히 활용 / fringe: 양쪽 비주류 / unknown: 챔피언스 미등장
-export type MegaPriority = "obligatory" | "flexible" | "fringe" | "unknown";
+export type MegaPriority = 'obligatory' | 'flexible' | 'fringe' | 'unknown';
 
 export type MegaForm = {
   stone: string;
@@ -16,11 +16,11 @@ export type MegaForm = {
   types: TypeName[];
   base: BaseStatBlock;
   ability: string;
-  megaForme: "X" | "Y" | null;
+  megaForme: 'X' | 'Y' | null;
   megaPriority?: MegaPriority;
 };
 
-export type ChampionsItem = { slug: string; ko: string; isMega: boolean; megaForme?: "X" | "Y" };
+export type ChampionsItem = { slug: string; ko: string; isMega: boolean; megaForme?: 'X' | 'Y' };
 
 const megas = (megasRaw as { megas: MegaForm[] }).megas;
 export const championsItems = (championsItemsRaw as { items: ChampionsItem[] }).items;
@@ -44,7 +44,7 @@ for (const item of championsItems) {
   }
   stoneByItemKo.set(item.ko, item.slug);
   // "망나뇽나이트" → "망나뇽" 식으로 끝의 "나이트"를 떼어 베이스 종족을 추정해 본다.
-  const baseGuess = item.ko.endsWith("나이트") ? item.ko.slice(0, -3) : null;
+  const baseGuess = item.ko.endsWith('나이트') ? item.ko.slice(0, -3) : null;
   if (!baseGuess) {
     continue;
   }
@@ -61,6 +61,14 @@ for (const item of championsItems) {
 
 // 종족 한국어명으로 가능한 메가 폼 목록 (리자몽은 X/Y 두 개, 그 외는 보통 1개).
 export const findMegasBySpecies = (species: string): MegaForm[] => byBaseKo.get(species) ?? [];
+
+// 메가 폼(슬러그)이 선택돼 있으면 메가 표시명(예: 메가리자몽X), 아니면 종족명을 돌려준다.
+export const speciesDisplayName = (species: string, megaForm?: string): string => {
+  if (!megaForm) {
+    return species;
+  }
+  return byBaseKo.get(species)?.find((mega) => mega.form === megaForm)?.ko ?? species;
+};
 
 // 메가스톤 슬러그로 단일 메가 폼 결정.
 export const findMegaByStone = (stone: string): MegaForm | undefined => byStone.get(stone);

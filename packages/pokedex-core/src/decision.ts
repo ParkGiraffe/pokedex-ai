@@ -1,8 +1,8 @@
-import { type DamageCategory, calculateDamage } from "./formula/damage";
-import { actualStat, applyRank } from "./formula/stat";
-import { findMove, findPokemon } from "./lookup";
-import type { MegaForm } from "./megas";
-import type { PartyMember, StatusCondition, TypeName } from "./types";
+import { calculateDamage } from './formula/damage';
+import { actualStat, applyRank } from './formula/stat';
+import { findMove, findPokemon } from './lookup';
+import type { MegaForm } from './megas';
+import type { PartyMember, StatusCondition, TypeName } from './types';
 
 export type MoveOption = {
   move: string;
@@ -21,7 +21,7 @@ export type MoveOption = {
 };
 
 // 상대 방어·HP는 0투자 중립을 가정한다 (보수적, 응답에서 가정 명시).
-const OPPONENT_NATURE = "노력";
+const OPPONENT_NATURE = '노력';
 
 // 데미지 범위와 현재 HP로 "확정 N타" 또는 "난수 N타" 단일 표기를 만든다.
 // guaranteedHits = ceil(HP / min) — 운이 가장 나빠도 보장되는 KO 타수
@@ -29,7 +29,7 @@ const OPPONENT_NATURE = "노력";
 // 두 값이 같으면 "확정 N타", 다르면 "난수 N타" (possible 기준, 운 좋으면 N타에 떨어진다).
 const hitsToKO = (min: number, max: number, hp: number) => {
   if (min <= 0 || max <= 0 || hp <= 0) {
-    return { guaranteed: null, possible: null, text: "" };
+    return { guaranteed: null, possible: null, text: '' };
   }
   const guaranteed = Math.ceil(hp / min);
   const possible = Math.ceil(hp / max);
@@ -37,14 +37,14 @@ const hitsToKO = (min: number, max: number, hp: number) => {
   return { guaranteed, possible, text };
 };
 
-export type StatRanks = Partial<Record<"A" | "B" | "C" | "D" | "S", number>>;
+export type StatRanks = Partial<Record<'A' | 'B' | 'C' | 'D' | 'S', number>>;
 
 export type MoveOptionsContext = {
   mega?: MegaForm; // 내 액티브 메가 활성 시 종족값·타입·자속을 메가 폼으로 swap한다.
   opponentMega?: MegaForm; // 상대 메가 활성 시 상대 종족값·타입을 swap한다.
   myRanks?: StatRanks; // 내 액티브 랭크업/다운 (-6..+6). 미지정 시 0.
   opponentRanks?: StatRanks; // 상대 랭크업/다운.
-  myStatus?: StatusCondition | ""; // 화상 시 물리 공격 ÷2. 마비는 스피드 영향이라 데미지엔 무관.
+  myStatus?: StatusCondition | ''; // 화상 시 물리 공격 ÷2. 마비는 스피드 영향이라 데미지엔 무관.
   // 상대 진영 스크린. 빛의장막=특수기 0.5배, 리플렉터=물리기 0.5배. 기술 분류에 맞게 적용.
   opponentScreens?: { light?: boolean; reflect?: boolean };
 };
@@ -53,22 +53,20 @@ export const moveOptions = (
   myActive: PartyMember,
   opponentSpecies: string,
   opponentHpPercent = 100,
-  context: MoveOptionsContext = {}
+  context: MoveOptionsContext = {},
 ): MoveOption[] | undefined => {
   const baseEntry = findPokemon(myActive.species);
   const opponentBaseEntry = findPokemon(opponentSpecies);
   if (!baseEntry || !opponentBaseEntry) {
     return undefined;
   }
-  const myEntry = context.mega
-    ? { ...baseEntry, base: context.mega.base, types: context.mega.types }
-    : baseEntry;
+  const myEntry = context.mega ? { ...baseEntry, base: context.mega.base, types: context.mega.types } : baseEntry;
   const opponentEntry = context.opponentMega
     ? { ...opponentBaseEntry, base: context.opponentMega.base, types: context.opponentMega.types }
     : opponentBaseEntry;
 
   const opponentHp = actualStat({
-    stat: "H",
+    stat: 'H',
     base: opponentEntry.base.H,
     iv: 31,
     ev: 0,
@@ -79,11 +77,11 @@ export const moveOptions = (
 
   return myActive.moves.map((moveName) => {
     const move = findMove(moveName);
-    if (!move || move.category === "변화" || move.power === null) {
+    if (!move || move.category === '변화' || move.power === null) {
       return {
         move: moveName,
-        type: move?.type ?? "?",
-        category: move?.category ?? "?",
+        type: move?.type ?? '?',
+        category: move?.category ?? '?',
         power: move?.power ?? null,
         min: 0,
         max: 0,
@@ -91,13 +89,13 @@ export const moveOptions = (
         damaging: false,
         guaranteedHits: null,
         possibleHits: null,
-        hitsText: "",
+        hitsText: '',
       };
     }
 
-    const physical = move.category === "물리";
-    const attackKey = physical ? "A" : "C";
-    const defenseKey = physical ? "B" : "D";
+    const physical = move.category === '물리';
+    const attackKey = physical ? 'A' : 'C';
+    const defenseKey = physical ? 'B' : 'D';
     const rawAttack = actualStat({
       stat: attackKey,
       base: myEntry.base[attackKey],
@@ -117,20 +115,18 @@ export const moveOptions = (
     const attack = applyRank(rawAttack, context.myRanks?.[attackKey] ?? 0);
     const defense = applyRank(rawDefense, context.opponentRanks?.[defenseKey] ?? 0);
 
-    const screen = physical
-      ? (context.opponentScreens?.reflect ?? false)
-      : (context.opponentScreens?.light ?? false);
+    const screen = physical ? (context.opponentScreens?.reflect ?? false) : (context.opponentScreens?.light ?? false);
     const result = calculateDamage({
       level: myActive.level,
       attack,
       defense,
       basePower: move.power,
-      category: move.category as DamageCategory,
+      category: move.category,
       attackerTypes: myEntry.types,
       defenderTypes: opponentEntry.types,
       moveType: move.type as TypeName,
       attackerTerastalized: false,
-      burned: context.myStatus === "화상",
+      burned: context.myStatus === '화상',
       screen,
     });
 
