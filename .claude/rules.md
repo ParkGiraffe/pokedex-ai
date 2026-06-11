@@ -11,7 +11,7 @@
 
 ## 작업 규칙
 
-- 작업 시작 전 이 파일과 `code-principles.md`, `client-stack.md`, `lexicon.md`, 그리고 `docs/specs/` 아래 최신 스펙을 모두 읽어 컨텍스트를 복원한다.
+- 작업 시작 전 이 파일과 `code-principles.md`, `client-stack.md`, `lexicon.md`를 모두 읽어 컨텍스트를 복원한다.
 - 모든 모델 호출은 Opus를 사용한다.
 - 새 패키지를 도입할 때는 사용자 승인을 먼저 받는다 (p2z 원칙).
 

@@ -1,26 +1,27 @@
-import { analysis, findMegaByItem, NATURE_NAMES, TYPE_NAMES } from "@pokedex-agent/pokedex-core";
-import { useState } from "react";
+import { analysis, findMegaByItem, NATURE_NAMES, TYPE_NAMES } from '@pokedex-agent/pokedex-core';
+import { useState } from 'react';
 
-import { cn } from "@/common/lib/cn";
-import { STAT_LABEL_KO } from "@/common/lib/stat";
-import { Button } from "@/common/ui/Button";
-import { Card } from "@/common/ui/Card";
-import { Field } from "@/common/ui/Field";
-import { Input } from "@/common/ui/Input";
-import { NumberField } from "@/common/ui/NumberField";
-import { Select } from "@/common/ui/Select";
-import { useAnalyzeParty } from "@/features/advisor/model/useAnalyzeParty";
-import { AnalysisResult } from "@/features/advisor/ui/AnalysisResult";
-import { PokemonDatalist } from "@/features/pokemon-picker/ui/PokemonDatalist";
-import { PokemonIcon } from "@/features/pokemon-picker/ui/PokemonIcon";
-import { PokemonPicker } from "@/features/pokemon-picker/ui/PokemonPicker";
+import { cn } from '@/common/lib/cn';
+import { STAT_LABEL_KO } from '@/common/lib/stat';
+import { Button } from '@/common/ui/Button';
+import { Card } from '@/common/ui/Card';
+import { Field } from '@/common/ui/Field';
+import { Input } from '@/common/ui/Input';
+import { NumberField } from '@/common/ui/NumberField';
+import { Select } from '@/common/ui/Select';
+import { useAnalyzeParty } from '@/features/advisor/model/useAnalyzeParty';
+import { AnalysisResult } from '@/features/advisor/ui/AnalysisResult';
+import { PokemonDatalist } from '@/features/pokemon-picker/ui/PokemonDatalist';
+import { PokemonIcon } from '@/features/pokemon-picker/ui/PokemonIcon';
+import { PokemonPicker } from '@/features/pokemon-picker/ui/PokemonPicker';
+import { PresetManager } from '@/features/presets';
 
-import { buildParty, memberError, teamWeakness } from "../lib/party";
-import { MAX_PARTY, type MemberDraft, usePartyStore } from "../model/store";
-import { PartyImportPanel } from "./PartyImportPanel";
+import { buildParty, memberError, teamWeakness } from '../lib/party';
+import { MAX_PARTY, type MemberDraft, usePartyStore } from '../model/store';
+import { PartyImportPanel } from './PartyImportPanel';
 
-const TERA_OPTIONS = [...TYPE_NAMES, "스텔라"] as const;
-const EV_KEYS: Array<keyof MemberDraft["evs"]> = ["H", "A", "B", "C", "D", "S"];
+const TERA_OPTIONS = [...TYPE_NAMES, '스텔라'] as const;
+const EV_KEYS: Array<keyof MemberDraft['evs']> = ['H', 'A', 'B', 'C', 'D', 'S'];
 
 type SlotProps = {
   index: number;
@@ -36,17 +37,21 @@ const PartySlot = ({ index, draft, onChange, onRemove }: SlotProps) => {
   return (
     <Card className="flex flex-col gap-3">
       <div className="flex items-center justify-between">
-        <span className="flex items-center gap-2 text-sm font-semibold text-foreground">
+        <span className="text-foreground flex items-center gap-2 text-sm font-semibold">
           슬롯 {index + 1}
           <PokemonIcon species={draft.species} className="h-9 w-9" />
         </span>
-        <button type="button" onClick={onRemove} className="text-xs text-muted-foreground hover:text-destructive">
+        <button type="button" onClick={onRemove} className="text-muted-foreground hover:text-destructive text-xs">
           삭제
         </button>
       </div>
 
       <Field label="포켓몬">
-        <PokemonPicker value={draft.species} invalid={Boolean(error)} onSelect={(name) => onChange({ species: name })} />
+        <PokemonPicker
+          value={draft.species}
+          invalid={Boolean(error)}
+          onSelect={(name) => onChange({ species: name })}
+        />
       </Field>
 
       <div className="grid grid-cols-2 gap-2">
@@ -79,7 +84,7 @@ const PartySlot = ({ index, draft, onChange, onRemove }: SlotProps) => {
             value={move}
             placeholder={`기술 ${moveIndex + 1}`}
             onChange={(event) => {
-              const moves = [...draft.moves] as MemberDraft["moves"];
+              const moves = [...draft.moves] as MemberDraft['moves'];
               moves[moveIndex] = event.currentTarget.value;
               onChange({ moves });
             }}
@@ -88,14 +93,14 @@ const PartySlot = ({ index, draft, onChange, onRemove }: SlotProps) => {
       </div>
 
       <div>
-        <div className="mb-1 flex items-center justify-between text-xs text-muted-foreground">
+        <div className="text-muted-foreground mb-1 flex items-center justify-between text-xs">
           <span>노력치</span>
           <span>합계 {evSum}</span>
         </div>
         <div className="grid grid-cols-6 gap-1">
           {EV_KEYS.map((key) => (
             <label key={key} className="flex flex-col items-center gap-0.5">
-              <span className="text-[10px] text-muted-foreground">{STAT_LABEL_KO[key]}</span>
+              <span className="text-muted-foreground text-[10px]">{STAT_LABEL_KO[key]}</span>
               <NumberField
                 value={draft.evs[key]}
                 min={0}
@@ -109,13 +114,13 @@ const PartySlot = ({ index, draft, onChange, onRemove }: SlotProps) => {
         </div>
       </div>
 
-      {error && <p className="text-xs text-destructive">{error}</p>}
+      {error && <p className="text-destructive text-xs">{error}</p>}
     </Card>
   );
 };
 
 export const PartyPage = () => {
-  const { members, addMember, removeMember, updateMember } = usePartyStore();
+  const { members, addMember, removeMember, updateMember, setMembers } = usePartyStore();
   const [importOpen, setImportOpen] = useState(false);
   const analyze = useAnalyzeParty();
 
@@ -124,7 +129,7 @@ export const PartyPage = () => {
   const roleLine = Object.entries(summary.roles)
     .filter(([, count]) => count > 0)
     .map(([name, count]) => `${name} ${count}`)
-    .join(", ");
+    .join(', ');
   const weakness = teamWeakness(members)
     .filter((entry) => entry.weakCount > 0)
     .sort((a, b) => b.weakCount - a.weakCount);
@@ -140,7 +145,7 @@ export const PartyPage = () => {
         <h1 className="text-xl font-bold">파티빌더</h1>
         <div className="flex gap-2">
           <Button onClick={() => analyze.mutate(party)} disabled={analyze.isPending}>
-            {analyze.isPending ? "분석 중..." : "이 파티 분석"}
+            {analyze.isPending ? '분석 중...' : '이 파티 분석'}
           </Button>
           <Button variant="secondary" onClick={() => setImportOpen(true)}>
             파티 가져오기
@@ -148,22 +153,24 @@ export const PartyPage = () => {
         </div>
       </header>
 
+      <PresetManager currentParty={members} onLoad={(loaded) => setMembers(loaded)} />
+
       <Card>
-        <h2 className="mb-2 text-sm font-semibold text-foreground">파티 약점 (2배 이상으로 받는 멤버 수)</h2>
+        <h2 className="text-foreground mb-2 text-sm font-semibold">파티 약점 (2배 이상으로 받는 멤버 수)</h2>
         {weakness.length === 0 ? (
-          <p className="text-sm text-muted-foreground">유효한 포켓몬을 입력하면 약점이 집계된다.</p>
+          <p className="text-muted-foreground text-sm">유효한 포켓몬을 입력하면 약점이 집계된다.</p>
         ) : (
           <div className="flex flex-wrap gap-1.5">
             {weakness.map((entry) => (
               <span
                 key={entry.type}
                 className={cn(
-                  "rounded-md border px-2 py-0.5 text-xs font-medium",
+                  'rounded-md border px-2 py-0.5 text-xs font-medium',
                   entry.weakCount >= 3
-                    ? "border-transparent bg-destructive/20 text-destructive"
+                    ? 'bg-destructive/20 text-destructive border-transparent'
                     : entry.weakCount === 2
-                      ? "border-transparent bg-warning/20 text-warning"
-                      : "border-border bg-muted text-muted-foreground"
+                      ? 'bg-warning/20 text-warning border-transparent'
+                      : 'border-border bg-muted text-muted-foreground',
                 )}
               >
                 {entry.type} {entry.weakCount}
@@ -174,25 +181,25 @@ export const PartyPage = () => {
       </Card>
 
       <Card className="flex flex-col gap-1.5 text-sm">
-        <h2 className="text-sm font-semibold text-foreground">분석 요약</h2>
+        <h2 className="text-foreground text-sm font-semibold">분석 요약</h2>
         <p className="text-foreground">
-          약점 분산 <span className="font-semibold text-primary">{summary.synergy.dispersionScore}/100</span>
-          {" "}(피크 {summary.synergy.sharedWeaknessPeak}슬롯)
+          약점 분산 <span className="text-primary font-semibold">{summary.synergy.dispersionScore}/100</span> (피크{' '}
+          {summary.synergy.sharedWeaknessPeak}슬롯)
         </p>
-        <p className="text-muted-foreground">역할 분포: {roleLine || "없음"}</p>
+        <p className="text-muted-foreground">역할 분포: {roleLine || '없음'}</p>
         <p className="text-muted-foreground">
-          화력 합계: 물리 {summary.balance.physicalPower} · 특수 {summary.balance.specialPower} · 내구{" "}
+          화력 합계: 물리 {summary.balance.physicalPower} · 특수 {summary.balance.specialPower} · 내구{' '}
           {summary.balance.bulk}
         </p>
         {megaCarriers.length >= 2 && (
-          <p className="flex items-center gap-1.5 text-xs text-warning">
-            <span className="rounded-md bg-warning/15 px-2 py-0.5 font-semibold">메가 {megaCarriers.length}개</span>
+          <p className="text-warning flex items-center gap-1.5 text-xs">
+            <span className="bg-warning/15 rounded-md px-2 py-0.5 font-semibold">메가 {megaCarriers.length}개</span>
             <span className="text-muted-foreground">1마리만 사용 가능 · "이 파티 분석"으로 대체 도구 확인</span>
           </p>
         )}
         {megaCarriers.length === 1 && (
-          <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <span className="rounded-md bg-muted px-2 py-0.5">메가 {megaCarriers[0]!.member.species}</span>
+          <p className="text-muted-foreground flex items-center gap-1.5 text-xs">
+            <span className="bg-muted rounded-md px-2 py-0.5">메가 {megaCarriers[0]!.member.species}</span>
           </p>
         )}
       </Card>
@@ -217,8 +224,8 @@ export const PartyPage = () => {
 
       {analyze.isError && (
         <Card>
-          <p className="text-sm text-destructive">
-            {analyze.error instanceof Error ? analyze.error.message : "분석 실패"}
+          <p className="text-destructive text-sm">
+            {analyze.error instanceof Error ? analyze.error.message : '분석 실패'}
           </p>
         </Card>
       )}

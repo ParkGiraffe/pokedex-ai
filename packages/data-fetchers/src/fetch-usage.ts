@@ -1,16 +1,16 @@
-import { mkdirSync, writeFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
-import { fetchJson } from "./pokeapi";
+import { fetchJson } from './pokeapi';
 
 // Smogon chaos 통계. BSS 전용은 없으므로 ou+ubers를 병합해 경쟁 메타 분포를 근사한다.
 // (인게임 랭크 정확 사용률은 포켓몬 HOME 공식 — docs/meta-collection.md 참고, 수기)
-const FORMATS = ["gen9ou", "gen9ubers"];
-const BASE = "https://data.pkmn.cc/stats";
-const OUT = resolve(import.meta.dirname, "../../pokedex-core/data/meta/usage-gen9.json");
+const FORMATS = ['gen9ou', 'gen9ubers'];
+const BASE = 'https://data.pkmn.cc/stats';
+const OUT = resolve(import.meta.dirname, '../../pokedex-core/data/gen9-fallback/usage-gen9.json');
 const TOP = 8;
 
-const toShowdownId = (name: string): string => name.toLowerCase().replace(/[^a-z0-9]/g, "");
+const toShowdownId = (name: string): string => name.toLowerCase().replace(/[^a-z0-9]/g, '');
 
 type SpeciesStats = {
   usage?: { weighted?: number; real?: number; raw?: number };
@@ -26,13 +26,13 @@ type StatsFile = { pokemon: Record<string, SpeciesStats> };
 
 const topN = (table: Record<string, number> | undefined, n = TOP): Array<[string, number]> =>
   Object.entries(table ?? {})
-    .filter(([name]) => name && name !== "nothing" && name !== "")
+    .filter(([name]) => name && name !== 'nothing' && name !== '')
     .sort((a, b) => b[1] - a[1])
     .slice(0, n)
     .map(([name, value]) => [name, Math.round(value * 1000) / 1000]);
 
 const main = async () => {
-  mkdirSync(resolve(OUT, ".."), { recursive: true });
+  mkdirSync(resolve(OUT, '..'), { recursive: true });
 
   const pokemon: Record<string, unknown> = {};
 
@@ -69,14 +69,14 @@ const main = async () => {
   const sorted = Object.fromEntries(Object.entries(pokemon).sort(([a], [b]) => a.localeCompare(b)));
 
   const payload = {
-    source: "Smogon chaos via data.pkmn.cc (gen9ou+ubers 병합)",
+    source: 'Smogon chaos via data.pkmn.cc (gen9ou+ubers 병합)',
     generated_at_utc: process.env.GENERATED_AT_UTC ?? new Date().toISOString(),
     formats: FORMATS,
     count: Object.keys(sorted).length,
     pokemon: sorted,
   };
 
-  writeFileSync(OUT, JSON.stringify(payload, null, 2) + "\n", "utf8");
+  writeFileSync(OUT, JSON.stringify(payload, null, 2) + '\n', 'utf8');
   process.stderr.write(`[done] ${OUT} (${payload.count} 종족)\n`);
 };
 

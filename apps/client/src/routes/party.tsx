@@ -1,11 +1,11 @@
-import { createRoute } from "@tanstack/react-router";
+import { createRoute } from '@tanstack/react-router';
 
-import { PartyPage } from "@/pages/party/ui/PartyPage";
+import { PartyPage } from '@/pages/party/ui/PartyPage';
 
-import { rootRoute } from "./__root";
+import { rootRoute } from './__root';
 
 export const partyRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: "/party",
+  path: '/party',
   component: PartyPage,
 });

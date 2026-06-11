@@ -1,8 +1,8 @@
-import { findPokemon, type PokedexEntry } from "@pokedex-agent/pokedex-core";
+import { findPokemon, type PokedexEntry } from '@pokedex-agent/pokedex-core';
 
-import { Input } from "@/common/ui/Input";
+import { Input } from '@/common/ui/Input';
 
-import { POKEMON_DATALIST_ID } from "./PokemonDatalist";
+import { POKEMON_DATALIST_ID } from './PokemonDatalist';
 
 type PokemonPickerProps = {
   value: string;
@@ -19,7 +19,7 @@ export const PokemonPicker = ({ value, onSelect, id, invalid }: PokemonPickerPro
     value={value}
     placeholder="포켓몬"
     aria-invalid={invalid}
-    className={invalid ? "border-destructive" : undefined}
+    className={invalid ? 'border-destructive' : undefined}
     onChange={(event) => {
       const name = event.currentTarget.value.trim();
       onSelect(name, findPokemon(name));

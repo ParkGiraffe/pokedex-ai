@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "lint": "eslint .",
     "type-check": "tsc --noEmit",
     "fetch:types": "tsx src/fetch-types.ts",
     "fetch:pokedex": "tsx src/fetch-pokedex.ts",
@@ -20,9 +21,6 @@
     "fetch:all": "tsx src/fetch-all.ts"
   },
   "dependencies": {
-    "@pkmn/data": "^0.10.9",
-    "@pkmn/dex": "^0.10.9",
-    "@pkmn/smogon": "^0.5.30",
     "@pokedex-agent/pokedex-core": "workspace:*",
     "p-limit": "^7.2.0",
     "zod": "^4.4.3"

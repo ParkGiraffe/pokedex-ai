@@ -1,9 +1,9 @@
-import type { PokedexEntry } from "./types";
-import { pokedex, pokedexByEn, pokedexByKo, pokedexByNo } from "./data";
-
-import movesRaw from "../data/moves.json" with { type: "json" };
-import abilitiesRaw from "../data/abilities.json" with { type: "json" };
-import itemsRaw from "../data/items.json" with { type: "json" };
+import abilitiesRaw from '../data/abilities.json' with { type: 'json' };
+import championsItemsRaw from '../data/champions/items.json' with { type: 'json' };
+import itemsRaw from '../data/items.json' with { type: 'json' };
+import movesRaw from '../data/moves.json' with { type: 'json' };
+import { pokedex, pokedexByEn, pokedexByKo, pokedexByNo } from './data';
+import type { PokedexEntry } from './types';
 
 type MoveData = {
   id: number;
@@ -11,7 +11,7 @@ type MoveData = {
   en: string;
   type: string;
   type_en: string;
-  category: "물리" | "특수" | "변화";
+  category: '물리' | '특수' | '변화';
   power: number | null;
   accuracy: number | null;
   pp: number;
@@ -24,6 +24,7 @@ type ItemData = { id: number; ko: string; en: string; category: string };
 const moves = (movesRaw as { moves: MoveData[] }).moves;
 const abilities = (abilitiesRaw as { abilities: AbilityData[] }).abilities;
 const items = (itemsRaw as { items: ItemData[] }).items;
+const championsItemKos = (championsItemsRaw as { items: Array<{ ko: string }> }).items.map((i) => i.ko);
 
 const moveByKo = new Map(moves.map((m) => [m.ko, m]));
 const moveByEn = new Map(moves.map((m) => [m.en, m]));
@@ -39,18 +40,16 @@ export const abilityKoByEn = (en: string): string | undefined => abilityByEn.get
 export const itemKoByEn = (en: string): string | undefined => itemByEn.get(en)?.ko;
 
 export const findPokemon = (key: string | number): PokedexEntry | undefined => {
-  if (typeof key === "number") return pokedexByNo.get(key);
+  if (typeof key === 'number') return pokedexByNo.get(key);
   return pokedexByKo.get(key) ?? pokedexByEn.get(key.toLowerCase());
 };
 
-export const findMove = (key: string): MoveData | undefined =>
-  moveByKo.get(key) ?? moveByEn.get(key.toLowerCase());
+export const findMove = (key: string): MoveData | undefined => moveByKo.get(key) ?? moveByEn.get(key.toLowerCase());
 
 export const findAbility = (key: string): AbilityData | undefined =>
   abilityByKo.get(key) ?? abilityByEn.get(key.toLowerCase());
 
-export const findItem = (key: string): ItemData | undefined =>
-  itemByKo.get(key) ?? itemByEn.get(key.toLowerCase());
+export const findItem = (key: string): ItemData | undefined => itemByKo.get(key) ?? itemByEn.get(key.toLowerCase());
 
 const editDistance = (a: string, b: string): number => {
   const m = a.length;
@@ -61,9 +60,7 @@ const editDistance = (a: string, b: string): number => {
   for (let i = 1; i <= m; i++) {
     for (let j = 1; j <= n; j++) {
       dp[i]![j] =
-        a[i - 1] === b[j - 1]
-          ? dp[i - 1]![j - 1]!
-          : 1 + Math.min(dp[i - 1]![j]!, dp[i]![j - 1]!, dp[i - 1]![j - 1]!);
+        a[i - 1] === b[j - 1] ? dp[i - 1]![j - 1]! : 1 + Math.min(dp[i - 1]![j]!, dp[i]![j - 1]!, dp[i - 1]![j - 1]!);
     }
   }
   return dp[m]![n]!;
@@ -82,6 +79,9 @@ const knownTerms = new Set<string>([
   ...moves.map((m) => m.ko),
   ...abilities.map((a) => a.ko),
   ...items.map((i) => i.ko),
+  // 루트 items.json은 수집 카테고리 한정(328종)이라 챔피언스 합법 도구를 전부 덮지 못한다.
+  // 예: 복슝열매(pecha-berry)는 챔피언스 카탈로그에 있지만 루트엔 없어 거짓 양성이 났었다.
+  ...championsItemKos,
 ]);
 
 // 정식 한국 명칭인지 확인. "메가XX"·"메가 XX"는 종족명 부분으로, 끝의 " X"/" Y"는 떼고 검증한다.
@@ -91,7 +91,7 @@ export const isKnownTerm = (name: string): boolean => {
   if (knownTerms.has(trimmed)) {
     return true;
   }
-  const base = trimmed.replace(/^메가\s*/, "").replace(/\s*[XY]$/, "");
+  const base = trimmed.replace(/^메가\s*/, '').replace(/\s*[XY]$/, '');
   return knownTerms.has(base);
 };
 

@@ -1,7 +1,7 @@
-import { pokedexByKo } from "./data";
-import { actualStatBlock } from "./formula/stat";
-import { typeEffectiveness } from "./formula/matchup";
-import { type Party, type StatBlock, type TypeName, TYPE_NAMES } from "./types";
+import { pokedexByKo } from './data';
+import { typeEffectiveness } from './formula/matchup';
+import { actualStatBlock } from './formula/stat';
+import { type Party, type StatBlock, TYPE_NAMES, type TypeName } from './types';
 
 type ResolvedMember = {
   species: string;
@@ -51,7 +51,7 @@ export const weaknessMatrix = (party: Party): TypeCount[] => {
   });
 };
 
-export type SpeedTierName = "빠름" | "중간" | "느림";
+export type SpeedTierName = '빠름' | '중간' | '느림';
 
 export type MemberSpeed = {
   species: string;
@@ -59,8 +59,7 @@ export type MemberSpeed = {
   tier: SpeedTierName;
 };
 
-const tierOf = (speed: number): SpeedTierName =>
-  speed >= 130 ? "빠름" : speed >= 90 ? "중간" : "느림";
+const tierOf = (speed: number): SpeedTierName => (speed >= 130 ? '빠름' : speed >= 90 ? '중간' : '느림');
 
 export const speedTier = (party: Party): MemberSpeed[] =>
   resolveParty(party).map((member) => ({
@@ -103,25 +102,25 @@ export const synergy = (party: Party): Synergy => {
   return { sharedWeaknessPeak: peak, stackedTypes, dispersionScore };
 };
 
-export type Role = "물리에이스" | "특수에이스" | "내구형" | "고속어태커" | "밸런스";
+export type Role = '물리에이스' | '특수에이스' | '내구형' | '고속어태커' | '밸런스';
 
 export type RoleDistribution = Record<Role, number>;
 
 const inferRole = (stats: StatBlock): Role => {
   const bulk = stats.H + stats.B + stats.D;
   if (bulk >= 500) {
-    return "내구형";
+    return '내구형';
   }
   if (stats.S >= 130) {
-    return "고속어태커";
+    return '고속어태커';
   }
   if (stats.A >= 150 && stats.A > stats.C) {
-    return "물리에이스";
+    return '물리에이스';
   }
   if (stats.C >= 150 && stats.C > stats.A) {
-    return "특수에이스";
+    return '특수에이스';
   }
-  return "밸런스";
+  return '밸런스';
 };
 
 export const role = (party: Party): RoleDistribution => {

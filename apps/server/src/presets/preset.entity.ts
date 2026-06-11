@@ -1,0 +1,37 @@
+import { type Opt } from '@mikro-orm/core';
+import { Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/decorators/legacy';
+import { type PartyDraft } from '@pokedex-agent/pokedex-core';
+import { uuidv7 } from 'uuidv7';
+
+import { User } from '../users/user.entity';
+
+// 저장된 파티 프리셋. 소유자(User)당 개수는 티어로 제한된다(free 2 / paid 20).
+@Entity({ tableName: 'presets' })
+export class Preset {
+  @PrimaryKey({ type: 'uuid' })
+  id: string = uuidv7();
+
+  @ManyToOne(() => User, { deleteRule: 'cascade' })
+  user!: User;
+
+  @Property()
+  name!: string;
+
+  // 빌더 작업 상태(부분 입력 허용)를 그대로 jsonb로 보관 — 적은 만큼 저장·복원된다.
+  @Property({ type: 'jsonb' })
+  party!: PartyDraft;
+
+  // 공유 토큰. 발급하면 누구나 읽기전용으로 열람 가능, null이면 비공개. unique로 토큰 충돌 방지.
+  @Property({ nullable: true, unique: true })
+  shareToken?: string;
+
+  // 이 공유 프리셋을 다른 사용자가 내 프리셋으로 복사한 횟수.
+  @Property({ default: 0 })
+  copyCount: number & Opt = 0;
+
+  @Property({ type: 'datetime', onCreate: () => new Date() })
+  createdAt!: Date & Opt;
+
+  @Property({ type: 'datetime', onCreate: () => new Date(), onUpdate: () => new Date() })
+  updatedAt!: Date & Opt;
+}

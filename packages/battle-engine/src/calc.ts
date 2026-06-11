@@ -1,16 +1,9 @@
-import {
-  findAbility,
-  findItem,
-  findMove,
-  findPokemon,
-  natureEnOf,
-  typeEnOf,
-} from "@pokedex-agent/pokedex-core";
-import { calculate, Field, Generations, Move, Pokemon } from "@smogon/calc";
+import { findAbility, findItem, findMove, findPokemon, natureEnOf, typeEnOf } from '@pokedex-agent/pokedex-core';
+import { calculate, Field, Generations, Move, Pokemon } from '@smogon/calc';
 
 const gen = Generations.get(9);
 
-export type StatSpread = Partial<Record<"hp" | "atk" | "def" | "spa" | "spd" | "spe", number>>;
+export type StatSpread = Partial<Record<'hp' | 'atk' | 'def' | 'spa' | 'spd' | 'spe', number>>;
 
 export type EngineSide = {
   species: string; // 한국어/영문
@@ -24,14 +17,14 @@ export type EngineSide = {
   teraType?: string; // 한국어(강철)/영문(Steel)
   terastallized?: boolean;
   mega?: boolean; // 메가진화 (챔피언스). 테라와 동시 불가 — 기믹 1개 규칙
-  megaForme?: "X" | "Y"; // 리자몽·뮤츠 등 2종 메가 구분
+  megaForme?: 'X' | 'Y'; // 리자몽·뮤츠 등 2종 메가 구분
   curHP?: number;
-  status?: "" | "slp" | "psn" | "brn" | "frz" | "par" | "tox";
+  status?: '' | 'slp' | 'psn' | 'brn' | 'frz' | 'par' | 'tox';
 };
 
 export type EngineField = {
-  weather?: "Rain" | "Sun" | "Sand" | "Snow";
-  terrain?: "Electric" | "Grassy" | "Psychic" | "Misty";
+  weather?: 'Rain' | 'Sun' | 'Sand' | 'Snow';
+  terrain?: 'Electric' | 'Grassy' | 'Psychic' | 'Misty';
 };
 
 export type CalcResult = {
@@ -44,13 +37,12 @@ export type CalcResult = {
 
 const enSpecies = (species: string): string => findPokemon(species)?.en ?? species;
 const enMove = (move: string): string => findMove(move)?.en ?? move;
-const enItem = (item?: string): string | undefined =>
-  item ? (findItem(item)?.en ?? item) : undefined;
+const enItem = (item?: string): string | undefined => (item ? (findItem(item)?.en ?? item) : undefined);
 const enAbility = (ability?: string): string | undefined =>
   ability ? (findAbility(ability)?.en ?? ability) : undefined;
 
 // 메가 폼 종족명 (예: charizard + Y -> charizard-mega-y). @smogon/calc이 폼 종족값·타입·특성을 자동 적용.
-const megaSpeciesName = (baseEn: string, forme?: "X" | "Y"): string =>
+const megaSpeciesName = (baseEn: string, forme?: 'X' | 'Y'): string =>
   forme ? `${baseEn}-mega-${forme.toLowerCase()}` : `${baseEn}-mega`;
 
 export const toCalcPokemon = (side: EngineSide): Pokemon => buildPokemon(side);
@@ -92,7 +84,7 @@ export const calcDamage = (
   attacker: EngineSide,
   defender: EngineSide,
   move: string,
-  field?: EngineField
+  field?: EngineField,
 ): CalcResult => {
   const battleField = field ? new Field(field) : undefined;
   const result = calculate(
@@ -100,12 +92,12 @@ export const calcDamage = (
     buildPokemon(attacker),
     buildPokemon(defender),
     new Move(gen, enMove(move)),
-    battleField
+    battleField,
   );
   const range = result.range();
   if (range[1] === 0) {
     // 면역·무효: kochance()/desc()가 0 데미지에서 throw하므로 직접 처리.
-    return { min: 0, max: 0, koChance: 0, koText: "데미지 없음", desc: `${move} → ${defender.species}: 무효` };
+    return { min: 0, max: 0, koChance: 0, koText: '데미지 없음', desc: `${move} → ${defender.species}: 무효` };
   }
   const ko = result.kochance();
   // kochance().chance는 n번째 타격까지의 KO 확률이다(약한 기술은 9타 후 100%).
