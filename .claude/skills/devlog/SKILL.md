@@ -12,6 +12,8 @@ description: Write or update a Korean dev-blog journal entry in docs/blog/devlog
 ## 실행 절차
 
 1. **대상 정리.** 이번 세션(또는 지정된 작업)에서 무엇을 했는지 한 줄로 요약한다.
+   굵직한 기능만 적지 않는다 — **테마·토글·한도·응답 계약 같은 작은 디테일도 사용자
+   지시로 기록 대상이다.** 세션에서 손댄 작은 변경을 빠뜨리지 않았는지 한 번 훑는다.
    기존 편 목록(`docs/blog/devlog/00-index.md`)을 읽고, 기존 편에 절을 보태는 게 맞는지
    새 편을 만드는 게 맞는지 판단한다. 새 편이면 다음 번호를 쓰고 index에 추가한다.
 
