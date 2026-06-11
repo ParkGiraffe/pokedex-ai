@@ -7,7 +7,7 @@ import { Card } from '@/common/ui/Card';
 import { POKEMON_DATALIST_ID } from '@/features/pokemon-picker/ui/PokemonDatalist';
 import { PokemonIcon } from '@/features/pokemon-picker/ui/PokemonIcon';
 
-const MAX_TEAM = 6;
+export const MAX_TEAM = 6;
 
 type TeamEntry = { id: number; species: string };
 

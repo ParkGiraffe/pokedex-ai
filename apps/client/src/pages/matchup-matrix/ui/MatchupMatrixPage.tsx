@@ -12,7 +12,7 @@ import { PokemonDatalist } from '@/features/pokemon-picker/ui/PokemonDatalist';
 import { PokemonIcon } from '@/features/pokemon-picker/ui/PokemonIcon';
 
 import { MatrixLegend } from './MatrixLegend';
-import { TeamInputCard } from './TeamInputCard';
+import { MAX_TEAM, TeamInputCard } from './TeamInputCard';
 
 const verdictBadgeVariant = (verdict: Pairwise['verdict']): 'success' | 'destructive' | 'muted' =>
   verdict === '유리' ? 'success' : verdict === '불리' ? 'destructive' : 'muted';
@@ -37,7 +37,7 @@ export const MatchupMatrixPage = () => {
   };
 
   const handleAddMyMon = () => {
-    setMyTeam((prev) => [...prev, makeEntry()]);
+    setMyTeam((prev) => (prev.length < MAX_TEAM ? [...prev, makeEntry()] : prev));
   };
 
   const handleRemoveMyMon = (id: number) => {
@@ -49,7 +49,7 @@ export const MatchupMatrixPage = () => {
   };
 
   const handleAddOpponent = () => {
-    setOpponentTeam((prev) => [...prev, makeEntry()]);
+    setOpponentTeam((prev) => (prev.length < MAX_TEAM ? [...prev, makeEntry()] : prev));
   };
 
   const handleRemoveOpponent = (id: number) => {
