@@ -9,7 +9,7 @@ import { PokemonIcon } from '@/features/pokemon-picker/ui/PokemonIcon';
 import { PokemonPicker } from '@/features/pokemon-picker/ui/PokemonPicker';
 
 import { assumedSpeed, optimizeSpeed, type SpeedReverseInput } from '../lib/optimize';
-import { natureOptions } from './options';
+import { natureOptions } from './ev-options';
 import { ResultRow } from './ResultRow';
 
 const SPEED_ITEM_OPTIONS = [
@@ -24,7 +24,7 @@ const ABILITY_OPTIONS = [
   { value: 2, label: '모래헤치기 등 2배' },
 ] as const;
 
-export const SpeedMode = () => {
+export const EvSpeedMode = () => {
   const [state, setState] = useState({
     species: '한카리아스',
     level: 50,

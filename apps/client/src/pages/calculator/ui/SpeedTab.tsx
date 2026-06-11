@@ -14,8 +14,8 @@ import { PokemonDatalist } from '@/features/pokemon-picker/ui/PokemonDatalist';
 import { PokemonIcon } from '@/features/pokemon-picker/ui/PokemonIcon';
 import { PokemonPicker } from '@/features/pokemon-picker/ui/PokemonPicker';
 
-import { compareSpeed, computeSpeed } from '../lib/calc';
-import { type SpeedSide, useSpeedStore } from '../model/store';
+import { compareSpeed, computeSpeed } from '../lib/speed-calc';
+import { type SpeedSide, useSpeedStore } from '../model/speed-store';
 
 type Accent = 'left' | 'right';
 
@@ -213,15 +213,15 @@ const SideCard = ({ title, accent, side, winning, onChange }: SideCardProps) => 
   );
 };
 
-export const SpeedPage = () => {
+export const SpeedTab = () => {
   const { left, right, trickRoom, setLeft, setRight, setTrickRoom } = useSpeedStore();
   const comparison = compareSpeed(left, right, trickRoom);
 
   return (
-    <section className="flex flex-col gap-5">
+    <>
       <header className="border-border flex flex-wrap items-center gap-3 border-b pb-3">
         <Gauge className="text-primary size-6" />
-        <h1 className="text-2xl font-bold tracking-tight">스피드</h1>
+        <h2 className="text-2xl font-bold tracking-tight">스피드</h2>
         <div className="ml-auto">
           <Checkbox checked={trickRoom} onCheckedChange={setTrickRoom} label="트릭룸" />
         </div>
@@ -235,6 +235,6 @@ export const SpeedPage = () => {
       </div>
 
       <PokemonDatalist />
-    </section>
+    </>
   );
 };

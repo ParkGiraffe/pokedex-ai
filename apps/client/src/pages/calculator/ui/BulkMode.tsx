@@ -10,7 +10,7 @@ import { PokemonIcon } from '@/features/pokemon-picker/ui/PokemonIcon';
 import { PokemonPicker } from '@/features/pokemon-picker/ui/PokemonPicker';
 
 import { type BulkInput, optimizeBulk } from '../lib/optimize';
-import { type Category, DEFAULT_ATTACK, ITEM_OPTIONS, natureOptions, typeOptions } from './options';
+import { type Category, DEFAULT_ATTACK, ITEM_OPTIONS, natureOptions, typeOptions } from './ev-options';
 import { ResultRow } from './ResultRow';
 
 type BulkState = typeof DEFAULT_ATTACK & {
