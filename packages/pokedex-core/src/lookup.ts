@@ -1,4 +1,5 @@
 import abilitiesRaw from '../data/abilities.json' with { type: 'json' };
+import championsItemsRaw from '../data/champions/items.json' with { type: 'json' };
 import itemsRaw from '../data/items.json' with { type: 'json' };
 import movesRaw from '../data/moves.json' with { type: 'json' };
 import { pokedex, pokedexByEn, pokedexByKo, pokedexByNo } from './data';
@@ -23,6 +24,7 @@ type ItemData = { id: number; ko: string; en: string; category: string };
 const moves = (movesRaw as { moves: MoveData[] }).moves;
 const abilities = (abilitiesRaw as { abilities: AbilityData[] }).abilities;
 const items = (itemsRaw as { items: ItemData[] }).items;
+const championsItemKos = (championsItemsRaw as { items: Array<{ ko: string }> }).items.map((i) => i.ko);
 
 const moveByKo = new Map(moves.map((m) => [m.ko, m]));
 const moveByEn = new Map(moves.map((m) => [m.en, m]));
@@ -77,6 +79,9 @@ const knownTerms = new Set<string>([
   ...moves.map((m) => m.ko),
   ...abilities.map((a) => a.ko),
   ...items.map((i) => i.ko),
+  // 루트 items.json은 수집 카테고리 한정(328종)이라 챔피언스 합법 도구를 전부 덮지 못한다.
+  // 예: 복슝열매(pecha-berry)는 챔피언스 카탈로그에 있지만 루트엔 없어 거짓 양성이 났었다.
+  ...championsItemKos,
 ]);
 
 // 정식 한국 명칭인지 확인. "메가XX"·"메가 XX"는 종족명 부분으로, 끝의 " X"/" Y"는 떼고 검증한다.
