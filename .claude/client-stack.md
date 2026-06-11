@@ -19,7 +19,8 @@
 
 ```
 apps/client/src/
-├── pages/         라우트 단위 페이지 (계산기·스피드·도감·파티빌더)
+├── pages/         라우트 단위 페이지 (battle·battle-vision·calculator·dex·ev-calc·leaderboard·log·
+│                  matchup·matchup-matrix·meta·party·shared-preset·speed)
 ├── features/      도메인별 기능 모듈 (lib·model·ui로 세분화)
 ├── common/        공통 (icons·lib·ui)
 ├── routes/        TanStack Router 라우트 정의
