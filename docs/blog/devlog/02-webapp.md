@@ -132,15 +132,14 @@ const hitsText = !Number.isFinite(guaranteedHits)
 
 최악 롤(99)로도 두 방이면 HP 183을 넘기고(99×2=198), 최선 롤(117)로도 한 방엔 못 잡으니
 guaranteed와 possible이 둘 다 2 — "확정 2타"다. 16롤을 막대 그래프로 같이 보여줘서, 운에 따라
-데미지가 어떻게 흔들리는지 눈으로 확인하게 했다.
+데미지가 어떻게 흔들리는지 눈으로 확인하게 했다. 실제 화면은 이렇다.
 
-> [스크린샷: 계산기(/) — 위 입력 상태의 데미지 결과 "확정 2타" 표기와 16롤 막대 그래프.
-> 현재 dev에서 localhost 띄워 캡처 예정]
+![계산기 — 한카리아스 지진을 무보정 한카리아스가 받는 상황. 54.1%~63.9%, 확정 2타, 16롤 막대](./img/calc-garchomp-eq.jpg)
 
 ## 4. UI 프리미티브는 직접 만들었다
 
 마지막으로 작은 판단 하나. 버튼·카드·셀렉트 같은 프리미티브는 외부 컴포넌트 라이브러리 대신
-직접 만들었다. Tailwind에 cva(class-variance-authority)로 변형을 정의하고 `cn`으로 합성한다.
+직접 만들었다. Tailwind에 cva(class-variance-authority)로 변형을 정의해 합성하는 방식이다.
 
 ```ts
 // apps/client/src/common/ui/Button.tsx
