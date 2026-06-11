@@ -1,3 +1,6 @@
+import { useNavigate, useSearch } from '@tanstack/react-router';
+
+import { cn } from '@/common/lib/cn';
 import { Card } from '@/common/ui/Card';
 import { useBattleAdvice } from '@/features/advisor/model/useBattleAdvice';
 import { AnalysisResult } from '@/features/advisor/ui/AnalysisResult';
@@ -14,8 +17,16 @@ import { BattleSetupCard } from './BattleSetupCard';
 import { FieldCard } from './FieldCard';
 import { RankStatusCard } from './RankStatusCard';
 import { RosterCard } from './RosterCard';
+import { ScreenshotTab } from './ScreenshotTab';
 
-export const BattlePage = () => {
+type Tab = 'manual' | 'screenshot';
+
+const TABS: ReadonlyArray<{ value: Tab; label: string }> = [
+  { value: 'manual', label: '직접 입력' },
+  { value: 'screenshot', label: '스크린샷' },
+];
+
+const ManualTab = () => {
   const members = usePartyStore((state) => state.members);
   const battle = useBattleStore();
   const advise = useBattleAdvice();
@@ -55,7 +66,7 @@ export const BattlePage = () => {
   };
 
   return (
-    <section className="flex flex-col gap-4">
+    <>
       <BattleHeader state={state} advise={advise} />
 
       <BattleSetupCard
@@ -129,6 +140,39 @@ export const BattlePage = () => {
       {advise.isSuccess && <AnalysisResult result={advise.data} />}
 
       <PokemonDatalist />
+    </>
+  );
+};
+
+export const BattlePage = () => {
+  const { tab } = useSearch({ from: '/battle' });
+  const navigate = useNavigate();
+
+  return (
+    <section className="flex flex-col gap-4">
+      <header className="flex flex-wrap items-center justify-between gap-2">
+        <h1 className="text-xl font-bold">배틀</h1>
+        <div className="flex gap-1">
+          {TABS.map((item) => (
+            <button
+              key={item.value}
+              type="button"
+              onClick={() => void navigate({ to: '/battle', search: { tab: item.value } })}
+              className={cn(
+                'rounded-md px-3 py-1.5',
+                'text-sm font-medium',
+                tab === item.value ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-accent',
+                'transition',
+              )}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+      </header>
+
+      {tab === 'manual' && <ManualTab />}
+      {tab === 'screenshot' && <ScreenshotTab />}
     </section>
   );
 };

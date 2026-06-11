@@ -27,7 +27,7 @@ type TeamEntry = { id: number; species: string };
 let nextId = 0;
 const makeEntry = (species = ''): TeamEntry => ({ id: nextId++, species });
 
-export const MatchupMatrixPage = () => {
+export const MatrixTab = () => {
   const [myTeam, setMyTeam] = useState<TeamEntry[]>([makeEntry()]);
   const [opponentTeam, setOpponentTeam] = useState<TeamEntry[]>([makeEntry()]);
   const matrix = useMatchupMatrix();

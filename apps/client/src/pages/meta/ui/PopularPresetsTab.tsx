@@ -15,20 +15,15 @@ const RANK_STYLES = [
 const rankStyle = (rank: number): string =>
   rank <= 3 ? (RANK_STYLES[rank - 1] ?? '') : 'bg-muted/40 text-muted-foreground border-border';
 
-export const LeaderboardPage = () => {
+export const PopularPresetsTab = () => {
   const leaderboard = useLeaderboard();
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-foreground text-xl font-bold">인기 파티</h1>
-        <p className="text-muted-foreground mt-1 text-sm">복사수 기준 상위 공유 파티 목록입니다.</p>
-      </div>
-
       {leaderboard.isLoading && <p className="text-muted-foreground text-sm">불러오는 중...</p>}
 
       {leaderboard.isError && (
-        <p className="text-destructive text-sm">리더보드를 불러올 수 없습니다. 잠시 후 다시 시도해 주세요.</p>
+        <p className="text-destructive text-sm">인기 파티를 불러올 수 없습니다. 잠시 후 다시 시도해 주세요.</p>
       )}
 
       {leaderboard.data && leaderboard.data.length === 0 && (

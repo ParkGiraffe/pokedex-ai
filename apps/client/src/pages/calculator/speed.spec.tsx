@@ -1,16 +1,15 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { compareSpeed } from './lib/calc';
-import { useSpeedStore } from './model/store';
-import { SpeedPage } from './ui/SpeedPage';
+import { compareSpeed } from './lib/speed-calc';
+import { useSpeedStore } from './model/speed-store';
+import { SpeedTab } from './ui/SpeedTab';
 
 const { left, right } = useSpeedStore.getState();
 
-describe('스피드 페이지', () => {
+describe('스피드 탭', () => {
   it('선공 판정을 렌더한다', () => {
-    render(<SpeedPage />);
-    expect(screen.getByRole('heading', { name: '스피드' })).toBeInTheDocument();
+    render(<SpeedTab />);
     expect(screen.getAllByText(/선공|동률/).length).toBeGreaterThan(0);
   });
 

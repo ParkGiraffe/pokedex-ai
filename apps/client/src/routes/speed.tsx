@@ -1,11 +1,12 @@
-import { createRoute } from '@tanstack/react-router';
-
-import { SpeedPage } from '@/pages/speed/ui/SpeedPage';
+import { createRoute, redirect } from '@tanstack/react-router';
 
 import { rootRoute } from './__root';
 
 export const speedRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/speed',
-  component: SpeedPage,
+  beforeLoad: () => {
+    // eslint-disable-next-line @typescript-eslint/only-throw-error
+    throw redirect({ to: '/', search: { tab: 'speed' } });
+  },
 });
