@@ -13,7 +13,6 @@ import { Badge } from '@/common/ui/Badge';
 import { Button } from '@/common/ui/Button';
 import { Card } from '@/common/ui/Card';
 import { useMatchupLeadrec } from '@/features/advisor/model/useMatchupLeadrec';
-import { MegaControl } from '@/features/pokemon-picker/ui/MegaControl';
 import { PokemonDatalist } from '@/features/pokemon-picker/ui/PokemonDatalist';
 import { PokemonIcon } from '@/features/pokemon-picker/ui/PokemonIcon';
 import { PokemonPicker } from '@/features/pokemon-picker/ui/PokemonPicker';
@@ -22,6 +21,7 @@ import { usePartyStore } from '@/pages/party/model/store';
 
 import { MAX_OPPONENTS, useMatchupStore } from '../model/store';
 import { type LeadRank, LeadrecResult } from './LeadrecResult';
+import { MegaFormSection } from './MegaFormSection';
 
 // 종족명 → 메가 폼 슬러그 매핑을 Map<species, MegaForm>으로 해석한다 (matchup context용).
 const resolveMegaContext = (
@@ -167,50 +167,14 @@ export const MatchupPage = () => {
             </div>
 
             {/* 메가 설정 영역. 매트릭스에서 메가 컨트롤을 분리해 컬럼 width를 균등하게 유지한다. */}
-            {(myMegaPicks.length > 0 || opponentMegaPicks.length > 0) && (
-              <div className="border-border/60 bg-muted/20 grid gap-4 rounded-lg border p-4 sm:grid-cols-2">
-                {myMegaPicks.length > 0 && (
-                  <div className="flex flex-col gap-3">
-                    <p className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">내 메가</p>
-                    <div className="flex flex-col gap-3">
-                      {myMegaPicks.map((species) => (
-                        <div key={species} className="flex flex-col gap-1.5">
-                          <div className="flex items-center gap-2">
-                            <PokemonIcon species={species} className="h-7 w-7" />
-                            <span className="text-sm font-medium">{species}</span>
-                          </div>
-                          <MegaControl
-                            species={species}
-                            value={myMegaForms[species] ?? ''}
-                            onChange={(form) => setMyMegaForm(species, form)}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                {opponentMegaPicks.length > 0 && (
-                  <div className="flex flex-col gap-3">
-                    <p className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">상대 메가</p>
-                    <div className="flex flex-col gap-3">
-                      {opponentMegaPicks.map((species) => (
-                        <div key={species} className="flex flex-col gap-1.5">
-                          <div className="flex items-center gap-2">
-                            <PokemonIcon species={species} className="h-7 w-7" />
-                            <span className="text-sm font-medium">{species}</span>
-                          </div>
-                          <MegaControl
-                            species={species}
-                            value={opponentMegaForms[species] ?? ''}
-                            onChange={(form) => setOpponentMegaForm(species, form)}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
+            <MegaFormSection
+              myMegaPicks={myMegaPicks}
+              opponentMegaPicks={opponentMegaPicks}
+              myMegaForms={myMegaForms}
+              opponentMegaForms={opponentMegaForms}
+              onMyMegaChange={setMyMegaForm}
+              onOpponentMegaChange={setOpponentMegaForm}
+            />
 
             <table className="w-full table-fixed border-collapse text-xs">
               <thead>
