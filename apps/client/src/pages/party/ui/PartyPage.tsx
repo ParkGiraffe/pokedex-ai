@@ -165,7 +165,8 @@ export const PartyPage = () => {
               <span
                 key={entry.type}
                 className={cn(
-                  'rounded-md border px-2 py-0.5 text-xs font-medium',
+                  'rounded-md border px-2 py-0.5',
+                  'text-xs font-medium',
                   entry.weakCount >= 3
                     ? 'bg-destructive/20 text-destructive border-transparent'
                     : entry.weakCount === 2

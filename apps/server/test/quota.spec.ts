@@ -22,13 +22,17 @@ const validParty = {
   ],
 };
 
+type AuthRes = { accessToken: string; user: { id: string } };
+type QuotaRes = { used: number; remaining: number; cap: number };
+
 describe('일일 쿼터', () => {
   let app: NestExpressApplication;
 
   const register = async (): Promise<{ token: string; userId: string }> => {
     const email = `${randomUUID()}@test.local`;
     const res = await request(app.getHttpServer()).post('/auth/register').send({ email, password: 'password123' });
-    return { token: res.body.accessToken as string, userId: res.body.user.id as string };
+    const body = res.body as AuthRes;
+    return { token: body.accessToken, userId: body.user.id };
   };
 
   beforeAll(async () => {
@@ -61,7 +65,7 @@ describe('일일 쿼터', () => {
       .execute('insert into usage_daily (user_id, usage_date, count) values (?, ?, ?)', [userId, kstToday(), 2]);
 
     const status = await request(app.getHttpServer()).get('/quota').set('authorization', `Bearer ${token}`);
-    expect(status.body.remaining).toBe(0);
+    expect((status.body as QuotaRes).remaining).toBe(0);
 
     const res = await request(app.getHttpServer())
       .post('/analyze-party')

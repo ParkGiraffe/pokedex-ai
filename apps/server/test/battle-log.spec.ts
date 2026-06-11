@@ -6,13 +6,22 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { createApp } from '../src/app.factory';
 
+type AuthRes = { accessToken: string };
+type BattleLogRes = { id: string; result: string; memo: string | null };
+type BattleStatsRes = {
+  total: number;
+  wins: number;
+  winRate: number;
+  byLead: Array<{ lead: string; games: number; wins: number; winRate: number }>;
+};
+
 describe('배틀 로그·통계', () => {
   let app: NestExpressApplication;
 
   const newUser = async (): Promise<string> => {
     const email = `${randomUUID()}@test.local`;
     const res = await request(app.getHttpServer()).post('/auth/register').send({ email, password: 'password123' });
-    return res.body.accessToken as string;
+    return (res.body as AuthRes).accessToken;
   };
 
   const addLog = (token: string, body: Record<string, unknown>) =>
@@ -41,16 +50,17 @@ describe('배틀 로그·통계', () => {
 
     const created = await addLog(token, sample({ memo: '선공으로 정리' }));
     expect(created.status).toBe(201);
-    expect(created.body.id).toBeTruthy();
-    expect(created.body.result).toBe('win');
-    expect(created.body.memo).toBe('선공으로 정리');
+    const createdBody = created.body as BattleLogRes;
+    expect(createdBody.id).toBeTruthy();
+    expect(createdBody.result).toBe('win');
+    expect(createdBody.memo).toBe('선공으로 정리');
 
     const listed = await request(app.getHttpServer()).get('/battle-logs').set('authorization', auth);
     expect(listed.status).toBe(200);
     expect(listed.body).toHaveLength(1);
 
     const removed = await request(app.getHttpServer())
-      .delete(`/battle-logs/${created.body.id as string}`)
+      .delete(`/battle-logs/${createdBody.id}`)
       .set('authorization', auth);
     expect(removed.status).toBe(204);
 
@@ -67,22 +77,25 @@ describe('배틀 로그·통계', () => {
 
     const stats = await request(app.getHttpServer()).get('/battle-logs/stats').set('authorization', auth);
     expect(stats.status).toBe(200);
-    expect(stats.body.total).toBe(3);
-    expect(stats.body.wins).toBe(2);
-    expect(stats.body.winRate).toBeCloseTo(66.7, 1);
+    const statsBody = stats.body as BattleStatsRes;
+    expect(statsBody.total).toBe(3);
+    expect(statsBody.wins).toBe(2);
+    expect(statsBody.winRate).toBeCloseTo(66.7, 1);
 
-    const garchomp = stats.body.byLead.find((row: { lead: string }) => row.lead === '한카리아스');
-    expect(garchomp.games).toBe(2);
-    expect(garchomp.wins).toBe(1);
-    expect(garchomp.winRate).toBe(50);
+    const garchomp = statsBody.byLead.find((row) => row.lead === '한카리아스');
+    expect(garchomp).toBeDefined();
+    expect(garchomp!.games).toBe(2);
+    expect(garchomp!.wins).toBe(1);
+    expect(garchomp!.winRate).toBe(50);
   });
 
   it('빈 로그의 통계는 0이다', async () => {
     const token = await newUser();
     const stats = await request(app.getHttpServer()).get('/battle-logs/stats').set('authorization', `Bearer ${token}`);
-    expect(stats.body.total).toBe(0);
-    expect(stats.body.winRate).toBe(0);
-    expect(stats.body.byLead).toHaveLength(0);
+    const statsBody = stats.body as BattleStatsRes;
+    expect(statsBody.total).toBe(0);
+    expect(statsBody.winRate).toBe(0);
+    expect(statsBody.byLead).toHaveLength(0);
   });
 
   it('남의 로그는 삭제할 수 없다(404)', async () => {
@@ -90,7 +103,7 @@ describe('배틀 로그·통계', () => {
     const created = await addLog(ownerToken, sample());
     const intruderToken = await newUser();
     const res = await request(app.getHttpServer())
-      .delete(`/battle-logs/${created.body.id as string}`)
+      .delete(`/battle-logs/${(created.body as BattleLogRes).id}`)
       .set('authorization', `Bearer ${intruderToken}`);
     expect(res.status).toBe(404);
   });

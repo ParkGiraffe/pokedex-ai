@@ -103,7 +103,7 @@ const inferNature = (rawNature: string, upLabel: string, downLabel: string): str
 };
 
 const distance = (a: string, b: string): number => {
-  const rows = Array.from({ length: a.length + 1 }, (_, i) => [i, ...Array(b.length).fill(0)]);
+  const rows: number[][] = Array.from({ length: a.length + 1 }, (_, i) => [i, ...Array<number>(b.length).fill(0)]);
   for (let j = 0; j <= b.length; j++) {
     rows[0]![j] = j;
   }
@@ -332,10 +332,10 @@ export class ImportService {
       return response.parsed_output?.party ?? [];
     } catch (error) {
       if (error instanceof Anthropic.AuthenticationError) {
-        throw new Error('Claude API 인증 실패 — ANTHROPIC_API_KEY 환경변수 확인');
+        throw new Error('Claude API 인증 실패 — ANTHROPIC_API_KEY 환경변수 확인', { cause: error });
       }
       if (error instanceof Anthropic.RateLimitError) {
-        throw new Error('Claude API 한도 초과 — 잠시 후 재시도');
+        throw new Error('Claude API 한도 초과 — 잠시 후 재시도', { cause: error });
       }
       throw error;
     }

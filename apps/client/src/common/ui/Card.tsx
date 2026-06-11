@@ -6,13 +6,13 @@ type CardProps = ComponentProps<'div'>;
 
 export const Card = ({ className, ...props }: CardProps) => (
   <div
-    className={cn('border-border bg-card text-card-foreground rounded-xl border p-4 shadow-sm', className)}
+    className={cn('rounded-xl border p-4', 'border-border bg-card text-card-foreground shadow-sm', className)}
     {...props}
   />
 );
 
 export const CardHeader = ({ className, ...props }: CardProps) => (
-  <div className={cn('flex flex-col gap-1 pb-3', className)} {...props} />
+  <div className={cn('flex flex-col gap-1', 'pb-3', className)} {...props} />
 );
 
 export const CardTitle = ({ className, ...props }: ComponentProps<'h3'>) => (
@@ -28,5 +28,5 @@ export const CardContent = ({ className, ...props }: CardProps) => (
 );
 
 export const CardFooter = ({ className, ...props }: CardProps) => (
-  <div className={cn('flex items-center justify-between gap-2 pt-3', className)} {...props} />
+  <div className={cn('flex items-center justify-between gap-2', 'pt-3', className)} {...props} />
 );

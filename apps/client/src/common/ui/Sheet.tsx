@@ -39,7 +39,10 @@ export const Sheet = ({ open, title, onClose, className, children }: SheetProps)
         aria-modal="true"
         aria-label={title}
         className={cn(
-          'border-border bg-popover relative flex h-full w-full max-w-md flex-col gap-4 overflow-y-auto border-l p-5 shadow-xl',
+          'relative flex flex-col gap-4',
+          'h-full w-full max-w-md overflow-y-auto',
+          'border-l p-5',
+          'border-border bg-popover shadow-xl',
           className,
         )}
       >

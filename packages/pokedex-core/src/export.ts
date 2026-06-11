@@ -310,7 +310,7 @@ export const serializeForClaude = (
   payload: { party?: Party; state?: BattleState; megaForms?: MegaFormSelection },
 ): string => {
   const header = TASK_HEADERS[task];
-  let body = '';
+  let body: string;
 
   if (task === 'party-analysis') {
     if (!payload.party) {

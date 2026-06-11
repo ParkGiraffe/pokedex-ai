@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { fetchMeta } from '../api';
+import { fetchMeta, type MetaSummary } from '../api';
 
-export const useMeta = () =>
+export const useMeta = (): ReturnType<typeof useQuery<MetaSummary>> =>
   useQuery({
     queryKey: ['meta'],
     queryFn: fetchMeta,

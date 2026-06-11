@@ -278,10 +278,12 @@ export const MatchupPage = () => {
                     type="button"
                     onClick={() => handleToggleSelected(member.species)}
                     className={cn(
-                      'flex flex-col items-center gap-1.5 rounded-lg border px-2 py-3 transition',
+                      'flex flex-col items-center gap-1.5',
+                      'rounded-lg border px-2 py-3',
                       selected
                         ? 'border-primary/60 bg-primary/10 shadow-[0_0_0_1px_var(--color-primary)]/30'
                         : 'border-border bg-card hover:border-foreground/30 hover:bg-muted/40',
+                      'transition',
                     )}
                   >
                     <PokemonIcon species={member.species} className="h-11 w-11" />
@@ -345,7 +347,7 @@ export const MatchupPage = () => {
           </p>
         </Card>
       )}
-      {advise.data && <LeadrecResult result={advise.data} ranks={leadRanks} />}
+      {advise.isSuccess && <LeadrecResult result={advise.data} ranks={leadRanks} />}
 
       <PokemonDatalist />
     </section>

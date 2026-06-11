@@ -6,6 +6,8 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { createApp } from '../src/app.factory';
 
+type AuthRes = { accessToken: string };
+
 // 실제 Anthropic 호출(비용)을 피하려 가드·검증 단계만 검증한다.
 // 토큰 없음 → 가드에서 401, 잘못된 body → 검증 파이프에서 400(둘 다 비전 호출 전에 차단).
 describe('배틀 스크린샷 조언 게이팅', () => {
@@ -30,7 +32,7 @@ describe('배틀 스크린샷 조언 게이팅', () => {
     const registered = await request(app.getHttpServer())
       .post('/auth/register')
       .send({ email, password: 'password123' });
-    const token = registered.body.accessToken as string;
+    const token = (registered.body as AuthRes).accessToken;
 
     const res = await request(app.getHttpServer())
       .post('/battle-screenshot')

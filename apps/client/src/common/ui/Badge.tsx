@@ -3,7 +3,7 @@ import { type ComponentProps } from 'react';
 
 import { cn } from '@/common/lib/cn';
 
-const badge = cva('inline-flex items-center gap-1 rounded-md font-medium leading-none border', {
+const badge = cva(['inline-flex items-center gap-1', 'rounded-md border', 'font-medium leading-none'], {
   variants: {
     variant: {
       default: 'border-transparent bg-secondary text-secondary-foreground',

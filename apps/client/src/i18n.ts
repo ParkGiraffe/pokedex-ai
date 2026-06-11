@@ -3,7 +3,7 @@ import { initReactI18next } from 'react-i18next';
 
 import { ko } from '@/locales/ko';
 
-i18n.use(initReactI18next).init({
+void i18n.use(initReactI18next).init({
   resources: { ko: { translation: ko } },
   lng: 'ko',
   fallbackLng: 'ko',

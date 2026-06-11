@@ -9,12 +9,14 @@ type MatchupLeadrecInput = {
   megaForms?: MegaFormSelection;
 };
 
-export const useMatchupLeadrec = () => {
+export const useMatchupLeadrec = (): ReturnType<
+  typeof useMutation<Awaited<ReturnType<typeof requestMatchupLeadrec>>, Error, MatchupLeadrecInput>
+> => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ state, megaForms }: MatchupLeadrecInput) => requestMatchupLeadrec(state, megaForms),
     onSuccess: () => toast.success('선두 추천 완료'),
     onError: (error) => toast.error(error instanceof Error ? error.message : '매치업 분석 실패'),
-    onSettled: () => queryClient.invalidateQueries({ queryKey: ['quota'] }),
+    onSettled: () => void queryClient.invalidateQueries({ queryKey: ['quota'] }),
   });
 };

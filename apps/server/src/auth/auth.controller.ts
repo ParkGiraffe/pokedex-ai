@@ -26,7 +26,9 @@ export class AuthController {
 
   @Get('me')
   @UseGuards(JwtAuthGuard)
-  async me(@CurrentUserId() userId: string) {
+  async me(
+    @CurrentUserId() userId: string,
+  ): Promise<{ id: string; email?: string; nickname?: string; tier: string } | null> {
     const user = await this.users.findById(userId);
     if (!user) {
       return null;

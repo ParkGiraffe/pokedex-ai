@@ -118,8 +118,10 @@ export const BattlePage = () => {
                   type="button"
                   onClick={() => handleToggleRoster(member.species)}
                   className={cn(
-                    'flex flex-col items-center gap-1.5 rounded-lg border px-2 py-3 transition',
+                    'flex flex-col items-center gap-1.5',
+                    'rounded-lg border px-2 py-3',
                     alive ? 'border-primary/60 bg-primary/10' : 'border-border bg-card opacity-40 hover:opacity-100',
+                    'transition',
                   )}
                 >
                   <PokemonIcon species={member.species} className="h-11 w-11" />
@@ -170,7 +172,8 @@ export const BattlePage = () => {
               {advice && (
                 <span
                   className={cn(
-                    'rounded-md px-2 py-0.5 text-xs font-medium whitespace-nowrap',
+                    'rounded-md px-2 py-0.5',
+                    'text-xs font-medium whitespace-nowrap',
                     advice.firstMove === '선공'
                       ? 'bg-success/15 text-success'
                       : advice.firstMove === '후공'
@@ -229,7 +232,8 @@ export const BattlePage = () => {
                     </td>
                     <td
                       className={cn(
-                        'p-2 text-center font-semibold',
+                        'p-2',
+                        'text-center font-semibold',
                         option.koChance >= 1
                           ? 'text-destructive'
                           : option.koChance > 0
@@ -241,7 +245,8 @@ export const BattlePage = () => {
                     </td>
                     <td
                       className={cn(
-                        'p-2 text-center text-xs font-medium',
+                        'p-2',
+                        'text-center text-xs font-medium',
                         option.guaranteedHits === 1
                           ? 'text-destructive'
                           : option.possibleHits === 1
@@ -400,7 +405,7 @@ export const BattlePage = () => {
           </p>
         </Card>
       )}
-      {advise.data && <AnalysisResult result={advise.data} />}
+      {advise.isSuccess && <AnalysisResult result={advise.data} />}
 
       <PokemonDatalist />
     </section>
