@@ -10,6 +10,10 @@ import { Preset } from '../src/presets/preset.entity';
 import { User } from '../src/users/user.entity';
 import { UserTier } from '../src/users/user.enums';
 
+type AuthRes = { accessToken: string; user: { id: string } };
+type PresetRes = { id: string; shareToken?: string | null };
+type LeaderboardEntry = { shareToken: string; copyCount: number };
+
 const sampleParty = () => [
   {
     species: '한카리아스',
@@ -29,7 +33,8 @@ describe('리더보드 + 공유 복사 수 추적', () => {
   const newUser = async (): Promise<{ token: string; userId: string }> => {
     const email = `${randomUUID()}@test.local`;
     const res = await request(app.getHttpServer()).post('/auth/register').send({ email, password: 'password123' });
-    return { token: res.body.accessToken as string, userId: res.body.user.id as string };
+    const body = res.body as AuthRes;
+    return { token: body.accessToken, userId: body.user.id };
   };
 
   const makePaid = async (userId: string): Promise<void> => {
@@ -74,21 +79,19 @@ describe('리더보드 + 공유 복사 수 추적', () => {
     const copier = await newUser();
 
     const created = await createPreset(owner.token, '인기 파티');
-    const id = created.body.id as string;
+    const id = (created.body as PresetRes).id;
 
     const shared = await sharePreset(owner.token, id);
-    const shareToken = shared.body.shareToken as string;
+    const shareToken = (shared.body as { shareToken: string }).shareToken;
 
     const copied = await copyPreset(copier.token, shareToken);
     expect(copied.status).toBe(201);
-    expect(copied.body.name).toBe('인기 파티');
+    expect((copied.body as { name: string }).name).toBe('인기 파티');
 
     // 공개 열람으로 copyCount 확인
     const leaderboard = await request(app.getHttpServer()).get('/leaderboard');
     expect(leaderboard.status).toBe(200);
-    const entry = (leaderboard.body as Array<{ shareToken: string; copyCount: number }>).find(
-      (p) => p.shareToken === shareToken,
-    );
+    const entry = (leaderboard.body as LeaderboardEntry[]).find((p) => p.shareToken === shareToken);
     expect(entry).toBeDefined();
     expect(entry!.copyCount).toBe(1);
   });
@@ -101,24 +104,24 @@ describe('리더보드 + 공유 복사 수 추적', () => {
     const b = await createPreset(owner.token, '파티B');
     const c = await createPreset(owner.token, '파티C');
 
-    const sharedA = (await sharePreset(owner.token, a.body.id as string)).body.shareToken as string;
-    const sharedB = (await sharePreset(owner.token, b.body.id as string)).body.shareToken as string;
-    const sharedC = (await sharePreset(owner.token, c.body.id as string)).body.shareToken as string;
+    const sharedA = (await sharePreset(owner.token, (a.body as PresetRes).id)).body as { shareToken: string };
+    const sharedB = (await sharePreset(owner.token, (b.body as PresetRes).id)).body as { shareToken: string };
+    const _sharedC = (await sharePreset(owner.token, (c.body as PresetRes).id)).body as { shareToken: string };
 
     // A: 3회, B: 1회, C: 0회
     for (let i = 0; i < 3; i++) {
       const copier = await newUser();
-      await copyPreset(copier.token, sharedA);
+      await copyPreset(copier.token, sharedA.shareToken);
     }
     const copierB = await newUser();
-    await copyPreset(copierB.token, sharedB);
+    await copyPreset(copierB.token, sharedB.shareToken);
 
     const leaderboard = await request(app.getHttpServer()).get('/leaderboard');
     expect(leaderboard.status).toBe(200);
 
-    const tokens = (leaderboard.body as Array<{ shareToken: string; copyCount: number }>).map((p) => p.shareToken);
-    const idxA = tokens.indexOf(sharedA);
-    const idxB = tokens.indexOf(sharedB);
+    const tokens = (leaderboard.body as LeaderboardEntry[]).map((p) => p.shareToken);
+    const idxA = tokens.indexOf(sharedA.shareToken);
+    const idxB = tokens.indexOf(sharedB.shareToken);
     expect(idxA).toBeGreaterThanOrEqual(0);
     expect(idxB).toBeGreaterThanOrEqual(0);
     expect(idxA).toBeLessThan(idxB);
@@ -133,8 +136,8 @@ describe('리더보드 + 공유 복사 수 추적', () => {
     await createPreset(copier.token, '내 파티2');
 
     const created = await createPreset(owner.token, '공유 파티');
-    const shared = await sharePreset(owner.token, created.body.id as string);
-    const shareToken = shared.body.shareToken as string;
+    const shared = await sharePreset(owner.token, (created.body as PresetRes).id);
+    const shareToken = (shared.body as { shareToken: string }).shareToken;
 
     const res = await copyPreset(copier.token, shareToken);
     expect(res.status).toBe(403);

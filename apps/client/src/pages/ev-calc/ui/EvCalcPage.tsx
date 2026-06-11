@@ -541,8 +541,10 @@ export const EvCalcPage = () => {
               type="button"
               onClick={() => setMode(item.value)}
               className={cn(
-                'rounded-md px-3 py-1.5 text-sm font-medium transition',
+                'rounded-md px-3 py-1.5',
+                'text-sm font-medium',
                 mode === item.value ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-accent',
+                'transition',
               )}
             >
               {item.label}

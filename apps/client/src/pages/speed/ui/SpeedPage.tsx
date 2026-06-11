@@ -61,8 +61,11 @@ const VersusPanel = ({ left, right, trickRoom }: VersusProps) => {
     return (
       <div
         className={cn(
-          'flex flex-col items-center gap-2 rounded-xl border p-4 text-center transition',
+          'flex flex-col items-center gap-2',
+          'rounded-xl border p-4',
+          'text-center',
           winner ? 'border-primary/50 bg-primary/5' : 'border-border bg-card',
+          'transition',
         )}
       >
         <PokemonIcon species={side.species} className="h-16 w-16" />
@@ -137,7 +140,7 @@ type SideCardProps = {
 const SideCard = ({ title, accent, side, winning, onChange }: SideCardProps) => {
   const speed = computeSpeed(side);
   return (
-    <Card className={cn('flex flex-col gap-3 transition', winning && 'ring-primary/40 ring-1')}>
+    <Card className={cn('flex flex-col gap-3', winning && 'ring-primary/40 ring-1', 'transition')}>
       <div className="flex items-center gap-2">
         <span className={cn('size-2 rounded-full', accent === 'left' ? 'bg-primary' : 'bg-info')} />
         <h2 className={cn('text-sm font-semibold', ACCENT_TEXT[accent])}>{title}</h2>

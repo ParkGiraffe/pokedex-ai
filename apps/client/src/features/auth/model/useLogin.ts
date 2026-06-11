@@ -1,10 +1,10 @@
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-import { loginUser } from '../api';
+import { type AuthResult, loginUser } from '../api';
 import { useAuthStore } from './store';
 
-export const useLogin = () => {
+export const useLogin = (): ReturnType<typeof useMutation<AuthResult, Error, { email: string; password: string }>> => {
   const setSession = useAuthStore((state) => state.setSession);
   return useMutation({
     mutationFn: loginUser,

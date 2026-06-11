@@ -26,7 +26,10 @@ export class BattleController {
   // 선출: 내 팀 × 상대 팀 매치업 점수로 선출 우선순위.
   @Post('team-select')
   @HttpCode(200)
-  teamSelect(@Body(new ZodValidationPipe(TeamSelectBody)) body: TeamSelectInput) {
+  teamSelect(@Body(new ZodValidationPipe(TeamSelectBody)) body: TeamSelectInput): {
+    board: ReturnType<typeof teamSelect>;
+    summary: string;
+  } {
     assertKnownSpecies([...body.myTeam.map((mon) => mon.species), ...body.opponentTeam]);
     const board = teamSelect(body.myTeam, body.opponentTeam, body.field);
     const top = board[0];
@@ -41,7 +44,9 @@ export class BattleController {
   // 인배틀: 현재 액티브의 기술/교체 추천.
   @Post('decide')
   @HttpCode(200)
-  decide(@Body(new ZodValidationPipe(DecideBody)) body: DecideInput) {
+  decide(
+    @Body(new ZodValidationPipe(DecideBody)) body: DecideInput,
+  ): ReturnType<typeof inBattle> & { summary: string } {
     assertKnownSpecies([body.active.species, body.opponentSpecies, ...body.bench.map((mon) => mon.species)]);
     const advice = inBattle(body.active, body.opponentSpecies, body.bench, body.field);
     return { ...advice, summary: advice.recommendation };
@@ -50,7 +55,10 @@ export class BattleController {
   // 파훼: 상대 종족의 흔한 세트별 카운터.
   @Post('counter')
   @HttpCode(200)
-  counter(@Body(new ZodValidationPipe(CounterBody)) body: CounterInput) {
+  counter(@Body(new ZodValidationPipe(CounterBody)) body: CounterInput): {
+    opponent: string;
+    entries: ReturnType<typeof counterplay>;
+  } {
     assertKnownSpecies([body.opponentSpecies, ...body.myPool.map((mon) => mon.species)]);
     const entries = counterplay(body.opponentSpecies, body.myPool, body.field);
     return { opponent: body.opponentSpecies, entries };

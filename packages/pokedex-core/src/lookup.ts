@@ -54,7 +54,7 @@ export const findItem = (key: string): ItemData | undefined => itemByKo.get(key)
 const editDistance = (a: string, b: string): number => {
   const m = a.length;
   const n = b.length;
-  const dp: number[][] = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+  const dp: number[][] = Array.from({ length: m + 1 }, () => Array<number>(n + 1).fill(0));
   for (let i = 0; i <= m; i++) dp[i]![0] = i;
   for (let j = 0; j <= n; j++) dp[0]![j] = j;
   for (let i = 1; i <= m; i++) {

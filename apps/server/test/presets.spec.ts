@@ -9,6 +9,9 @@ import { createApp } from '../src/app.factory';
 import { User } from '../src/users/user.entity';
 import { UserTier } from '../src/users/user.enums';
 
+type AuthRes = { accessToken: string; user: { id: string } };
+type PresetRes = { id: string; name: string; party: unknown; shareToken?: string | null };
+
 const sampleParty = () => [
   {
     species: '한카리아스',
@@ -28,7 +31,8 @@ describe('프리셋 (티어 한도)', () => {
   const newUser = async (): Promise<{ token: string; userId: string }> => {
     const email = `${randomUUID()}@test.local`;
     const res = await request(app.getHttpServer()).post('/auth/register').send({ email, password: 'password123' });
-    return { token: res.body.accessToken as string, userId: res.body.user.id as string };
+    const body = res.body as AuthRes;
+    return { token: body.accessToken, userId: body.user.id };
   };
 
   const makePaid = async (userId: string): Promise<void> => {
@@ -57,23 +61,24 @@ describe('프리셋 (티어 한도)', () => {
     const { token } = await newUser();
     const created = await createPreset(token, '내 파티');
     expect(created.status).toBe(201);
-    expect(created.body.id).toBeTruthy();
-    expect(created.body.name).toBe('내 파티');
-    expect(created.body.party).toHaveLength(1);
+    const createdBody = created.body as PresetRes;
+    expect(createdBody.id).toBeTruthy();
+    expect(createdBody.name).toBe('내 파티');
+    expect(createdBody.party).toHaveLength(1);
 
-    const id = created.body.id as string;
+    const id = createdBody.id;
     const auth = `Bearer ${token}`;
 
     const listed = await request(app.getHttpServer()).get('/presets').set('authorization', auth);
     expect(listed.status).toBe(200);
-    expect(listed.body.some((preset: { id: string }) => preset.id === id)).toBe(true);
+    expect((listed.body as PresetRes[]).some((preset) => preset.id === id)).toBe(true);
 
     const updated = await request(app.getHttpServer())
       .put(`/presets/${id}`)
       .set('authorization', auth)
       .send({ name: '수정한 파티' });
     expect(updated.status).toBe(200);
-    expect(updated.body.name).toBe('수정한 파티');
+    expect((updated.body as PresetRes).name).toBe('수정한 파티');
 
     const removed = await request(app.getHttpServer()).delete(`/presets/${id}`).set('authorization', auth);
     expect(removed.status).toBe(204);
@@ -102,7 +107,7 @@ describe('프리셋 (티어 한도)', () => {
     const created = await createPreset(owner.token, '비밀 파티');
     const intruder = await newUser();
     const res = await request(app.getHttpServer())
-      .get(`/presets/${created.body.id}`)
+      .get(`/presets/${(created.body as PresetRes).id}`)
       .set('authorization', `Bearer ${intruder.token}`);
     expect(res.status).toBe(404);
   });
@@ -124,21 +129,22 @@ describe('프리셋 (티어 한도)', () => {
   it('공유 토큰을 발급하고 비로그인으로 읽기전용 조회한다', async () => {
     const { token } = await newUser();
     const created = await createPreset(token, '공유할 파티');
-    const id = created.body.id as string;
+    const id = (created.body as PresetRes).id;
     const auth = `Bearer ${token}`;
 
     const shared = await request(app.getHttpServer()).post(`/presets/${id}/share`).set('authorization', auth);
     expect(shared.status).toBe(200);
-    const shareToken = shared.body.shareToken as string;
+    const shareToken = (shared.body as { shareToken: string }).shareToken;
     expect(shareToken).toBeTruthy();
 
     // 비로그인(토큰 헤더 없음)으로도 열람 가능, name·party만 노출.
     const publicView = await request(app.getHttpServer()).get(`/shared-presets/${shareToken}`);
     expect(publicView.status).toBe(200);
-    expect(publicView.body.name).toBe('공유할 파티');
-    expect(publicView.body.party).toHaveLength(1);
-    expect(publicView.body.id).toBeUndefined();
-    expect(publicView.body.shareToken).toBeUndefined();
+    const publicBody = publicView.body as { name: string; party: unknown; id?: string; shareToken?: string };
+    expect(publicBody.name).toBe('공유할 파티');
+    expect(publicBody.party).toHaveLength(1);
+    expect(publicBody.id).toBeUndefined();
+    expect(publicBody.shareToken).toBeUndefined();
   });
 
   it('같은 프리셋 재공유는 같은 토큰을 준다(멱등)', async () => {
@@ -146,12 +152,12 @@ describe('프리셋 (티어 한도)', () => {
     const created = await createPreset(token, '파티');
     const auth = `Bearer ${token}`;
     const first = await request(app.getHttpServer())
-      .post(`/presets/${created.body.id}/share`)
+      .post(`/presets/${(created.body as PresetRes).id}/share`)
       .set('authorization', auth);
     const second = await request(app.getHttpServer())
-      .post(`/presets/${created.body.id}/share`)
+      .post(`/presets/${(created.body as PresetRes).id}/share`)
       .set('authorization', auth);
-    expect(second.body.shareToken).toBe(first.body.shareToken);
+    expect((second.body as { shareToken: string }).shareToken).toBe((first.body as { shareToken: string }).shareToken);
   });
 
   it('공유 취소 후에는 옛 링크가 404', async () => {
@@ -159,12 +165,12 @@ describe('프리셋 (티어 한도)', () => {
     const created = await createPreset(token, '파티');
     const auth = `Bearer ${token}`;
     const shared = await request(app.getHttpServer())
-      .post(`/presets/${created.body.id}/share`)
+      .post(`/presets/${(created.body as PresetRes).id}/share`)
       .set('authorization', auth);
-    const shareToken = shared.body.shareToken as string;
+    const shareToken = (shared.body as { shareToken: string }).shareToken;
 
     const unshared = await request(app.getHttpServer())
-      .delete(`/presets/${created.body.id}/share`)
+      .delete(`/presets/${(created.body as PresetRes).id}/share`)
       .set('authorization', auth);
     expect(unshared.status).toBe(204);
 
@@ -182,7 +188,7 @@ describe('프리셋 (티어 한도)', () => {
     const created = await createPreset(owner.token, '비밀 파티');
     const intruder = await newUser();
     const res = await request(app.getHttpServer())
-      .post(`/presets/${created.body.id}/share`)
+      .post(`/presets/${(created.body as PresetRes).id}/share`)
       .set('authorization', `Bearer ${intruder.token}`);
     expect(res.status).toBe(404);
   });

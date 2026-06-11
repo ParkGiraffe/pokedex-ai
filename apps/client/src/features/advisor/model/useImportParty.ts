@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { importPartyImages } from '../api';
+import { importPartyImages, type ImportResult } from '../api';
 
-export const useImportParty = () => {
+export const useImportParty = (): ReturnType<typeof useMutation<ImportResult, Error, string[]>> => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (images: string[]) => importPartyImages(images),

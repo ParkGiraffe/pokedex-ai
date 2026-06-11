@@ -110,7 +110,9 @@ export const MatchupMatrixPage = () => {
                   onChange={(e) => handleSetMySpecies(entry.id, e.target.value)}
                   placeholder="종족 이름"
                   className={cn(
-                    'border-border bg-background placeholder:text-muted-foreground focus:ring-ring min-w-0 flex-1 rounded-md border px-3 py-1.5 text-sm focus:ring-2 focus:outline-none',
+                    'min-w-0 flex-1 rounded-md border px-3 py-1.5',
+                    'border-border bg-background text-sm',
+                    'focus:ring-ring placeholder:text-muted-foreground focus:ring-2 focus:outline-none',
                   )}
                 />
                 <Button
@@ -154,7 +156,9 @@ export const MatchupMatrixPage = () => {
                   onChange={(e) => handleSetOpponentSpecies(entry.id, e.target.value)}
                   placeholder="종족 이름"
                   className={cn(
-                    'border-border bg-background placeholder:text-muted-foreground focus:ring-ring min-w-0 flex-1 rounded-md border px-3 py-1.5 text-sm focus:ring-2 focus:outline-none',
+                    'min-w-0 flex-1 rounded-md border px-3 py-1.5',
+                    'border-border bg-background text-sm',
+                    'focus:ring-ring placeholder:text-muted-foreground focus:ring-2 focus:outline-none',
                   )}
                 />
                 <Button
@@ -240,7 +244,7 @@ export const MatchupMatrixPage = () => {
                     {row.pairs.map((pair: Pairwise) => (
                       <td
                         key={pair.opponent}
-                        className={cn('min-w-[80px] p-2 text-center align-middle', verdictCellBg(pair.verdict))}
+                        className={cn('align-middle', 'min-w-[80px] p-2', 'text-center', verdictCellBg(pair.verdict))}
                       >
                         <div className="flex flex-col items-center gap-0.5">
                           <Badge variant={verdictBadgeVariant(pair.verdict)} size="sm">

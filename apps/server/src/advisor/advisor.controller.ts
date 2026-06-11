@@ -1,4 +1,5 @@
 import { Body, Controller, HttpCode, Post, UseGuards } from '@nestjs/common';
+import { type ClaudeResponse } from '@pokedex-agent/pokedex-core';
 
 import { JwtAuthGuard } from '../auth/auth.guard';
 import { CurrentUserId } from '../auth/current-user.decorator';
@@ -15,7 +16,7 @@ import {
 } from '../dto';
 import { QuotaService } from '../quota/quota.service';
 import { AdvisorService } from './advisor.service';
-import { BattleVisionService } from './battle-vision.service';
+import { type BattleVisionAdvice, BattleVisionService } from './battle-vision.service';
 
 // 추천 시스템: 로그인 + 일일 쿼터 소비 후 Anthropic 호출.
 @Controller()
@@ -32,7 +33,7 @@ export class AdvisorController {
   async analyzeParty(
     @CurrentUserId() userId: string,
     @Body(new ZodValidationPipe(AnalyzePartyBody)) body: AnalyzePartyInput,
-  ) {
+  ): Promise<ClaudeResponse> {
     await this.quota.consumeOrThrow(userId);
     return this.advisor.adviseParty(body.party);
   }
@@ -42,7 +43,7 @@ export class AdvisorController {
   async matchupLeadrec(
     @CurrentUserId() userId: string,
     @Body(new ZodValidationPipe(MatchupLeadrecBody)) body: MatchupLeadrecInput,
-  ) {
+  ): Promise<ClaudeResponse> {
     await this.quota.consumeOrThrow(userId);
     return this.advisor.adviseMatchup(body.state, body.megaForms);
   }
@@ -52,7 +53,7 @@ export class AdvisorController {
   async battleAdvice(
     @CurrentUserId() userId: string,
     @Body(new ZodValidationPipe(BattleAdviceBody)) body: BattleAdviceInput,
-  ) {
+  ): Promise<ClaudeResponse> {
     await this.quota.consumeOrThrow(userId);
     return this.advisor.adviseBattle(body.state);
   }
@@ -62,7 +63,7 @@ export class AdvisorController {
   async battleScreenshot(
     @CurrentUserId() userId: string,
     @Body(new ZodValidationPipe(BattleScreenshotBody)) body: BattleScreenshotInput,
-  ) {
+  ): Promise<BattleVisionAdvice> {
     await this.quota.consumeOrThrow(userId);
     return this.battleVision.adviseFromScreenshot(body.image, body.note);
   }

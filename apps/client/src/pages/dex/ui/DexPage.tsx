@@ -144,7 +144,9 @@ export const DexPage = () => {
                 <div
                   key={entry.type}
                   className={cn(
-                    'flex flex-col items-center rounded px-1 py-1 text-xs',
+                    'flex flex-col items-center',
+                    'rounded px-1 py-1',
+                    'text-xs',
                     multiplierClass(entry.multiplier),
                   )}
                 >
@@ -170,8 +172,11 @@ export const DexPage = () => {
             type="button"
             onClick={() => select(entry.no)}
             className={cn(
-              'flex items-center justify-between gap-2 rounded-lg border px-3 py-2 text-left transition',
+              'flex items-center justify-between gap-2',
+              'rounded-lg border px-3 py-2',
+              'text-left',
               entry.no === selectedNo ? 'border-ring bg-card' : 'border-border bg-card/40 hover:border-border',
+              'transition',
             )}
           >
             <span className="flex items-center gap-1.5">
