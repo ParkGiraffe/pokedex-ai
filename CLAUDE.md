@@ -34,7 +34,7 @@
 
 ## 활성 로드맵
 
-계정(카카오·네이버 자체 OAuth)·프리셋 티어(무료 2/유료 20)·일일 쿼터(무료 2/유료 100)·웹 Stripe 결제·Expo 모바일(스크린샷 비전) 도입이 목표다. Supabase는 쓰지 않는다(네이버 미지원). 승인된 단계 계획: `~/.claude/plans/6-27-harmonic-lecun.md`. 진행: Phase 0~C 완료(2026-06-04: A NestJS전환·B 인증/DB·C 프리셋 티어 무료2/유료20) → **D(일일 쿼터, 다음)** → E(결제) → F(모바일). B에서 MikroORM+Postgres(docker)·내부 로그인(이메일+비번, OAuth 끼울 수 있게 추상화)·JWT 도입. 인증은 헥사고날 포트/어댑터라 카카오·네이버는 어댑터만 추가하면 된다. 로컬 인프라: `mise run infra up --env <development|test>`(Postgres 5435).
+계정(카카오·네이버 자체 OAuth)·프리셋 티어(무료 2/유료 20)·일일 쿼터(무료 2/유료 100)·웹 Stripe 결제·Expo 모바일(스크린샷 비전) 도입이 목표다. Supabase는 쓰지 않는다(네이버 미지원). 승인된 단계 계획: `~/.claude/plans/6-27-harmonic-lecun.md`. 진행: Phase 0~D 완료(2026-06-04~05: A NestJS전환·B 인증/DB·C 프리셋 티어·D 일일 쿼터) + 커뮤니티·도구 기능 완료(공유 링크·배틀 전적·리더보드·노력치 역산기·매치업 매트릭스·리빙 메타·배틀 스크린샷 조언, PR #2 머지됨) → **E(결제, 다음)** → F(모바일). 출시 전 선행 권장: prod 배포 셋업(현재 없음)·카카오/네이버 OAuth 어댑터. B에서 MikroORM+Postgres(docker)·내부 로그인(이메일+비번, OAuth 끼울 수 있게 추상화)·JWT 도입. 인증은 헥사고날 포트/어댑터라 카카오·네이버는 어댑터만 추가하면 된다. 로컬 인프라: `mise run infra up --env <development|test>`(Postgres 5435).
 
 ## 프로젝트 구조 (현재)
 
@@ -42,8 +42,10 @@
 pokedex-agent/
 ├── .claude/                  컨텍스트·하드룰·데이터 임시 위치
 ├── apps/
-│   ├── client/               React + Vite 웹앱 (battle·calculator·dex·matchup·party·speed 페이지)
-│   └── server/               NestJS 11 + Express + MikroORM/Postgres. Anthropic 직접 호출(추천·OCR) + 계정·인증(내부 로그인+JWT)
+│   ├── client/               React + Vite 웹앱 (battle·battle-vision·calculator·dex·ev-calc·leaderboard·log·
+│   │                         matchup·matchup-matrix·meta·party·shared-preset·speed 페이지)
+│   └── server/               NestJS 11 + Express + MikroORM/Postgres. Anthropic 직접 호출(추천·OCR·스크린샷 비전)
+│                             + 계정·인증(내부 로그인+JWT)·프리셋·쿼터·전적·리더보드. apps/server/CLAUDE.md 참고
 ├── packages/
 │   ├── pokedex-core/         결정론적 도메인 라이브러리 (데이터·공식·타입·export·matchup·decision)
 │   ├── battle-engine/        배틀 상태·데미지 계산 엔진

@@ -1,22 +1,39 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { createMemoryHistory, createRouter, RouterProvider } from '@tanstack/react-router';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
 import { buildParty } from '@/pages/party/lib/party';
 import { usePartyStore } from '@/pages/party/model/store';
+import { rootRoute } from '@/routes/__root';
+import { battleRoute } from '@/routes/battle';
 
 import { battleOptions } from './lib/battle';
-import { BattlePage } from './ui/BattlePage';
+
+// 탭 셸이 라우트 search(?tab=)를 읽으므로 실제 라우터로 감싸 렌더한다.
+const renderPage = (initial: string) =>
+  render(
+    <QueryClientProvider client={new QueryClient()}>
+      <RouterProvider
+        router={createRouter({
+          routeTree: rootRoute.addChildren([battleRoute]),
+          history: createMemoryHistory({ initialEntries: [initial] }),
+        })}
+      />
+    </QueryClientProvider>,
+  );
 
 describe('배틀 페이지', () => {
-  it('기술 옵션 표를 렌더한다', () => {
-    render(
-      <QueryClientProvider client={new QueryClient()}>
-        <BattlePage />
-      </QueryClientProvider>,
-    );
-    expect(screen.getByRole('heading', { name: '배틀' })).toBeInTheDocument();
+  it('기술 옵션 표를 렌더한다', async () => {
+    renderPage('/battle');
+    expect(await screen.findByRole('heading', { name: '배틀' })).toBeInTheDocument();
     expect(screen.getByText(/KO 확률은 16롤 기준/)).toBeInTheDocument();
+  });
+
+  it('스크린샷 탭으로 전환하면 기술 옵션 표 대신 업로드 화면을 렌더한다', async () => {
+    renderPage('/battle?tab=screenshot');
+    expect(await screen.findByRole('heading', { name: '배틀' })).toBeInTheDocument();
+    expect(screen.queryByText(/KO 확률은 16롤 기준/)).not.toBeInTheDocument();
   });
 
   it('내 액티브의 기술 옵션과 KO 확률을 계산한다', () => {

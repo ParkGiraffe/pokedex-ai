@@ -1,7 +1,19 @@
+import { useNavigate, useSearch } from '@tanstack/react-router';
+
+import { cn } from '@/common/lib/cn';
 import { Card, CardContent, CardHeader, CardTitle } from '@/common/ui/Card';
 import { type MetaLeadRecord } from '@/features/meta/api';
 import { useMeta } from '@/features/meta/model/useMeta';
 import { PokemonIcon } from '@/features/pokemon-picker/ui/PokemonIcon';
+
+import { PopularPresetsTab } from './PopularPresetsTab';
+
+type Tab = 'usage' | 'presets';
+
+const TABS: ReadonlyArray<{ value: Tab; label: string }> = [
+  { value: 'usage', label: '사용률' },
+  { value: 'presets', label: '인기 파티' },
+];
 
 const winRateColor = (wr: number): string => {
   if (wr >= 60) {
@@ -64,7 +76,7 @@ const LeadsTable = ({ title, rows }: LeadsTableProps) => (
   </Card>
 );
 
-export const MetaPage = () => {
+const UsageTab = () => {
   const meta = useMeta();
 
   if (meta.isLoading) {
@@ -80,7 +92,6 @@ export const MetaPage = () => {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-foreground text-xl font-bold">이번 메타</h1>
         <p className="text-muted-foreground mt-1 text-sm">
           {data && data.totalGames > 0 ? (
             <>표본 {data.totalGames.toLocaleString()}판</>
@@ -132,6 +143,39 @@ export const MetaPage = () => {
           )}
         </>
       )}
+    </div>
+  );
+};
+
+export const MetaPage = () => {
+  const { tab } = useSearch({ from: '/meta' });
+  const navigate = useNavigate();
+
+  return (
+    <div className="flex flex-col gap-6">
+      <header className="flex flex-wrap items-center justify-between gap-2">
+        <h1 className="text-foreground text-xl font-bold">이번 메타</h1>
+        <div className="flex gap-1">
+          {TABS.map((item) => (
+            <button
+              key={item.value}
+              type="button"
+              onClick={() => void navigate({ to: '/meta', search: { tab: item.value } })}
+              className={cn(
+                'rounded-md px-3 py-1.5',
+                'text-sm font-medium',
+                tab === item.value ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-accent',
+                'transition',
+              )}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+      </header>
+
+      {tab === 'usage' && <UsageTab />}
+      {tab === 'presets' && <PopularPresetsTab />}
     </div>
   );
 };

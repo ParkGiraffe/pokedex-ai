@@ -26,8 +26,12 @@ export const NumberField = ({ value, onValueChange, min, max, step, className }:
       onValueChange(next);
     }}
     className={cn(
-      'border-border bg-input text-foreground focus:border-primary focus:ring-ring h-9 w-full rounded-md border px-2 text-center text-sm transition focus:ring-2 focus:outline-none',
-      '[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none',
+      'h-9 w-full rounded-md border px-2',
+      'border-border bg-input text-foreground text-center text-sm',
+      '[&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none',
+      'transition',
+      'focus:border-primary focus:ring-ring focus:ring-2 focus:outline-none',
+      '[appearance:textfield]',
       className,
     )}
   />

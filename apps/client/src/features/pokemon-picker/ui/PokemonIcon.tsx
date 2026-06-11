@@ -17,7 +17,7 @@ export const PokemonIcon = ({ species, className }: PokemonIconProps) => {
       src={`/sprites/${entry.no}.png`}
       alt={species}
       loading="lazy"
-      className={cn('inline-block h-11 w-11 shrink-0 object-contain', className)}
+      className={cn('inline-block', 'h-11 w-11 shrink-0', 'object-contain', className)}
     />
   );
 };

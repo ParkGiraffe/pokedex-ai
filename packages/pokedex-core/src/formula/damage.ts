@@ -74,7 +74,7 @@ export const calculateDamage = (input: DamageInput): DamageResult => {
 
   const effectiveness = typeEffectiveness(moveType, defenderTypes);
   if (effectiveness === 0) {
-    return { min: 0, max: 0, rolls: Array(16).fill(0), effectiveness: 0 };
+    return { min: 0, max: 0, rolls: Array<number>(16).fill(0), effectiveness: 0 };
   }
 
   const effectiveAttack = burned && category === '물리' ? Math.floor(attack / 2) : attack;

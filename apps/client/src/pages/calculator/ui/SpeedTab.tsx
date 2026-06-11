@@ -14,8 +14,8 @@ import { PokemonDatalist } from '@/features/pokemon-picker/ui/PokemonDatalist';
 import { PokemonIcon } from '@/features/pokemon-picker/ui/PokemonIcon';
 import { PokemonPicker } from '@/features/pokemon-picker/ui/PokemonPicker';
 
-import { compareSpeed, computeSpeed } from '../lib/calc';
-import { type SpeedSide, useSpeedStore } from '../model/store';
+import { compareSpeed, computeSpeed } from '../lib/speed-calc';
+import { type SpeedSide, useSpeedStore } from '../model/speed-store';
 
 type Accent = 'left' | 'right';
 
@@ -61,8 +61,11 @@ const VersusPanel = ({ left, right, trickRoom }: VersusProps) => {
     return (
       <div
         className={cn(
-          'flex flex-col items-center gap-2 rounded-xl border p-4 text-center transition',
+          'flex flex-col items-center gap-2',
+          'rounded-xl border p-4',
+          'text-center',
           winner ? 'border-primary/50 bg-primary/5' : 'border-border bg-card',
+          'transition',
         )}
       >
         <PokemonIcon species={side.species} className="h-16 w-16" />
@@ -137,7 +140,7 @@ type SideCardProps = {
 const SideCard = ({ title, accent, side, winning, onChange }: SideCardProps) => {
   const speed = computeSpeed(side);
   return (
-    <Card className={cn('flex flex-col gap-3 transition', winning && 'ring-primary/40 ring-1')}>
+    <Card className={cn('flex flex-col gap-3', winning && 'ring-primary/40 ring-1', 'transition')}>
       <div className="flex items-center gap-2">
         <span className={cn('size-2 rounded-full', accent === 'left' ? 'bg-primary' : 'bg-info')} />
         <h2 className={cn('text-sm font-semibold', ACCENT_TEXT[accent])}>{title}</h2>
@@ -210,15 +213,15 @@ const SideCard = ({ title, accent, side, winning, onChange }: SideCardProps) => 
   );
 };
 
-export const SpeedPage = () => {
+export const SpeedTab = () => {
   const { left, right, trickRoom, setLeft, setRight, setTrickRoom } = useSpeedStore();
   const comparison = compareSpeed(left, right, trickRoom);
 
   return (
-    <section className="flex flex-col gap-5">
+    <>
       <header className="border-border flex flex-wrap items-center gap-3 border-b pb-3">
         <Gauge className="text-primary size-6" />
-        <h1 className="text-2xl font-bold tracking-tight">스피드</h1>
+        <h2 className="text-2xl font-bold tracking-tight">스피드</h2>
         <div className="ml-auto">
           <Checkbox checked={trickRoom} onCheckedChange={setTrickRoom} label="트릭룸" />
         </div>
@@ -232,6 +235,6 @@ export const SpeedPage = () => {
       </div>
 
       <PokemonDatalist />
-    </section>
+    </>
   );
 };

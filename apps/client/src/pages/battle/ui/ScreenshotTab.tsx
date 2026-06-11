@@ -7,7 +7,7 @@ import { Input } from '@/common/ui/Input';
 import { useAuthStore } from '@/features/auth';
 import { useBattleVision } from '@/features/battle-vision/model/useBattleVision';
 
-export const BattleVisionPage = () => {
+export const ScreenshotTab = () => {
   const isLoggedIn = useAuthStore((state) => Boolean(state.token));
   const advise = useBattleVision();
   const [image, setImage] = useState<string | null>(null);
@@ -46,13 +46,6 @@ export const BattleVisionPage = () => {
 
   return (
     <section className="flex flex-col gap-4">
-      <header>
-        <h1 className="text-xl font-bold">배틀 스크린샷 조언</h1>
-        <p className="text-muted-foreground text-sm">
-          배틀 화면을 올리면 다음 한 수를 분석해 드립니다. 질의 1회가 소모됩니다.
-        </p>
-      </header>
-
       <Card className="flex flex-col gap-3">
         <label className="border-border hover:bg-accent flex cursor-pointer flex-col items-center justify-center gap-2 rounded-md border border-dashed px-4 py-8 text-sm">
           <input type="file" accept="image/*" onChange={handleFile} className="hidden" />

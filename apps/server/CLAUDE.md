@@ -4,7 +4,7 @@
 
 ## 상태
 
-**Phase A(Fastify→NestJS 전환)·Phase B(인증·DB) 완료(2026-06-04).** 8개 도메인 엔드포인트 + 계정/내부 로그인(이메일+비번)/JWT + MikroORM/Postgres 동작. 전체 로드맵: `~/.claude/plans/6-27-harmonic-lecun.md`. 다음은 Phase C(프리셋 티어).
+**Phase A(NestJS 전환)~D(일일 쿼터) + 커뮤니티 기능 완료(2026-06-05).** 계정/내부 로그인/JWT + MikroORM/Postgres, 프리셋 티어(무료 2/유료 20), 일일 쿼터(무료 2/유료 100, KST 자정 리셋), 프리셋 공유·복사·리더보드, 배틀 전적·리빙 메타 집계, 배틀 스크린샷 조언까지 동작. 전체 로드맵: `~/.claude/plans/6-27-harmonic-lecun.md`. 다음은 Phase E(웹 Stripe 결제).
 
 ## 기술 스택
 
@@ -26,18 +26,25 @@ Redis·Queue는 계획에 없음(p2z 템플릿의 Redis/Bull/Throttler는 도입
 src/
 ├── main.ts              부트스트랩(listen). 앱 생성은 app.factory로 분리(테스트가 listen 없이 재사용)
 ├── app.factory.ts       createApp: NestExpress, 12MB body, 전역 예외 필터, CORS
-├── app.module.ts        Advisor·Battle·Import 모듈 + HealthController
+├── app.module.ts        Advisor·Battle·Import·Auth·Users·Presets·Quota·BattleLog 모듈 + HealthController
 ├── dto.ts               요청 Zod 스키마(pokedex-core Party·BattleState 재사용) + 추론 타입
 ├── common/
 │   ├── zod-validation.pipe.ts   Zod 스키마로 @Body 검증(class-validator 대신 — 도메인 스키마가 Zod라 재사용)
 │   └── error.filter.ts          전역 필터: 응답을 { error: message }로(기존 Fastify 계약 유지)
 ├── advisor/             /analyze-party·/matchup-leadrec·/battle-advice (Sonnet, 2패스 보정 보존)
+│                        + /battle-screenshot (battle-vision.service, Sonnet 경량 비전, max_tokens 1200)
 ├── import/              /import-party (Opus 비전). 순수 함수 buildImportResult·mergeMembers export 유지
-├── battle/              /team-select·/decide·/counter (battle-engine 로컬 연산)
+├── battle/              /team-select·/decide·/counter (battle-engine 로컬 연산, 무인증)
 ├── health/              /health → { ok: true }
 ├── mikro-orm.config.ts  Postgres 설정(env via dotenv, 엔티티 명시 배열, ReflectMetadataProvider)
 ├── users/               User 엔티티(uuidv7, provider·tier enum) + UsersService(EntityManager)
-├── presets/             Preset 엔티티(party jsonb) + CRUD. 티어 캡(무료2/유료20) em.transactional로 강제
+├── presets/             Preset 엔티티(party jsonb, shareToken, copyCount) + CRUD/공유/복사
+│                        티어 캡(무료2/유료20) em.transactional로 강제. 공개 라우트:
+│                        GET /shared-presets/:token(name·party만)·GET /leaderboard(복사수순)
+├── quota/               UsageDaily(복합 PK userId+usageDate) 단일 ON CONFLICT upsert로 원자 소비
+│                        무료2/유료100, KST 자정 리셋. GET /quota
+├── battle-log/          BattleLog 엔티티(수동 전적 일지) + CRUD /battle-logs·/battle-logs/stats
+│                        + 공개 GET /meta/usage (전 사용자 익명 집계 리빙 메타)
 └── auth/                내부 로그인 + JWT (헥사고날 포트/어댑터)
     ├── domain/          포트: AuthProvider(전략)·PasswordHasher·TokenService — lib import 없음
     ├── application/     AuthService — 포트에만 의존, provider 레지스트리로 login 분기
@@ -50,8 +57,8 @@ src/
 ## 핵심 도메인(이식 시 로직 보존 필수)
 
 - **AI 추천** — `advisor/advisor.service.ts`: `serializeForClaude` + `ClaudeResponseSchema` + 미검증 한국어 명사 발견 시 **보정 2차 콜**. 모델 추천 Sonnet 4.6, OCR Opus 4.7. 임의 격하 금지(Haiku는 한국 종족·기술명 fabricate).
-- **이미지 import** — `import/import.service.ts`: Opus 비전. 데이터 사전은 `@pokedex-agent/pokedex-core/node`의 `DATA_DIR`로 경로 해석(컴파일·재배치에도 안전). 배틀 스크린샷 조언용 경량 비전(Sonnet)은 추후 신설.
-- **인증·쿼터(Phase B~D)** — Anthropic 호출 4개 엔드포인트에 JWT 가드 + 호출 전 일일 쿼터 소비 예정.
+- **이미지 import** — `import/import.service.ts`: Opus 비전. 데이터 사전은 `@pokedex-agent/pokedex-core/node`의 `DATA_DIR`로 경로 해석(컴파일·재배치에도 안전). 배틀 스크린샷 조언은 `advisor/battle-vision.service.ts`의 경량 Sonnet 비전(`messages.parse`+`zodOutputFormat`, env `ADVISOR_MODEL_BATTLE_VISION`).
+- **인증·쿼터** — AI 5개 엔드포인트(analyze-party·matchup-leadrec·battle-advice·import-party·battle-screenshot) 전부 JwtAuthGuard + Anthropic 호출 **전** 원자적 쿼터 소비(`consumeOrThrow`). 결정론 엔드포인트(battle/·shared-presets·leaderboard·meta)는 무인증.
 
 ## 워크스페이스 패키지 빌드(중요)
 

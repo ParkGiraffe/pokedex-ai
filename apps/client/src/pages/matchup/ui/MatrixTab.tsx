@@ -1,5 +1,5 @@
 import { speciesDisplayName } from '@pokedex-agent/pokedex-core';
-import { Grid2x2, Plus, X } from 'lucide-react';
+import { Grid2x2 } from 'lucide-react';
 import { useState } from 'react';
 
 import { cn } from '@/common/lib/cn';
@@ -8,10 +8,11 @@ import { Button } from '@/common/ui/Button';
 import { Card } from '@/common/ui/Card';
 import { type LeadScore, type Pairwise } from '@/features/matchup-matrix/api';
 import { useMatchupMatrix } from '@/features/matchup-matrix/model/useMatchupMatrix';
-import { POKEMON_DATALIST_ID, PokemonDatalist } from '@/features/pokemon-picker/ui/PokemonDatalist';
+import { PokemonDatalist } from '@/features/pokemon-picker/ui/PokemonDatalist';
 import { PokemonIcon } from '@/features/pokemon-picker/ui/PokemonIcon';
 
-const MAX_TEAM = 6;
+import { MatrixLegend } from './MatrixLegend';
+import { MAX_TEAM, TeamInputCard } from './TeamInputCard';
 
 const verdictBadgeVariant = (verdict: Pairwise['verdict']): 'success' | 'destructive' | 'muted' =>
   verdict === '유리' ? 'success' : verdict === '불리' ? 'destructive' : 'muted';
@@ -26,7 +27,7 @@ type TeamEntry = { id: number; species: string };
 let nextId = 0;
 const makeEntry = (species = ''): TeamEntry => ({ id: nextId++, species });
 
-export const MatchupMatrixPage = () => {
+export const MatrixTab = () => {
   const [myTeam, setMyTeam] = useState<TeamEntry[]>([makeEntry()]);
   const [opponentTeam, setOpponentTeam] = useState<TeamEntry[]>([makeEntry()]);
   const matrix = useMatchupMatrix();
@@ -36,9 +37,7 @@ export const MatchupMatrixPage = () => {
   };
 
   const handleAddMyMon = () => {
-    if (myTeam.length < MAX_TEAM) {
-      setMyTeam((prev) => [...prev, makeEntry()]);
-    }
+    setMyTeam((prev) => (prev.length < MAX_TEAM ? [...prev, makeEntry()] : prev));
   };
 
   const handleRemoveMyMon = (id: number) => {
@@ -50,9 +49,7 @@ export const MatchupMatrixPage = () => {
   };
 
   const handleAddOpponent = () => {
-    if (opponentTeam.length < MAX_TEAM) {
-      setOpponentTeam((prev) => [...prev, makeEntry()]);
-    }
+    setOpponentTeam((prev) => (prev.length < MAX_TEAM ? [...prev, makeEntry()] : prev));
   };
 
   const handleRemoveOpponent = (id: number) => {
@@ -87,95 +84,23 @@ export const MatchupMatrixPage = () => {
         <p className="text-muted-foreground ml-auto text-xs">내 팀 × 상대 팀 결정론적 매트릭스 (AI 없음)</p>
       </header>
 
-      {/* 팀 입력 */}
       <div className="grid gap-4 md:grid-cols-2">
-        {/* 내 팀 */}
-        <Card className="flex flex-col gap-3">
-          <div className="flex items-center gap-2">
-            <h2 className="text-sm font-semibold">내 팀</h2>
-            <Badge variant="muted">
-              {myTeam.length}/{MAX_TEAM}
-            </Badge>
-          </div>
-          <div className="flex flex-col gap-2">
-            {myTeam.map((entry) => (
-              <div key={entry.id} className="flex items-center gap-2">
-                {entry.species.trim().length > 0 && (
-                  <PokemonIcon species={entry.species.trim()} className="h-7 w-7 shrink-0" />
-                )}
-                <input
-                  type="text"
-                  list={POKEMON_DATALIST_ID}
-                  value={entry.species}
-                  onChange={(e) => handleSetMySpecies(entry.id, e.target.value)}
-                  placeholder="종족 이름"
-                  className={cn(
-                    'border-border bg-background placeholder:text-muted-foreground focus:ring-ring min-w-0 flex-1 rounded-md border px-3 py-1.5 text-sm focus:ring-2 focus:outline-none',
-                  )}
-                />
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => handleRemoveMyMon(entry.id)}
-                  aria-label="내 포켓몬 삭제"
-                  className="text-muted-foreground hover:text-destructive size-8 shrink-0"
-                >
-                  <X className="size-4" />
-                </Button>
-              </div>
-            ))}
-          </div>
-          {myTeam.length < MAX_TEAM && (
-            <Button variant="outline" size="sm" className="w-fit" onClick={handleAddMyMon}>
-              <Plus className="size-3.5" />
-              추가
-            </Button>
-          )}
-        </Card>
-
-        {/* 상대 팀 */}
-        <Card className="flex flex-col gap-3">
-          <div className="flex items-center gap-2">
-            <h2 className="text-sm font-semibold">상대 팀</h2>
-            <Badge variant="muted">
-              {opponentTeam.length}/{MAX_TEAM}
-            </Badge>
-          </div>
-          <div className="flex flex-col gap-2">
-            {opponentTeam.map((entry) => (
-              <div key={entry.id} className="flex items-center gap-2">
-                {entry.species.trim().length > 0 && (
-                  <PokemonIcon species={entry.species.trim()} className="h-7 w-7 shrink-0" />
-                )}
-                <input
-                  type="text"
-                  list={POKEMON_DATALIST_ID}
-                  value={entry.species}
-                  onChange={(e) => handleSetOpponentSpecies(entry.id, e.target.value)}
-                  placeholder="종족 이름"
-                  className={cn(
-                    'border-border bg-background placeholder:text-muted-foreground focus:ring-ring min-w-0 flex-1 rounded-md border px-3 py-1.5 text-sm focus:ring-2 focus:outline-none',
-                  )}
-                />
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => handleRemoveOpponent(entry.id)}
-                  aria-label="상대 삭제"
-                  className="text-muted-foreground hover:text-destructive size-8 shrink-0"
-                >
-                  <X className="size-4" />
-                </Button>
-              </div>
-            ))}
-          </div>
-          {opponentTeam.length < MAX_TEAM && (
-            <Button variant="outline" size="sm" className="w-fit" onClick={handleAddOpponent}>
-              <Plus className="size-3.5" />
-              추가
-            </Button>
-          )}
-        </Card>
+        <TeamInputCard
+          title="내 팀"
+          team={myTeam}
+          removeAriaLabel="내 포켓몬 삭제"
+          onSpeciesChange={handleSetMySpecies}
+          onAdd={handleAddMyMon}
+          onRemove={handleRemoveMyMon}
+        />
+        <TeamInputCard
+          title="상대 팀"
+          team={opponentTeam}
+          removeAriaLabel="상대 삭제"
+          onSpeciesChange={handleSetOpponentSpecies}
+          onAdd={handleAddOpponent}
+          onRemove={handleRemoveOpponent}
+        />
       </div>
 
       <div className="flex items-center gap-3">
@@ -189,17 +114,14 @@ export const MatchupMatrixPage = () => {
         )}
       </div>
 
-      {/* 결과 */}
       {board.length > 0 && (
         <>
-          {/* 요약 */}
           {matrix.data?.summary && (
             <Card>
               <p className="text-muted-foreground text-sm">{matrix.data.summary}</p>
             </Card>
           )}
 
-          {/* 매트릭스 테이블 */}
           <Card className="flex flex-col gap-4 overflow-x-auto">
             <div className="flex flex-wrap items-center gap-2">
               <h2 className="text-sm font-semibold">매트릭스</h2>
@@ -240,7 +162,7 @@ export const MatchupMatrixPage = () => {
                     {row.pairs.map((pair: Pairwise) => (
                       <td
                         key={pair.opponent}
-                        className={cn('min-w-[80px] p-2 text-center align-middle', verdictCellBg(pair.verdict))}
+                        className={cn('align-middle', 'min-w-[80px] p-2', 'text-center', verdictCellBg(pair.verdict))}
                       >
                         <div className="flex flex-col items-center gap-0.5">
                           <Badge variant={verdictBadgeVariant(pair.verdict)} size="sm">
@@ -284,34 +206,7 @@ export const MatchupMatrixPage = () => {
             </table>
           </Card>
 
-          {/* 범례 */}
-          <Card className="flex flex-wrap items-center gap-4">
-            <span className="text-muted-foreground text-xs font-semibold">범례</span>
-            <span className="flex items-center gap-1.5 text-xs">
-              <Badge variant="success" size="sm">
-                유리
-              </Badge>
-              <span className="text-muted-foreground">상성 유리</span>
-            </span>
-            <span className="flex items-center gap-1.5 text-xs">
-              <Badge variant="destructive" size="sm">
-                불리
-              </Badge>
-              <span className="text-muted-foreground">상성 불리</span>
-            </span>
-            <span className="flex items-center gap-1.5 text-xs">
-              <Badge variant="muted" size="sm">
-                호각
-              </Badge>
-              <span className="text-muted-foreground">호각</span>
-            </span>
-            <span className="text-muted-foreground text-xs">
-              <span className="text-success font-medium">↑</span> 선공 /
-              <span className="text-destructive font-medium"> ↓</span> 후공 /<span className="font-medium"> =</span>{' '}
-              동속
-            </span>
-            <span className="text-muted-foreground text-xs">KO% = 내 최적기 기준</span>
-          </Card>
+          <MatrixLegend />
         </>
       )}
 

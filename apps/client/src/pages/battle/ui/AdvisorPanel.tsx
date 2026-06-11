@@ -24,7 +24,9 @@ export const AdvisorPanel = ({ advice }: AdvisorPanelProps) => {
     <Card className="flex flex-col gap-3">
       <div className="flex items-center gap-2">
         <h2 className="text-foreground text-sm font-semibold">추천</h2>
-        <span className={cn('bg-muted rounded-md px-2 py-0.5 text-xs font-medium', firstMoveClass)}>{firstMove}</span>
+        <span className={cn('rounded-md px-2 py-0.5', 'text-xs font-medium', 'bg-muted', firstMoveClass)}>
+          {firstMove}
+        </span>
       </div>
       <p className="bg-primary/10 text-primary rounded px-2 py-1.5 text-sm font-medium">{recommendation}</p>
 

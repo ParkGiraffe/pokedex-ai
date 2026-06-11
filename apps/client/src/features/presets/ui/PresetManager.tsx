@@ -58,7 +58,7 @@ export const PresetManager = ({ currentParty, onLoad }: PresetManagerProps) => {
   const handleSave = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formEl = event.currentTarget;
-    const name = String(new FormData(formEl).get('name') ?? '').trim();
+    const name = ((new FormData(formEl).get('name') as string | null) ?? '').trim();
     if (!name) {
       toast.error('프리셋 이름을 입력하세요');
       return;

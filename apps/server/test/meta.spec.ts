@@ -7,13 +7,21 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { createApp } from '../src/app.factory';
 
+type AuthRes = { accessToken: string };
+type MetaSummary = {
+  totalGames: number;
+  topLeads: Array<{ species: string; games: number; wins: number; winRate: number; usage: number }>;
+  topOpponents: Array<{ species: string; games: number; wins: number; winRate: number; usage: number }>;
+  gimmickUsage: Array<{ gimmick: string; games: number; share: number }>;
+};
+
 describe('리빙 메타', () => {
   let app: NestExpressApplication;
 
   const newUser = async (): Promise<string> => {
     const email = `${randomUUID()}@test.local`;
     const res = await request(app.getHttpServer()).post('/auth/register').send({ email, password: 'password123' });
-    return res.body.accessToken as string;
+    return (res.body as AuthRes).accessToken;
   };
 
   const addLog = (token: string, body: Record<string, unknown>) =>
@@ -32,10 +40,11 @@ describe('리빙 메타', () => {
     // 이 테스트가 먼저 실행되는 경우를 위해 DB 상태와 무관하게 구조만 검사한다.
     const res = await request(app.getHttpServer()).get('/meta/usage');
     expect(res.status).toBe(200);
-    expect(typeof res.body.totalGames).toBe('number');
-    expect(Array.isArray(res.body.topLeads)).toBe(true);
-    expect(Array.isArray(res.body.topOpponents)).toBe(true);
-    expect(Array.isArray(res.body.gimmickUsage)).toBe(true);
+    const body = res.body as MetaSummary;
+    expect(typeof body.totalGames).toBe('number');
+    expect(Array.isArray(body.topLeads)).toBe(true);
+    expect(Array.isArray(body.topOpponents)).toBe(true);
+    expect(Array.isArray(body.gimmickUsage)).toBe(true);
   });
 
   it('인증 없이 접근할 수 있다', async () => {
@@ -61,12 +70,7 @@ describe('리빙 메타', () => {
     const res = await request(app.getHttpServer()).get('/meta/usage');
     expect(res.status).toBe(200);
 
-    const { totalGames, topLeads, topOpponents, gimmickUsage } = res.body as {
-      totalGames: number;
-      topLeads: Array<{ species: string; games: number; wins: number; winRate: number; usage: number }>;
-      topOpponents: Array<{ species: string; games: number; wins: number; winRate: number; usage: number }>;
-      gimmickUsage: Array<{ gimmick: string; games: number; share: number }>;
-    };
+    const { totalGames, topLeads, topOpponents, gimmickUsage } = res.body as MetaSummary;
 
     // 위에서 비웠으므로 이 테스트 시드(4판)만 집계된다.
     expect(totalGames).toBe(4);

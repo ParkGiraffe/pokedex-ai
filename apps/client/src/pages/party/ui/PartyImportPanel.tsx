@@ -113,7 +113,11 @@ export const PartyImportPanel = ({ open, onClose }: PartyImportPanelProps) => {
           </ul>
         )}
 
-        <Button variant="secondary" onClick={handleAnalyze} disabled={files.length === 0 || importParty.isPending}>
+        <Button
+          variant="secondary"
+          onClick={() => void handleAnalyze()}
+          disabled={files.length === 0 || importParty.isPending}
+        >
           {importParty.isPending ? '분석 중...' : `이미지 ${files.length}장 분석`}
         </Button>
         {importParty.isError && (

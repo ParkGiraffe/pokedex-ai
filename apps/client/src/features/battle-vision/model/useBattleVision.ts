@@ -1,9 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-import { adviseScreenshot } from '../api';
+import { adviseScreenshot, type BattleVisionAdvice } from '../api';
 
-export const useBattleVision = () => {
+export const useBattleVision = (): ReturnType<
+  typeof useMutation<BattleVisionAdvice, Error, { image: string; note?: string }>
+> => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: adviseScreenshot,

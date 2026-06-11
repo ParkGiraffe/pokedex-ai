@@ -1,0 +1,191 @@
+import { type NatureName, type TeraType, TYPE_NAMES, type TypeName } from '@pokedex-agent/pokedex-core';
+import { useMemo, useState } from 'react';
+
+import { Card } from '@/common/ui/Card';
+import { Checkbox } from '@/common/ui/Checkbox';
+import { Field } from '@/common/ui/Field';
+import { NumberField } from '@/common/ui/NumberField';
+import { Select } from '@/common/ui/Select';
+import { PokemonIcon } from '@/features/pokemon-picker/ui/PokemonIcon';
+import { PokemonPicker } from '@/features/pokemon-picker/ui/PokemonPicker';
+
+import { optimizePower } from '../lib/optimize';
+import { type Category, DEFAULT_ATTACK, ITEM_OPTIONS, natureOptions, typeOptions } from './ev-options';
+import { ResultRow } from './ResultRow';
+
+export const PowerMode = () => {
+  const [state, setState] = useState({
+    ...DEFAULT_ATTACK,
+    defenderSpecies: '또가스',
+    defenderLevel: 50,
+    defenderNature: '신중' as NatureName,
+    defenderHpEv: 0,
+    defenderDefEv: 0,
+    targetHits: 2,
+    guaranteed: true,
+  });
+  const set = (patch: Partial<typeof state>) => setState((prev) => ({ ...prev, ...patch }));
+
+  const result = useMemo(
+    () =>
+      optimizePower({
+        attackerSpecies: state.attackerSpecies,
+        attackerLevel: state.attackerLevel,
+        attackerNature: state.attackerNature,
+        attack: {
+          level: state.attackerLevel,
+          category: state.category,
+          moveType: state.moveType,
+          movePower: state.movePower,
+          itemMultiplier: state.itemMultiplier,
+          terastalized: state.terastalized,
+          teraType: state.teraType,
+        },
+        defenderSpecies: state.defenderSpecies,
+        defenderLevel: state.defenderLevel,
+        defenderNature: state.defenderNature,
+        defenderHpEv: state.defenderHpEv,
+        defenderDefEv: state.defenderDefEv,
+        targetHits: state.targetHits,
+        guaranteed: state.guaranteed,
+      }),
+    [state],
+  );
+
+  const attackEvLabel = state.category === '물리' ? '공격' : '특공';
+
+  return (
+    <div className="grid gap-4 md:grid-cols-2">
+      <Card className="flex flex-col gap-3">
+        <h2 className="text-primary text-sm font-semibold">공격(나)</h2>
+        <Field label="포켓몬">
+          <div className="flex items-center gap-2">
+            <PokemonIcon species={state.attackerSpecies} />
+            <PokemonPicker value={state.attackerSpecies} onSelect={(name) => set({ attackerSpecies: name })} />
+          </div>
+        </Field>
+        <div className="grid grid-cols-2 gap-3">
+          <Field label="분류">
+            <Select
+              value={state.category}
+              onValueChange={(value) => set({ category: value as Category })}
+              options={[
+                { value: '물리', label: '물리' },
+                { value: '특수', label: '특수' },
+              ]}
+            />
+          </Field>
+          <Field label="기술 타입">
+            <Select
+              value={state.moveType}
+              onValueChange={(value) => set({ moveType: value as TypeName })}
+              options={typeOptions}
+            />
+          </Field>
+          <Field label="위력">
+            <NumberField
+              value={state.movePower}
+              min={0}
+              max={250}
+              onValueChange={(value) => set({ movePower: value })}
+            />
+          </Field>
+          <Field label="성격">
+            <Select
+              value={state.attackerNature}
+              onValueChange={(value) => set({ attackerNature: value as NatureName })}
+              options={natureOptions}
+            />
+          </Field>
+          <Field label="도구">
+            <Select
+              value={String(state.itemMultiplier)}
+              onValueChange={(value) => set({ itemMultiplier: Number(value) })}
+              options={ITEM_OPTIONS.map((option) => ({ value: String(option.value), label: option.label }))}
+            />
+          </Field>
+        </div>
+        <Checkbox
+          checked={state.terastalized}
+          onCheckedChange={(checked) => set({ terastalized: checked })}
+          label="테라스탈"
+        />
+        {state.terastalized && (
+          <Select
+            value={state.teraType}
+            onValueChange={(value) => set({ teraType: value as TeraType })}
+            options={[...TYPE_NAMES, '스텔라'].map((type) => ({ value: type, label: type }))}
+          />
+        )}
+      </Card>
+
+      <Card className="flex flex-col gap-3">
+        <h2 className="text-info text-sm font-semibold">대상(상대)</h2>
+        <Field label="포켓몬">
+          <div className="flex items-center gap-2">
+            <PokemonIcon species={state.defenderSpecies} />
+            <PokemonPicker value={state.defenderSpecies} onSelect={(name) => set({ defenderSpecies: name })} />
+          </div>
+        </Field>
+        <div className="grid grid-cols-2 gap-3">
+          <Field label="HP 노력치">
+            <NumberField
+              value={state.defenderHpEv}
+              min={0}
+              max={32}
+              onValueChange={(value) => set({ defenderHpEv: value })}
+            />
+          </Field>
+          <Field label="방어 노력치">
+            <NumberField
+              value={state.defenderDefEv}
+              min={0}
+              max={32}
+              onValueChange={(value) => set({ defenderDefEv: value })}
+            />
+          </Field>
+          <Field label="성격">
+            <Select
+              value={state.defenderNature}
+              onValueChange={(value) => set({ defenderNature: value as NatureName })}
+              options={natureOptions}
+            />
+          </Field>
+          <Field label="목표 타수">
+            <NumberField
+              value={state.targetHits}
+              min={1}
+              max={5}
+              onValueChange={(value) => set({ targetHits: value })}
+            />
+          </Field>
+        </div>
+        <Checkbox
+          checked={state.guaranteed}
+          onCheckedChange={(checked) => set({ guaranteed: checked })}
+          label="확정(끄면 난수 허용)"
+        />
+      </Card>
+
+      <Card className="md:col-span-2">
+        {!result ? (
+          <p className="text-muted-foreground text-sm">포켓몬을 정확히 입력하라.</p>
+        ) : result.evNeeded === null ? (
+          <p className="text-destructive text-sm font-medium">
+            최대 투자로도 목표 {state.targetHits}타 불가 (최대 {result.maxDamagePercent.toFixed(1)}%,{' '}
+            {result.achievedHitsText}).
+          </p>
+        ) : (
+          <div className="flex flex-col gap-2">
+            <ResultRow label={`필요 ${attackEvLabel} 노력치`} value={`${result.evNeeded} / 32`} strong />
+            <ResultRow
+              label="달성"
+              value={`${state.guaranteed ? '확정' : '난수'} ${state.targetHits}타 (${result.achievedHitsText})`}
+            />
+            <ResultRow label="여유 포인트" value={`${32 - result.evNeeded} 포인트를 다른 곳에`} />
+          </div>
+        )}
+      </Card>
+    </div>
+  );
+};

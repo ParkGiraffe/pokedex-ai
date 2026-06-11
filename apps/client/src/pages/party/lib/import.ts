@@ -39,10 +39,10 @@ export const parsePartyImport = (text: string): MemberDraft[] => {
       evs[key] = evValue(raw.evs?.[key]);
     }
     return {
-      species: String(raw.species),
+      species: typeof raw.species === 'string' ? raw.species : '',
       level: typeof raw.level === 'number' ? raw.level : base.level,
-      ability: raw.ability ? String(raw.ability) : '',
-      item: raw.item ? String(raw.item) : '',
+      ability: typeof raw.ability === 'string' ? raw.ability : '',
+      item: typeof raw.item === 'string' ? raw.item : '',
       // 임의 문자열을 그대로 캐스트하면 actualStat의 NATURE_TABLE 조회에서 터진다. Zod로 검증 후 폴백.
       nature: NatureName.safeParse(raw.nature).success ? (raw.nature as NatureName) : base.nature,
       teraType: TeraType.safeParse(raw.teraType).success ? (raw.teraType as TeraType) : base.teraType,

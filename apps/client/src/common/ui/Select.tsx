@@ -35,7 +35,13 @@ export const Select = ({ value, onValueChange, options, placeholder, disabled, c
   >
     <SelectPrimitive.Trigger
       className={cn(
-        'border-border bg-input text-foreground focus:border-primary focus:ring-ring data-[placeholder]:text-muted-foreground flex h-9 w-full items-center justify-between gap-2 rounded-md border px-3 text-sm transition focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50',
+        'flex items-center justify-between gap-2',
+        'h-9 w-full rounded-md border px-3',
+        'border-border bg-input text-foreground text-sm',
+        'transition',
+        'focus:border-primary focus:ring-ring focus:ring-2 focus:outline-none',
+        'disabled:cursor-not-allowed disabled:opacity-50',
+        'data-[placeholder]:text-muted-foreground',
         className,
       )}
     >
@@ -50,7 +56,8 @@ export const Select = ({ value, onValueChange, options, placeholder, disabled, c
         sideOffset={4}
         className={cn(
           'max-h-[var(--radix-select-content-available-height)] min-w-[var(--radix-select-trigger-width)]',
-          'border-border bg-popover text-popover-foreground z-50 overflow-hidden rounded-md border shadow-md',
+          'z-50 overflow-hidden rounded-md border',
+          'border-border bg-popover text-popover-foreground shadow-md',
         )}
       >
         <SelectPrimitive.Viewport className="p-1">

@@ -25,9 +25,9 @@ export const AuthSheet = ({ open, onClose }: AuthSheetProps) => {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
-    const email = String(form.get('email') ?? '');
-    const password = String(form.get('password') ?? '');
-    const nickname = String(form.get('nickname') ?? '').trim() || undefined;
+    const email = (form.get('email') as string | null) ?? '';
+    const password = (form.get('password') as string | null) ?? '';
+    const nickname = ((form.get('nickname') as string | null) ?? '').trim() || undefined;
     const onSuccess = () => onClose();
     if (mode === 'login') {
       login.mutate({ email, password }, { onSuccess });
@@ -41,8 +41,10 @@ export const AuthSheet = ({ open, onClose }: AuthSheetProps) => {
       type="button"
       onClick={() => setMode(value)}
       className={cn(
-        'flex-1 rounded px-3 py-1.5 transition',
+        'flex-1',
+        'rounded px-3 py-1.5',
         mode === value ? 'bg-card text-foreground font-semibold' : 'text-muted-foreground',
+        'transition',
       )}
     >
       {label}

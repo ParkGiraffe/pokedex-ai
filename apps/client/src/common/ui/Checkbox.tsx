@@ -9,7 +9,7 @@ type CheckboxProps = Omit<ComponentProps<'input'>, 'type' | 'onChange'> & {
 };
 
 export const Checkbox = ({ className, label, onCheckedChange, ...props }: CheckboxProps) => (
-  <label className={cn('inline-flex cursor-pointer items-center gap-2 select-none', className)}>
+  <label className={cn('inline-flex items-center gap-2', 'cursor-pointer select-none', className)}>
     <span className="relative inline-flex items-center justify-center">
       <input
         type="checkbox"

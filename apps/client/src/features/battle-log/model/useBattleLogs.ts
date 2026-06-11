@@ -2,9 +2,9 @@ import { useQuery } from '@tanstack/react-query';
 
 import { useAuthStore } from '@/features/auth';
 
-import { fetchBattleLogs } from '../api';
+import { type BattleLogRes, fetchBattleLogs } from '../api';
 
-export const useBattleLogs = () => {
+export const useBattleLogs = (): ReturnType<typeof useQuery<BattleLogRes[]>> => {
   const token = useAuthStore((state) => state.token);
   return useQuery({
     queryKey: ['battle-logs'],

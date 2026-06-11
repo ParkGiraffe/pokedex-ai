@@ -1,6 +1,6 @@
 import { findMegasBySpecies, findPokemon, formula } from '@pokedex-agent/pokedex-core';
 
-import { type SpeedSide } from '../model/store';
+import { type SpeedSide } from '../model/speed-store';
 
 export const computeSpeed = (side: SpeedSide): number | undefined => {
   const entry = findPokemon(side.species);

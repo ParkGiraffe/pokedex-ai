@@ -8,6 +8,8 @@ import { createApp } from '../src/app.factory';
 
 const uniqueEmail = (): string => `${randomUUID()}@test.local`;
 
+type AuthRes = { accessToken: string; user: { id: string; email: string; tier: string } };
+
 describe('인증 (내부 로그인)', () => {
   let app: NestExpressApplication;
 
@@ -29,9 +31,10 @@ describe('인증 (내부 로그인)', () => {
     const email = uniqueEmail();
     const res = await register(email, 'password123', '트레이너');
     expect(res.status).toBe(201);
-    expect(res.body.accessToken).toBeTruthy();
-    expect(res.body.user.email).toBe(email);
-    expect(res.body.user.tier).toBe('free');
+    const body = res.body as AuthRes;
+    expect(body.accessToken).toBeTruthy();
+    expect(body.user.email).toBe(email);
+    expect(body.user.tier).toBe('free');
   });
 
   it('같은 이메일로 재가입하면 409', async () => {
@@ -46,7 +49,7 @@ describe('인증 (내부 로그인)', () => {
     await register(email, 'password123');
     const res = await login(email, 'password123');
     expect(res.status).toBe(200);
-    expect(res.body.accessToken).toBeTruthy();
+    expect((res.body as AuthRes).accessToken).toBeTruthy();
   });
 
   it('틀린 비밀번호 로그인은 401', async () => {
@@ -59,10 +62,10 @@ describe('인증 (내부 로그인)', () => {
   it('발급한 토큰으로 /auth/me를 조회한다', async () => {
     const email = uniqueEmail();
     const registered = await register(email, 'password123');
-    const token = registered.body.accessToken as string;
+    const token = (registered.body as AuthRes).accessToken;
     const res = await request(app.getHttpServer()).get('/auth/me').set('authorization', `Bearer ${token}`);
     expect(res.status).toBe(200);
-    expect(res.body.email).toBe(email);
+    expect((res.body as { email: string }).email).toBe(email);
   });
 
   it('토큰 없이 /auth/me는 401', async () => {

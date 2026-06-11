@@ -4,7 +4,9 @@ import { toast } from 'sonner';
 
 import { requestPartyAnalysis } from '../api';
 
-export const useAnalyzeParty = () => {
+export const useAnalyzeParty = (): ReturnType<
+  typeof useMutation<Awaited<ReturnType<typeof requestPartyAnalysis>>, Error, Party>
+> => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (party: Party) => requestPartyAnalysis(party),
