@@ -15,7 +15,6 @@ const validateSearch = (search: Record<string, unknown>): MetaSearch => {
   return { tab: VALID_TABS.includes(tab as Tab) ? (tab as Tab) : 'usage' };
 };
 
-// 리빙 메타 + 인기 파티. 가드 없음 — 비로그인도 접근 가능.
 export const metaRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/meta',

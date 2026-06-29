@@ -25,8 +25,6 @@ export const MetaBundle = z.object({
 });
 export type MetaBundle = z.infer<typeof MetaBundle>;
 
-// 시즌 메타는 공식 API가 없어 사용자가 수기로 수집한다 (docs/meta-collection.md).
-// 시즌 데이터를 추가하면 여기서 import해 currentMeta에 연결한다. 현재는 미수집.
 export const currentMeta = null as MetaBundle | null;
 
 export const usageRankOf = (species: string): number | undefined =>

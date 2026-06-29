@@ -8,7 +8,6 @@ export const useCreateBattleLog = (): ReturnType<typeof useMutation<BattleLogRes
   return useMutation({
     mutationFn: createBattleLog,
     onSuccess: () => {
-      // ['battle-logs'] 프리픽스로 목록과 통계(['battle-logs','stats'])를 함께 갱신한다.
       void queryClient.invalidateQueries({ queryKey: ['battle-logs'] });
       toast.success('배틀 로그를 기록했습니다');
     },

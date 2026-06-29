@@ -16,7 +16,6 @@ export class PresetsService {
     return this.em.find(Preset, { user: userId }, { orderBy: { createdAt: 'asc' } });
   }
 
-  // 소유자 본인 것만 조회 — 남의 프리셋은 존재 여부도 노출하지 않도록 404.
   async getOwned(userId: string, id: string): Promise<Preset> {
     const preset = await this.em.findOne(Preset, { id, user: userId });
     if (!preset) {
@@ -25,7 +24,6 @@ export class PresetsService {
     return preset;
   }
 
-  // 개수 검사 + 생성을 한 트랜잭션으로 묶어 동시 요청이 캡을 넘기지 못하게 한다(커밋 시 flush).
   create(userId: string, name: string, party: PartyDraft): Promise<Preset> {
     return this.em.transactional(async (em) => {
       const user = await em.findOne(User, { id: userId });
@@ -62,7 +60,6 @@ export class PresetsService {
     await this.em.flush();
   }
 
-  // 공유 토큰을 발급한다. 이미 발급돼 있으면 그대로 돌려준다(멱등 — 같은 링크 유지).
   async share(userId: string, id: string): Promise<string> {
     const preset = await this.getOwned(userId, id);
     if (!preset.shareToken) {
@@ -72,14 +69,12 @@ export class PresetsService {
     return preset.shareToken;
   }
 
-  // 공유를 취소한다 — 기존 링크는 이후 404가 된다.
   async unshare(userId: string, id: string): Promise<void> {
     const preset = await this.getOwned(userId, id);
     preset.shareToken = undefined;
     await this.em.flush();
   }
 
-  // 공유 토큰으로 누구나(비로그인 포함) 조회 — 소유자 필터 없음. 없으면 404.
   async getByShareToken(token: string): Promise<Preset> {
     const preset = await this.em.findOne(Preset, { shareToken: token });
     if (!preset) {
@@ -88,7 +83,6 @@ export class PresetsService {
     return preset;
   }
 
-  // 공유 토큰으로 프리셋을 내 프리셋으로 복사한다. 원본의 copyCount를 1 증가시키고 새 프리셋을 반환한다.
   copyFromShare(userId: string, token: string): Promise<Preset> {
     return this.em.transactional(async (em) => {
       const source = await em.findOne(Preset, { shareToken: token });
@@ -112,7 +106,6 @@ export class PresetsService {
     });
   }
 
-  // 복사수 내림차순으로 공유 프리셋 상위 limit개를 반환한다.
   leaderboard(limit: number): Promise<Preset[]> {
     return this.em.find(Preset, { shareToken: { $ne: null } }, { orderBy: { copyCount: 'desc' }, limit });
   }

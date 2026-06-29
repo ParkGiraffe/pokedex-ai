@@ -19,7 +19,6 @@ const makeRouter = (initial: string) =>
     history: createMemoryHistory({ initialEntries: [initial] }),
   });
 
-// 실제 앱(main.tsx)처럼 QueryClientProvider로 감싼다(헤더의 AuthMenu가 react-query 훅을 쓴다).
 const renderApp = (initial: string) =>
   render(
     <QueryClientProvider client={new QueryClient()}>

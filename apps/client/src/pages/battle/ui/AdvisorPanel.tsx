@@ -7,7 +7,6 @@ type AdvisorPanelProps = {
   advice: BattleAdvice | undefined;
 };
 
-// 결정론 인배틀 추천. 페이지 상태(메가·랭크·상태이상)가 그대로 반영된다.
 export const AdvisorPanel = ({ advice }: AdvisorPanelProps) => {
   if (!advice) {
     return (

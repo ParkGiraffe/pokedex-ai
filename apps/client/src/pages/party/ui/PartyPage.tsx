@@ -29,7 +29,6 @@ export const PartyPage = () => {
     .filter((entry) => entry.weakCount > 0)
     .sort((a, b) => b.weakCount - a.weakCount);
 
-  // 챔피언스는 한 배틀에 메가진화가 1마리만 가능. 메가스톤 보유 슬롯이 2개 이상이면 잉여.
   const megaCarriers = members
     .map((member, index) => ({ member, index, mega: member.item ? findMegaByItem(member.item) : undefined }))
     .filter((entry) => entry.mega !== undefined);

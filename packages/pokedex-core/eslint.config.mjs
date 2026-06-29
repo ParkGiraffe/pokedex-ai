@@ -1,5 +1,3 @@
-// @ts-check
-// noinspection JSCheckFunctionSignatures
 
 import { baseConfig } from '../../eslint.config.base.mjs';
 import globals from 'globals';

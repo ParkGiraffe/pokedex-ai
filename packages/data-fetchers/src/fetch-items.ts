@@ -22,7 +22,6 @@ type ItemResponse = {
 
 const OUT = resolve(import.meta.dirname, '../../pokedex-core/data/items.json');
 
-// SV 배틀에서 의미 있는 카테고리 (배틀용 도구·구애·메가스톤 등)
 const BATTLE_CATEGORIES = new Set([
   'held-items',
   'choice',

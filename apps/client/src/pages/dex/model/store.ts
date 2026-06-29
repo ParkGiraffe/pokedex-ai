@@ -16,7 +16,6 @@ type DexState = {
   select: (no: number | null) => void;
 };
 
-// filter 바뀌면 페이지를 1로 리셋한다. select는 페이지 위치를 보존한다.
 export const useDexStore = create<DexState>((set) => ({
   query: '',
   type: ALL_TYPES,

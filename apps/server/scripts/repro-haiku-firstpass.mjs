@@ -1,7 +1,3 @@
-// 2026-06-11 devlog 08편 증거 수집용 일회성 스크립트.
-// 2패스 명칭 보정이 끼기 전의 "1차 응답"을 그대로 받기 위해, 서버와 동일한
-// 직렬화·SYSTEM 프롬프트·스키마로 Anthropic을 직접 호출한다(서버 경유 안 함).
-// 모델은 초기에 쓰던 Haiku로 강제해 당시 구성을 재현한다.
 import { readFileSync } from 'node:fs';
 
 import Anthropic from '@anthropic-ai/sdk';
@@ -14,7 +10,6 @@ for (const line of readFileSync(new URL('./.env.development', import.meta.url), 
   if (m && !process.env[m[1]]) process.env[m[1]] = m[2];
 }
 
-// 2026-05-28 보정 도입 커밋(6329ff8) 직전의 실제 SYSTEM (git show 6329ff8^:apps/server/src/advisor.ts)
 const SYSTEM_OLD = [
   '포켓몬 챔피언스 싱글배틀 분석가. 한국 SV 커뮤니티 어휘 (영어 직역 금지).',
   '응답은 details 2~4개로 압축, 파티 전체 관점. 포켓몬별 분산 금지.',
@@ -22,7 +17,6 @@ const SYSTEM_OLD = [
   "고유명사(포켓몬 종족·도구·기술·특성)는 절대 만들어내지 마라. 입력에 등장하지 않은 이름이나 확신 없는 한국 명칭을 출력하지 말 것. 필요하면 슬롯 번호('1번', '2번 슬롯')로만 가리켜라.",
 ].join('\n');
 
-// advisor.service.ts의 현행 SYSTEM 원문 그대로
 const SYSTEM_NOW = [
   '포켓몬 챔피언스 싱글배틀 분석가. 한국 SV 커뮤니티 어휘 (영어 직역 금지).',
   '응답은 details 2~4개로 압축, 파티 전체 관점. 포켓몬별 분산 금지.',

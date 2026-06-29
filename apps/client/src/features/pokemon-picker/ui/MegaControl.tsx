@@ -9,14 +9,11 @@ type MegaControlProps = {
   className?: string;
 };
 
-// 메가 가능한 종족이면 [비메가 | 메가XX (| Y)] segmented control로 통일한다.
-// 메가가 단일이든 X/Y 다중이든 같은 톤이라 시각적 일관성이 유지된다.
 export const MegaControl = ({ species, value, onChange, className }: MegaControlProps) => {
   const options = findMegasBySpecies(species);
   if (options.length === 0) {
     return null;
   }
-  // 라벨 일관성: 단일 메가는 "메가", X/Y 다중은 "메가X"/"메가Y"로 짧게 통일한다.
   const labelOf = (form: string): string => {
     if (options.length === 1) {
       return '메가';

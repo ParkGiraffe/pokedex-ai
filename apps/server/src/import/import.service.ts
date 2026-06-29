@@ -7,7 +7,6 @@ import { Injectable } from '@nestjs/common';
 import { DATA_DIR } from '@pokedex-agent/pokedex-core/node';
 import { z } from 'zod';
 
-// 데이터 디렉토리는 pokedex-core가 노출하는 절대 경로를 쓴다(컴파일·재배치에도 안전).
 const CORE = DATA_DIR;
 
 const PROMPT = [
@@ -48,7 +47,6 @@ export type ImportResult = { party: ImportMember[]; warnings: string[] };
 
 const STAT_KEYS = ['H', 'A', 'B', 'C', 'D', 'S'] as const;
 
-// 챔피언스 노력 포인트(0~32) 그대로. 본가 EV 변환은 폐기됨.
 const toEv = (point: unknown): number => {
   const value = Number(point);
   if (!Number.isFinite(value)) {
@@ -57,7 +55,6 @@ const toEv = (point: unknown): number => {
   return Math.min(32, Math.max(0, Math.round(value)));
 };
 
-// --- 우리 데이터 사전 (OCR 오독 교정 + 도구/기술 재분류용) ---
 const norm = (value: string): string => value.toLowerCase().replace(/\s/g, '');
 const readKo = (file: string, key: string, prop = 'ko'): string[] => {
   const parsed = JSON.parse(readFileSync(resolve(CORE, file), 'utf8')) as Record<string, Array<Record<string, string>>>;
@@ -74,7 +71,6 @@ type NatureEntry = { ko: string; up: string | null; down: string | null };
 const NATURE_TABLE: NatureEntry[] = (
   JSON.parse(readFileSync(resolve(CORE, 'natures.json'), 'utf8')) as { natures: NatureEntry[] }
 ).natures;
-// 한국어 스탯 라벨 → 내부 키(A/B/C/D/S). HP(H)는 성격 보정 대상 아님.
 const STAT_LABEL_TO_KEY: Record<string, 'A' | 'B' | 'C' | 'D' | 'S'> = {
   공격: 'A',
   방어: 'B',
@@ -85,7 +81,6 @@ const STAT_LABEL_TO_KEY: Record<string, 'A' | 'B' | 'C' | 'D' | 'S'> = {
   스피드: 'S',
 };
 
-// (natureUp, natureDown) 스탯 라벨 → 결정적 성격 역산. 둘 다 비어 있으면 중립으로 폴백.
 const inferNature = (rawNature: string, upLabel: string, downLabel: string): string => {
   const direct = nearest(rawNature, NATURES)?.name;
   if (direct) {
@@ -116,7 +111,6 @@ const distance = (a: string, b: string): number => {
   return rows[a.length]![b.length]!;
 };
 
-// 사전에서 가장 가까운 한국어명. dist가 임계 이하일 때만 채택(OCR 오타 1~2자 교정).
 const nearest = (text: string, dict: string[]): { name: string; dist: number } | undefined => {
   const target = norm(text);
   if (!target) {
@@ -136,7 +130,6 @@ const nearest = (text: string, dict: string[]): { name: string; dist: number } |
   return best && best.dist <= limit ? best : undefined;
 };
 
-// 스테이터스 화면에서 새어 들어오는 능력치 라벨(기술/도구 아님) — 분류에서 제외.
 const STAT_LABELS = new Set(
   [
     'hp',
@@ -154,7 +147,6 @@ const STAT_LABELS = new Set(
   ].map(norm),
 );
 
-// 모델이 도구/기술 칸을 헷갈리므로, item+moves 텍스트를 한 풀로 모아 사전으로 재분류한다.
 const classify = (raw: RawMember): { item: string; moves: string[]; unmatched: string[] } => {
   const texts = [raw.item, ...(raw.moves ?? [])]
     .map((value) => String(value ?? '').trim())
@@ -206,7 +198,6 @@ export const buildImportResult = (raw: RawMember[]): ImportResult => {
       evs[key] = toEv(member.points?.[key]);
     }
 
-    // 성격: 스테이터스 화면의 ↑/↓ 화살표(natureUp/natureDown)로 결정적 역산.
     const upLabel = (member.natureUp ?? '').trim();
     const downLabel = (member.natureDown ?? '').trim();
     const nature = inferNature(member.nature ?? '', upLabel, downLabel);
@@ -232,7 +223,6 @@ const pointSum = (points?: Points): number =>
   points ? STAT_KEYS.reduce((sum, key) => sum + (Number(points[key]) || 0), 0) : 0;
 const movesCount = (moves?: string[]): number => (moves ?? []).filter(Boolean).length;
 
-// 여러 화면(능력=기술, 스테이터스=EV 등)을 종족 기준으로 병합한다.
 export const mergeMembers = (lists: RawMember[][]): RawMember[] => {
   const groups = new Map<string, RawMember>();
   const order: string[] = [];
@@ -275,7 +265,6 @@ export const mergeMembers = (lists: RawMember[][]): RawMember[] => {
   return order.map((key) => groups.get(key)!);
 };
 
-// Structured Outputs로 응답 JSON 형식을 보장 — 느슨한 파싱 불필요.
 const PartySchema = z.object({
   party: z.array(
     z.object({
@@ -300,15 +289,11 @@ const PartySchema = z.object({
 
 @Injectable()
 export class ImportService {
-  // Claude 비전. 기본 claude-opus-4-7 (한국어 OCR·게임 UI 정확도 최상).
   private readonly model = process.env.ANTHROPIC_MODEL ?? 'claude-opus-4-7';
-  // 비전 OCR은 응답이 느릴 수 있어 추천보다 여유를 둔다. 타임아웃 없으면 요청이 무한 대기한다.
   private readonly anthropic = new Anthropic({ timeout: 120_000 });
 
-  // 파티 화면 이미지(여러 장 가능) → Claude 비전 → 종족 기준 병합 → 검증된 파티(빌더 형식).
   async importParty(sources: string[]): Promise<ImportResult> {
     const images = sources.map((source) => source.replace(/^data:image\/[a-zA-Z+]+;base64,/, ''));
-    // Claude API는 동시 요청 가능 — 여러 장 병렬 처리해 응답 시간 단축.
     const lists = await Promise.all(images.map((image) => this.extractPartyFromImage(image)));
     return buildImportResult(mergeMembers(lists));
   }

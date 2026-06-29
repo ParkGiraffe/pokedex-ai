@@ -38,8 +38,6 @@ const partyAnalysisBody = (party: Party): string => {
     .join(', ');
   const meta = metaSummary();
 
-  // 메가스톤 보유 슬롯 카운트. 챔피언스 룰상 한 배틀에 메가는 1마리만 가능하므로
-  // 2개 이상이면 슬롯이 낭비될 가능성이 큼.
   const megaCarriers = party
     .map((member, index) => ({ member, index, mega: member.item ? findMegaByItem(member.item) : undefined }))
     .filter(
@@ -48,7 +46,6 @@ const partyAnalysisBody = (party: Party): string => {
       ): entry is { member: Party[number]; index: number; mega: NonNullable<ReturnType<typeof findMegaByItem>> } =>
         entry.mega !== undefined,
     );
-  // 메가 의무도(Smogon 챔피언스 사용률 기반) 라벨. 어느 메가스톤이 메인이고 어느 게 잉여인지 판단의 근거.
   const priorityLabel = (priority: string | undefined): string =>
     priority === 'obligatory'
       ? '메가 필수(비메가 거의 안 씀)'
@@ -112,7 +109,6 @@ const battleDecisionBody = (state: BattleState): string => {
   if (state.weather) lines.push(`- 날씨: ${state.weather}`);
   if (state.terrain) lines.push(`- 필드: ${state.terrain}`);
   if (state.trickRoom) lines.push(`- 트릭룸: 활성`);
-  // 필드 상태(진입 위험·스크린·순풍). 데미지·교체·선공 판단의 근거.
   const fld = state.battleField;
   if (fld) {
     const notes: string[] = [];
@@ -139,7 +135,6 @@ const battleDecisionBody = (state: BattleState): string => {
     lines.push('(공개된 정보 없음)');
   } else {
     lines.push(revealedSpecies.join(', '));
-    // 상대 예상 세트(실측 빈도, 검증된 한국명). AI가 특성·기술을 추측·음역하지 않도록 데이터로 제공한다.
     for (const species of revealedSpecies) {
       const hint = opponentSetHint(species);
       if (hint) {
@@ -154,7 +149,6 @@ const battleDecisionBody = (state: BattleState): string => {
   const opponentSlot = state.opponent.field[0];
   const myActive = mySlot?.member;
   if (myActive && mySlot && opponentSlot) {
-    // 필드 슬롯의 랭크·상태·메가를 그대로 반영해, 클라이언트 결정론 어드바이저와 동일한 데미지를 본다.
     const pickRanks = (ranks: { A: number; B: number; C: number; D: number; S: number }) => ({
       A: ranks.A,
       B: ranks.B,
@@ -207,7 +201,6 @@ const battleDecisionBody = (state: BattleState): string => {
   return lines.join('\n');
 };
 
-// 종족명→메가폼 슬러그 Record를 leadBoard용 Map<species, MegaForm>으로 해석한다.
 const resolveMegaMap = (formBySpecies?: Record<string, string>): Map<string, MegaForm> => {
   const map = new Map<string, MegaForm>();
   if (!formBySpecies) {
@@ -234,20 +227,16 @@ const matchupLeadBody = (state: BattleState, megaForms?: MegaFormSelection): str
   const opponents = state.opponent.revealed
     .map((member) => member.species)
     .filter((species): species is string => Boolean(species));
-  // 클라이언트 화면과 동일하게 메가 선택을 점수에 반영한다(미반영 시 비메가 기준으로 어긋남).
   const context: MatchupContext = {
     myMegaByPick: resolveMegaMap(megaForms?.my),
     opponentMegaBySpecies: resolveMegaMap(megaForms?.opponent),
   };
-  // state.my는 호출자가 이미 선출한 3마리만 담아 전달한다. leadBoard는 그 안에서 1·2·3순위를 결정.
   const board = leadBoard(state.my, opponents, context);
   const cover = coverage(state.my, opponents, context);
   const boardLines = board.map((lead, index) => {
     const detail = lead.pairs.map((pair) => `${pair.opponent} ${pair.verdict}`).join(', ');
     return `- ${index + 1}순위 ${lead.myPick}: ${lead.finalScore}점 (유리 ${lead.favorable}/불리 ${lead.unfavorable})${detail ? ` — ${detail}` : ''}`;
   });
-  // 선출 3마리 중 메가스톤 보유자. 챔피언스는 한 배틀에 메가 1마리라 2개 이상이면 한 쪽이 잉여.
-  // 메가 의무도 라벨로 어느 픽이 메인 메가여야 하는지 판단 근거를 준다.
   const lineupPriorityLabel = (priority: string | undefined): string =>
     priority === 'obligatory'
       ? '메가 필수'
@@ -272,7 +261,6 @@ const matchupLeadBody = (state: BattleState, megaForms?: MegaFormSelection): str
     '',
     '## 상대 공개분',
     opponents.length === 0 ? '(공개된 정보 없음)' : opponents.join(', '),
-    // 상대 예상 세트(실측 빈도, 검증된 한국명). 추측·음역 방지용.
     ...opponents
       .map((species) => {
         const hint = opponentSetHint(species);

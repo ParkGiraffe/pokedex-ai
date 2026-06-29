@@ -18,7 +18,6 @@ import { QuotaService } from '../quota/quota.service';
 import { AdvisorService } from './advisor.service';
 import { type BattleVisionAdvice, BattleVisionService } from './battle-vision.service';
 
-// 추천 시스템: 로그인 + 일일 쿼터 소비 후 Anthropic 호출.
 @Controller()
 @UseGuards(JwtAuthGuard)
 export class AdvisorController {

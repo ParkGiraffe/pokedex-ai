@@ -38,7 +38,6 @@ export const LogPage = () => {
   const create = useCreateBattleLog();
   const remove = useDeleteBattleLog();
   const presets = usePresets();
-  // 카운터 조회용 풀: 저장한 프리셋의 포켓몬을 종족 단위로 중복 제거해 모은다.
   const pool = useMemo<CounterPoolMon[]>(() => {
     const seen = new Set<string>();
     const result: CounterPoolMon[] = [];

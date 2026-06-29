@@ -5,7 +5,6 @@ import { type AuthProvider } from '../domain/auth-provider.port';
 import { type ProviderName, type VerifiedIdentity } from '../domain/identity';
 import { PASSWORD_HASHER, type PasswordHasher } from '../domain/password-hasher.port';
 
-// 내부 로그인 제공자: 저장된 이메일+비밀번호 해시로 검증. providerUserId는 이메일을 쓴다.
 @Injectable()
 export class InternalAuthProvider implements AuthProvider {
   readonly name: ProviderName = 'internal';

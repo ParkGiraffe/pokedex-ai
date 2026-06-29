@@ -5,8 +5,8 @@ export type DamageCategory = '물리' | '특수';
 
 export type DamageInput = {
   level: number;
-  attack: number; // 실수치 (랭크·도구·특성 미리 반영)
-  defense: number; // 실수치
+  attack: number;
+  defense: number;
   basePower: number;
   category: DamageCategory;
   attackerTypes: ReadonlyArray<TypeName>;
@@ -14,12 +14,12 @@ export type DamageInput = {
   moveType: TypeName;
   attackerTeraType?: TeraType;
   attackerTerastalized: boolean;
-  stab?: boolean; // 호환용. 미지정 시 attackerTypes로 자속을 판정한다.
+  stab?: boolean;
   critical?: boolean;
-  weatherBoost?: 1 | 1.5 | 0.5; // 날씨에 의한 위력 보정 (불꽃-맑음 1.5, 물-맑음 0.5 등)
-  itemMultiplier?: number; // 도구 종합 보정 (생명의구슬 1.3, 안경 1.2 등)
-  burned?: boolean; // 화상 (물리 공격 실수치 절반)
-  screen?: boolean; // 상대 빛의장막(특수)/리플렉터(물리). 싱글 0.5배, 급소면 무시.
+  weatherBoost?: 1 | 1.5 | 0.5;
+  itemMultiplier?: number;
+  burned?: boolean;
+  screen?: boolean;
 };
 
 export type DamageResult = {
@@ -31,7 +31,6 @@ export type DamageResult = {
 
 const RANDOM_ROLLS = [85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100] as const;
 
-// SV 데미지는 4096 고정소수점 모디파이어와 pokeRound(반내림)를 쓴다.
 const pokeRound = (n: number): number => (n - Math.floor(n) > 0.5 ? Math.ceil(n) : Math.floor(n));
 
 const applyMod = (damage: number, mod: number): number => pokeRound((damage * mod) / 4096);
@@ -43,13 +42,13 @@ const stabMod = (input: DamageInput): number => {
   const tera = input.attackerTerastalized ? input.attackerTeraType : undefined;
 
   if (tera === '스텔라') {
-    return isOriginalStab ? 8192 : 4915; // 자속 2.0, 비자속 1.2
+    return isOriginalStab ? 8192 : 4915;
   }
 
   if (tera) {
     const isTeraStab = input.moveType === tera;
-    if (isTeraStab && isOriginalStab) return 8192; // 테라 자속 + 원본 자속 = 2.0
-    if (isTeraStab || isOriginalStab) return 6144; // 한쪽만 자속 = 1.5
+    if (isTeraStab && isOriginalStab) return 8192;
+    if (isTeraStab || isOriginalStab) return 6144;
     return 4096;
   }
 
@@ -90,7 +89,6 @@ export const calculateDamage = (input: DamageInput): DamageResult => {
   const stab = stabMod(input);
   const item = toMod(itemMultiplier);
 
-  // 스크린은 급소가 아닐 때만 0.5배. 싱글 기준 2048/4096.
   const screenActive = screen && !critical;
 
   const rolls = RANDOM_ROLLS.map((r) => {
@@ -110,13 +108,11 @@ export const calculateDamage = (input: DamageInput): DamageResult => {
   };
 };
 
-// 스텔스록 진입 데미지(최대 HP 비율). 바위 타입 상성 × 1/8. 비행 2배=1/4, 4배=1/2.
 export const stealthRockDamage = (defenderTypes: ReadonlyArray<TypeName>, maxHp: number): number => {
   const eff = typeEffectiveness('바위', defenderTypes);
   return Math.floor((maxHp * eff) / 8);
 };
 
-// 압정 진입 데미지(최대 HP 비율). 층수별 1/8·1/6·1/4. 비행 타입은 무효(0).
 export const spikesDamage = (defenderTypes: ReadonlyArray<TypeName>, maxHp: number, layers: 1 | 2 | 3): number => {
   if (defenderTypes.includes('비행')) {
     return 0;

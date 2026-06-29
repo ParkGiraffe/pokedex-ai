@@ -32,7 +32,6 @@ import { UsersModule } from './users/users.module';
 export class AppModule implements OnModuleInit {
   constructor(private readonly orm: MikroORM) {}
 
-  // 개발·테스트에선 스키마를 자동 동기화한다. 운영은 마이그레이션(migration:up)으로 관리.
   async onModuleInit(): Promise<void> {
     if (!isProduction()) {
       await this.orm.schema.update();

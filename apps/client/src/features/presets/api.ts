@@ -37,14 +37,11 @@ export const sharePreset = (id: string): Promise<{ shareToken: string }> =>
 export const unsharePreset = (id: string): Promise<void> =>
   apiRequest(`/presets/${id}/share`, { method: 'DELETE' }, '공유 취소 실패');
 
-// 공개 조회 — 토큰만 있으면 비로그인도 호출 가능(서버가 가드 없이 받는다).
 export const fetchSharedPreset = (token: string): Promise<SharedPresetRes> =>
   apiRequest(`/shared-presets/${encodeURIComponent(token)}`, { method: 'GET' }, '공유된 프리셋을 찾을 수 없습니다');
 
-// 공유 토큰으로 원본을 내 프리셋으로 복사한다. 원본 copyCount가 1 증가한다.
 export const copyPreset = (token: string): Promise<PresetRes> =>
   apiRequest('/presets/copy', { method: 'POST', body: JSON.stringify({ token }) }, '복사 실패');
 
-// 인기 파티 리더보드 — 비로그인도 호출 가능.
 export const fetchLeaderboard = (): Promise<LeaderboardEntry[]> =>
   apiRequest('/leaderboard', { method: 'GET' }, '리더보드 조회 실패');

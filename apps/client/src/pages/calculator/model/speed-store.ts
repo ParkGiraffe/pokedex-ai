@@ -12,7 +12,7 @@ export type SpeedSide = {
   paralyzed: boolean;
   stickyWeb: boolean;
   tailwind: boolean;
-  megaForm: string; // 메가 폼 슬러그. "" = 비메가.
+  megaForm: string;
 };
 
 type SpeedState = {
@@ -45,7 +45,6 @@ export const useSpeedStore = create<SpeedState>((set) => ({
   setLeft: (patch) =>
     set((state) => {
       const next = { ...state.left, ...patch };
-      // 종족 교체 시 메가 매핑 자동 해제.
       if (patch.species !== undefined && patch.species !== state.left.species) {
         next.megaForm = '';
       }

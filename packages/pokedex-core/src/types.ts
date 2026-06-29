@@ -29,7 +29,6 @@ export const isTypeName = (value: unknown): value is TypeName => TypeName.safePa
 export const TeraType = z.union([TypeName, z.literal('스텔라')]);
 export type TeraType = z.infer<typeof TeraType>;
 
-// 공식 한국어 표기(PokeAPI /nature/ 기준, 도감번호 순). 보정치는 natures.json에서 파생한다.
 export const NATURE_NAMES = [
   '노력',
   '대담',
@@ -61,7 +60,6 @@ export const NATURE_NAMES = [
 export const NatureName = z.enum(NATURE_NAMES);
 export type NatureName = z.infer<typeof NatureName>;
 
-// 챔피언스 시스템: 노력 포인트 0~32 (각 스탯). 본가 EV 0~252 시스템은 사용하지 않는다.
 const StatNumber = z.number().int().min(0).max(32);
 
 export const StatBlock = z.object({
@@ -88,7 +86,6 @@ export type IvBlock = z.infer<typeof IvBlock>;
 
 export const PERFECT_IVS: IvBlock = { H: 31, A: 31, B: 31, C: 31, D: 31, S: 31 };
 
-// 챔피언스 시스템: 각 스탯 0~32 노력 포인트(= 0~252 EV) 한도만 강제, 합계 제한 없음.
 export const PartyMemberObject = z.object({
   species: z.string().min(1),
   level: z.number().int().min(1).max(100).default(50),
@@ -107,8 +104,6 @@ export type PartyMember = z.infer<typeof PartyMember>;
 export const Party = z.array(PartyMember).min(1).max(6);
 export type Party = z.infer<typeof Party>;
 
-// 빌더 작업 상태(부분 입력 허용). 프리셋은 검증된 Party가 아니라 이 draft를 그대로 저장·복원한다.
-// species·ability·item·moves는 빈 문자열 허용(nature·teraType·evs는 셀렉트/스피너라 항상 유효).
 export const PartyDraftMember = z.object({
   species: z.string(),
   level: z.number().int().min(1).max(100),
@@ -160,12 +155,10 @@ export const FieldSlot = z.object({
   }),
   status: StatusCondition.optional(),
   terastalized: z.boolean().default(false),
-  // 메가 폼 슬러그. "" 또는 미지정이면 비메가. 데미지·스피드 계산에서 종족값·타입을 swap한다.
   megaForm: z.string().optional(),
 });
 export type FieldSlot = z.infer<typeof FieldSlot>;
 
-// 필드 상태. 진입 위험(hazard)은 내 쪽, 스크린은 상대 쪽, 순풍은 양쪽 기준.
 export const BattleFieldState = z.object({
   myStealthRock: z.boolean().default(false),
   mySpikes: z.number().int().min(0).max(3).default(0),

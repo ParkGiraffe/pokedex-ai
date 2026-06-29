@@ -2,7 +2,6 @@ import { useAuthStore } from '@/features/auth';
 
 import { useQuota } from '../model/useQuota';
 
-// 헤더에 오늘 남은 AI 질의 수를 표시한다. 0이면 경고색.
 export const QuotaBadge = () => {
   const token = useAuthStore((state) => state.token);
   const quota = useQuota();

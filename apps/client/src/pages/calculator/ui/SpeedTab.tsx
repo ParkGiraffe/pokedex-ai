@@ -34,7 +34,6 @@ const TypeRow = ({ types }: { types: readonly string[] }) => {
   );
 };
 
-// 상단 VS 요약 — 양쪽 스프라이트·타입·실효 스피드와 선공 판정을 한눈에.
 type VersusProps = {
   left: SpeedSide;
   right: SpeedSide;
@@ -53,7 +52,6 @@ const VersusPanel = ({ left, right, trickRoom }: VersusProps) => {
   const gap = Math.abs(comparison.left - comparison.right);
 
   const column = (accent: Accent, side: SpeedSide, value: number, winner: boolean) => {
-    // 메가 선택 시 메가 표시명(메가리자몽X 등)과 메가 타입을 보여준다.
     const mega = side.megaForm
       ? findMegasBySpecies(side.species).find((form) => form.form === side.megaForm)
       : undefined;

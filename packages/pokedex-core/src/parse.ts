@@ -23,7 +23,6 @@ export const ClaudeResponseSchema = z.object({
     )
     .default([]),
   unknownNames: z.array(z.string()).default([]),
-  // 응답에 등장시킨 모든 포켓몬·기술·특성·도구 한국명. 서버가 검증 사전과 대조해 음역·fabricate를 잡는다.
   mentionedNames: z.array(z.string()).default([]),
 });
 export type ClaudeResponse = z.infer<typeof ClaudeResponseSchema>;

@@ -34,8 +34,6 @@ const main = async () => {
     slugToKo[t.name] = ko;
   }
 
-  // PokeAPI의 damage_relations는 "방어 타입이 받는 배율" 기준이다.
-  // 공격 → 방어 매트릭스로 뒤집어 계산한다.
   const matchup: Record<string, Record<string, number>> = {};
   for (const attacker of results) {
     const attackKo = slugToKo[attacker.name]!;

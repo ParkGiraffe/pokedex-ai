@@ -64,8 +64,6 @@ describe('리더보드 + 공유 복사 수 추적', () => {
     await app.init();
   });
 
-  // 리더보드는 전역 top-N이라 다른 테스트가 남긴 공유 프리셋이 누적·순서를 오염시킨다.
-  // 파일 순차 실행(fileParallelism:false)이므로 각 테스트 전에 프리셋을 비워 결정적으로 만든다.
   beforeEach(async () => {
     await app.get(MikroORM).em.fork().nativeDelete(Preset, {});
   });
@@ -88,7 +86,6 @@ describe('리더보드 + 공유 복사 수 추적', () => {
     expect(copied.status).toBe(201);
     expect((copied.body as { name: string }).name).toBe('인기 파티');
 
-    // 공개 열람으로 copyCount 확인
     const leaderboard = await request(app.getHttpServer()).get('/leaderboard');
     expect(leaderboard.status).toBe(200);
     const entry = (leaderboard.body as LeaderboardEntry[]).find((p) => p.shareToken === shareToken);
@@ -108,7 +105,6 @@ describe('리더보드 + 공유 복사 수 추적', () => {
     const sharedB = (await sharePreset(owner.token, (b.body as PresetRes).id)).body as { shareToken: string };
     const _sharedC = (await sharePreset(owner.token, (c.body as PresetRes).id)).body as { shareToken: string };
 
-    // A: 3회, B: 1회, C: 0회
     for (let i = 0; i < 3; i++) {
       const copier = await newUser();
       await copyPreset(copier.token, sharedA.shareToken);
@@ -131,7 +127,6 @@ describe('리더보드 + 공유 복사 수 추적', () => {
     const owner = await newUser();
     const copier = await newUser();
 
-    // 이미 무료 한도(2)를 채운다
     await createPreset(copier.token, '내 파티1');
     await createPreset(copier.token, '내 파티2');
 

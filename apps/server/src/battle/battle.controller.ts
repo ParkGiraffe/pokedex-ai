@@ -12,8 +12,6 @@ import {
   type TeamSelectInput,
 } from '../dto';
 
-// 입력 종족이 도감에 있는지 검증한다. 오타·미존재 종족(예: 또가스 오타)이 @smogon/calc에 닿으면
-// "Cannot read properties of undefined (reading 'hp')"로 크래시하므로, 그 전에 친절한 400으로 막는다.
 const assertKnownSpecies = (names: ReadonlyArray<string>): void => {
   const unknown = [...new Set(names.filter((name) => name && !findPokemon(name)))];
   if (unknown.length > 0) {
@@ -23,7 +21,6 @@ const assertKnownSpecies = (names: ReadonlyArray<string>): void => {
 
 @Controller()
 export class BattleController {
-  // 선출: 내 팀 × 상대 팀 매치업 점수로 선출 우선순위.
   @Post('team-select')
   @HttpCode(200)
   teamSelect(@Body(new ZodValidationPipe(TeamSelectBody)) body: TeamSelectInput): {
@@ -41,7 +38,6 @@ export class BattleController {
     };
   }
 
-  // 인배틀: 현재 액티브의 기술/교체 추천.
   @Post('decide')
   @HttpCode(200)
   decide(
@@ -52,7 +48,6 @@ export class BattleController {
     return { ...advice, summary: advice.recommendation };
   }
 
-  // 파훼: 상대 종족의 흔한 세트별 카운터.
   @Post('counter')
   @HttpCode(200)
   counter(@Body(new ZodValidationPipe(CounterBody)) body: CounterInput): {

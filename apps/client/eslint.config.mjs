@@ -1,5 +1,3 @@
-// @ts-check
-// noinspection JSCheckFunctionSignatures
 
 import { baseConfig } from '../../eslint.config.base.mjs';
 import reactHooks from 'eslint-plugin-react-hooks';
@@ -28,7 +26,6 @@ export default tseslint.config(
     },
     rules: {
       'tailwindcss-categorized/ordering': 'warn',
-      // set-state-in-effect: 기존 코드 위반 → warn 으로 완화 (런타임 로직 변경 회피)
       'react-hooks/set-state-in-effect': 'warn',
     },
   },

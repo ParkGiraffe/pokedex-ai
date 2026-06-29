@@ -73,7 +73,6 @@ export const MatrixTab = () => {
   const canCalculate = validMyCount > 0 && validOppCount > 0;
 
   const board = matrix.data?.board ?? [];
-  // board가 이미 score 내림차순 정렬(서버 teamSelect가 정렬해서 반환한다)
   const opponents = board[0]?.pairs.map((p) => p.opponent) ?? [];
 
   return (

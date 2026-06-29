@@ -15,7 +15,6 @@ type NatureData = {
 
 const natures = (naturesRaw as { natures: NatureData[] }).natures;
 
-// 성격별 능력치 보정은 PokeAPI /nature/ 산출물에서 파생한다 (손코딩 금지).
 export const NATURE_TABLE: Record<NatureName, NatureModifier> = Object.fromEntries(
   natures.map((n) => [n.ko, { up: n.up ?? undefined, down: n.down ?? undefined }]),
 ) as Record<NatureName, NatureModifier>;
@@ -38,20 +37,17 @@ const natureMultiplier = (stat: Stat, nature: NatureName): number => {
 };
 
 export const actualStat = ({ stat, base, iv, ev, level, nature }: ActualStatInput): number => {
-  // ev는 챔피언스 노력 포인트(0~32). 본가 공식의 evComponent(0~63)와 매핑하면 ev * 2다.
   const evComponent = ev * 2;
   if (stat === 'H') {
-    if (base === 1) return 1; // 껍질몬: HP 종족값 1은 항상 1로 고정
+    if (base === 1) return 1;
     return Math.floor(((2 * base + iv + evComponent) * level) / 100) + level + 10;
   }
   const before = Math.floor(((2 * base + iv + evComponent) * level) / 100) + 5;
   return Math.floor(before * natureMultiplier(stat, nature));
 };
 
-// 랭크 배율: +n = (2+n)/2, -n = 2/(2+n). HP는 랭크 적용 대상이 아니다.
 export const rankMultiplier = (rank: number): number => (rank >= 0 ? (2 + rank) / 2 : 2 / (2 - rank));
 
-// 능력치 실수치에 랭크 배율을 적용한 값을 반환한다.
 export const applyRank = (stat: number, rank: number): number => Math.floor(stat * rankMultiplier(rank));
 
 export const actualStatBlock = (

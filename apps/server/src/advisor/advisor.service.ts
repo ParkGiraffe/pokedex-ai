@@ -12,9 +12,6 @@ import {
   serializeForClaude,
 } from '@pokedex-agent/pokedex-core';
 
-// 추천 시스템 모델은 한국 SV 어휘 정확도 우선으로 모두 Sonnet 4.6 사용.
-// (Haiku는 종족·도구·기술 이름을 fabricate하는 사례가 잦았음.)
-// OCR(import.service)은 별도로 Opus 유지.
 const MODEL_BY_TASK: Record<ExportTask, string> = {
   'party-analysis': process.env.ADVISOR_MODEL_PARTY ?? 'claude-sonnet-4-6',
   'matchup-leadrec': process.env.ADVISOR_MODEL_MATCHUP ?? 'claude-sonnet-4-6',
@@ -36,14 +33,12 @@ const SYSTEM = [
 
 @Injectable()
 export class AdvisorService {
-  // 타임아웃 없으면 Claude API가 hang할 때 요청이 무한 대기한다.
   private readonly anthropic = new Anthropic({ timeout: 90_000 });
 
   private async callClaude(task: ExportTask, body: string): Promise<ClaudeResponse> {
     const response = await this.anthropic.messages.parse({
       model: MODEL_BY_TASK[task],
       max_tokens: 1500,
-      // 정적 SYSTEM 프롬프트를 prompt caching — 같은 유저의 연속 호출에서 입력 토큰 비용 절감.
       system: [{ type: 'text', text: SYSTEM, cache_control: { type: 'ephemeral' } }],
       messages: [{ role: 'user', content: body }],
       output_config: { format: zodOutputFormat(ClaudeResponseSchema) },
@@ -55,8 +50,6 @@ export class AdvisorService {
     return parsed;
   }
 
-  // 2겹 방어: 응답의 mentionedNames를 검증 사전과 대조해 음역·fabricate를 잡는다.
-  // 사전 밖 명칭이 있으면 그 목록을 주고 1회 교정 재시도. 그래도 남으면 unknownNames로 표시한다.
   private async request(
     task: ExportTask,
     payload: { party?: Party; state?: BattleState; megaForms?: MegaFormSelection },
@@ -69,7 +62,6 @@ export class AdvisorService {
         const correction = `\n\n## 명칭 교정 요청 (필수)\n다음 명칭은 검증 사전에 없다(음역·직역·오타·미존재 의심): ${unverified.join(', ')}\n정식 한국 명칭으로 바꾸거나, 확신이 없으면 해당 언급을 통째로 삭제하고 응답을 다시 작성하라. mentionedNames도 갱신하라.`;
         const retried = await this.callClaude(task, body + correction);
         const retriedUnverified = retried.mentionedNames.filter((name) => !isKnownTerm(name));
-        // 재시도가 더 깨끗하면 채택.
         if (retriedUnverified.length < unverified.length) {
           parsed = retried;
           unverified = retriedUnverified;

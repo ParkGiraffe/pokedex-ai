@@ -1,11 +1,4 @@
-// @ts-check
-// noinspection JSCheckFunctionSignatures
 
-// 공유 base eslint 설정. 각 패키지의 eslint.config.mjs가 이 배열을 펼쳐 쓰고
-// parserOptions(projectService)·globals·패키지별 룰만 덧붙인다.
-//
-// 룰 강도 정책: 전 룰 error. 기존 위반은 2026-06-11 일괄 정리됨(0 warnings 달성 후 승격).
-// 예외는 각 패키지 config 참고(예: client의 react-hooks/set-state-in-effect 는 warn).
 
 import eslint from '@eslint/js';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
@@ -13,10 +6,6 @@ import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import unusedImports from 'eslint-plugin-unused-imports';
 import tseslint from 'typescript-eslint';
 
-/**
- * 모든 패키지가 공유하는 base 설정 레이어.
- * @returns {import('typescript-eslint').ConfigArray}
- */
 export function baseConfig() {
   return tseslint.config(
     eslint.configs.recommended,

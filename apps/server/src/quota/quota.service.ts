@@ -15,12 +15,10 @@ export class QuotaService {
     private readonly users: UsersService,
   ) {}
 
-  // KST 기준 오늘(YYYY-MM-DD). en-CA 로캘이 ISO 형식을 준다.
   private today(): string {
     return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul' }).format(new Date());
   }
 
-  // 단일 upsert로 원자적 소비. cap 미만이면 +1 후 새 count, 한도면 null(레이스에도 초과 0건).
   private async consume(userId: string, cap: number): Promise<number | null> {
     const rows = await this.em.getConnection().execute<Array<{ count: number }>>(
       `insert into usage_daily (user_id, usage_date, count) values (?, ?, 1)
@@ -32,7 +30,6 @@ export class QuotaService {
     return rows[0]?.count ?? null;
   }
 
-  // AI 호출 직전 게이트. 한도 초과면 429.
   async consumeOrThrow(userId: string): Promise<void> {
     const cap = await this.capOf(userId);
     if ((await this.consume(userId, cap)) === null) {

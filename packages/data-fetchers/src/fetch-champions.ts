@@ -7,8 +7,6 @@ try {
   // .env 없으면 무시
 }
 
-// 출처: pkmnchamps.com (포켓몬 챔피언스 배틀 도구). Supabase 공개 anon 키로 읽기 전용 조회.
-// 게임 데이터 테이블만 사용하며 유저 PII 테이블(user_profiles 등)은 건드리지 않는다.
 const SUPABASE = 'https://misabaliuftjkqigysvv.supabase.co/rest/v1';
 const ANON_KEY = process.env.PKMNCHAMPS_ANON_KEY;
 if (!ANON_KEY) {
@@ -27,7 +25,6 @@ const query = async <T>(path: string): Promise<T> => {
   return (await response.json()) as T;
 };
 
-// PostgREST 기본 1000행 한계 → offset 페이지네이션.
 const queryAll = async <T>(path: string): Promise<T[]> => {
   const page = 1000;
   const rows: T[] = [];
@@ -86,7 +83,6 @@ const main = async () => {
   }
   process.stderr.write(`활성 레귤레이션: ${active.slug} (${active.name_ko})\n`);
 
-  // 로스터
   const rosterRows = await queryAll<RosterRow>(
     `season_pokemon?season_id=eq.${active.id}&select=pokemon_id,mega_form,region_form&order=pokemon_id.asc`,
   );
@@ -101,7 +97,6 @@ const main = async () => {
     pokemon: roster,
   });
 
-  // 싱글 사용률
   const statRows = await queryAll<StatRow>(
     `champions_pokemon_stats?regulation=eq.${active.slug}&battle_format=eq.singles` +
       `&select=pokemon_id,pokemon_name_ko,mega_form,region_form,pick_rank,abilities,moves,items,natures,spreads,teammates` +
@@ -131,7 +126,6 @@ const main = async () => {
     pokemon: Object.fromEntries(Object.entries(usage).sort(([a], [b]) => Number(a) - Number(b))),
   });
 
-  // 샘플 세트 (공개)
   const sampleRows = await queryAll<SampleRow>(
     `pokemon_samples?is_public=eq.true` +
       `&select=pokemon_id,pokemon_name_ko,pokemon_name_en,nature,ability,mega_form,item,level,sps,move_slots` +

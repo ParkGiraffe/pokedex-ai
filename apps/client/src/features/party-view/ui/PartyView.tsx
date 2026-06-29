@@ -15,7 +15,6 @@ type PartyViewProps = {
   party: PartyDraft;
 };
 
-// 읽기전용 파티 표시. 공유 링크 뷰 등 편집이 필요 없는 곳에서 쓴다.
 export const PartyView = ({ party }: PartyViewProps) => (
   <div className="grid gap-3 sm:grid-cols-2">
     {party.map((member, index) => {

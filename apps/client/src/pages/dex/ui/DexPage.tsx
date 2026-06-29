@@ -1,5 +1,5 @@
 import { findPokemon, TYPE_NAMES } from '@pokedex-agent/pokedex-core';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { cn } from '@/common/lib/cn';
 import { Button } from '@/common/ui/Button';
@@ -11,13 +11,13 @@ import { StatBox } from '@/common/ui/StatBox';
 import { TypeBadge } from '@/common/ui/TypeBadge';
 import { PokemonIcon } from '@/features/pokemon-picker/ui/PokemonIcon';
 
-// 페이지 직접 입력. 사용자가 타이핑 중일 땐 부모 state로 즉시 반영 안 하고, blur/Enter에 commit한다.
-// 그래야 "1"이 박힌 채로 새 숫자 입력 시 132·52 같은 이상한 합쳐짐이 안 생긴다.
 const PageInput = ({ value, max, onCommit }: { value: number; max: number; onCommit: (page: number) => void }) => {
   const [draft, setDraft] = useState<string>(String(value));
-  useEffect(() => {
+  const [lastValue, setLastValue] = useState(value);
+  if (value !== lastValue) {
+    setLastValue(value);
     setDraft(String(value));
-  }, [value]);
+  }
   const commit = () => {
     const next = Number(draft);
     if (Number.isNaN(next)) {

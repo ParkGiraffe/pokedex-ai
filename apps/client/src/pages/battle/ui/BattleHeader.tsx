@@ -8,7 +8,6 @@ type BattleHeaderProps = {
   advise: UseMutationResult<ClaudeResponse, Error, BattleState>;
 };
 
-// 페이지 제목은 탭 셸(BattlePage)이 가진다. 여기는 직접 입력 탭의 추천 트리거만 둔다.
 export const BattleHeader = ({ state, advise }: BattleHeaderProps) => (
   <div className="flex flex-wrap items-center justify-end gap-2">
     {state && (

@@ -8,8 +8,6 @@ import { createApp } from '../src/app.factory';
 
 type AuthRes = { accessToken: string };
 
-// 실제 Anthropic 호출(비용)을 피하려 가드·검증 단계만 검증한다.
-// 토큰 없음 → 가드에서 401, 잘못된 body → 검증 파이프에서 400(둘 다 비전 호출 전에 차단).
 describe('배틀 스크린샷 조언 게이팅', () => {
   let app: NestExpressApplication;
 

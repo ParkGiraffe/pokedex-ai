@@ -6,18 +6,18 @@ const gen = Generations.get(9);
 export type StatSpread = Partial<Record<'hp' | 'atk' | 'def' | 'spa' | 'spd' | 'spe', number>>;
 
 export type EngineSide = {
-  species: string; // 한국어/영문
+  species: string;
   level?: number;
-  ability?: string; // 한국어/영문
-  item?: string; // 한국어/영문
-  nature?: string; // 한국어(고집)/영문(Adamant)
+  ability?: string;
+  item?: string;
+  nature?: string;
   evs?: StatSpread;
   ivs?: StatSpread;
-  boosts?: StatSpread; // 랭크 -6..+6
-  teraType?: string; // 한국어(강철)/영문(Steel)
+  boosts?: StatSpread;
+  teraType?: string;
   terastallized?: boolean;
-  mega?: boolean; // 메가진화 (챔피언스). 테라와 동시 불가 — 기믹 1개 규칙
-  megaForme?: 'X' | 'Y'; // 리자몽·뮤츠 등 2종 메가 구분
+  mega?: boolean;
+  megaForme?: 'X' | 'Y';
   curHP?: number;
   status?: '' | 'slp' | 'psn' | 'brn' | 'frz' | 'par' | 'tox';
 };
@@ -41,7 +41,6 @@ const enItem = (item?: string): string | undefined => (item ? (findItem(item)?.e
 const enAbility = (ability?: string): string | undefined =>
   ability ? (findAbility(ability)?.en ?? ability) : undefined;
 
-// 메가 폼 종족명 (예: charizard + Y -> charizard-mega-y). @smogon/calc이 폼 종족값·타입·특성을 자동 적용.
 const megaSpeciesName = (baseEn: string, forme?: 'X' | 'Y'): string =>
   forme ? `${baseEn}-mega-${forme.toLowerCase()}` : `${baseEn}-mega`;
 
@@ -50,7 +49,6 @@ export const toCalcPokemon = (side: EngineSide): Pokemon => buildPokemon(side);
 const buildPokemon = (side: EngineSide): Pokemon => {
   const baseEn = enSpecies(side.species);
   if (side.mega) {
-    // 메가는 폼 고유 특성(부모자식사랑 등)을 쓰므로 기존 특성·도구(메가스톤)·테라를 넘기지 않는다.
     try {
       return new Pokemon(gen, megaSpeciesName(baseEn, side.megaForme), {
         level: side.level ?? 50,
@@ -96,12 +94,9 @@ export const calcDamage = (
   );
   const range = result.range();
   if (range[1] === 0) {
-    // 면역·무효: kochance()/desc()가 0 데미지에서 throw하므로 직접 처리.
     return { min: 0, max: 0, koChance: 0, koText: '데미지 없음', desc: `${move} → ${defender.species}: 무효` };
   }
   const ko = result.kochance();
-  // kochance().chance는 n번째 타격까지의 KO 확률이다(약한 기술은 9타 후 100%).
-  // 이번 턴 결정타 판단엔 OHKO 확률(n===1)만 의미가 있다.
   return {
     min: range[0],
     max: range[1],

@@ -23,7 +23,6 @@ import { MAX_OPPONENTS, useMatchupStore } from '../model/store';
 import { type LeadRank, LeadrecResult } from './LeadrecResult';
 import { MegaFormSection } from './MegaFormSection';
 
-// 종족명 → 메가 폼 슬러그 매핑을 Map<species, MegaForm>으로 해석한다 (matchup context용).
 const resolveMegaContext = (
   speciesList: ReadonlyArray<string>,
   formBySpecies: Record<string, string>,
@@ -74,18 +73,14 @@ export const LeadTab = () => {
   const lineups = matchup.lineupBoard(myParty, validOpponents, matchupContext);
   const autoPicks = lineups[0]?.picks ?? [];
 
-  // 매트릭스에서 메가 컨트롤을 분리하기 위한 종족 목록. 메가 가능한 종족만 메가 설정 영역에 나타난다.
   const myMegaPicks = myParty.map((m) => m.species).filter((species) => findMegasBySpecies(species).length > 0);
   const opponentMegaPicks = validOpponents.filter((species) => findMegasBySpecies(species).length > 0);
 
-  // 사용자가 한 번이라도 체크박스를 건드렸으면 그 값을 그대로 보여준다(3마리가 아니어도).
-  // 완전히 빈 상태일 때만 자동 추천(lineupBoard 1위)을 적용해서 디폴트로 채운다.
   const effectiveSelection = selectedSpecies.length > 0 ? selectedSpecies : autoPicks;
   const selectedParty = myParty.filter((member) => effectiveSelection.includes(member.species));
   const selectedBoard = matchup.leadBoard(selectedParty, validOpponents, matchupContext);
   const isReady = selectedParty.length === matchup.LINEUP_SIZE;
 
-  // 선출 3마리 안에서 leadScore 내림차순으로 1·2·3순위. 모델은 이 순서를 뒤집을 수 없다.
   const leadRanks: LeadRank[] = selectedBoard.map((entry, index) => ({
     pick: entry.myPick,
     rank: index + 1,

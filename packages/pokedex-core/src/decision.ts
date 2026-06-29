@@ -11,22 +11,15 @@ export type MoveOption = {
   power: number | null;
   min: number;
   max: number;
-  koChance: number; // 0..1, 16롤 중 1HKO 비율
+  koChance: number;
   damaging: boolean;
-  // 한국 SV 데미지 표기: 최소 데미지 기준 확정 N타, 최대 데미지 기준 난수 N타.
-  // 같은 값이면 "확정 N타", 다르면 "난수 N타~확정 M타".
-  guaranteedHits: number | null; // min damage 기준 N타 KO. min=0이면 null.
-  possibleHits: number | null; // max damage 기준 최소 N타 KO.
-  hitsText: string; // 표시용: "확정 1타" | "난수 2타~확정 3타" | "" (변화기)
+  guaranteedHits: number | null;
+  possibleHits: number | null;
+  hitsText: string;
 };
 
-// 상대 방어·HP는 0투자 중립을 가정한다 (보수적, 응답에서 가정 명시).
 const OPPONENT_NATURE = '노력';
 
-// 데미지 범위와 현재 HP로 "확정 N타" 또는 "난수 N타" 단일 표기를 만든다.
-// guaranteedHits = ceil(HP / min) — 운이 가장 나빠도 보장되는 KO 타수
-// possibleHits   = ceil(HP / max) — 운이 가장 좋으면 도달 가능한 KO 타수
-// 두 값이 같으면 "확정 N타", 다르면 "난수 N타" (possible 기준, 운 좋으면 N타에 떨어진다).
 const hitsToKO = (min: number, max: number, hp: number) => {
   if (min <= 0 || max <= 0 || hp <= 0) {
     return { guaranteed: null, possible: null, text: '' };
@@ -40,12 +33,11 @@ const hitsToKO = (min: number, max: number, hp: number) => {
 export type StatRanks = Partial<Record<'A' | 'B' | 'C' | 'D' | 'S', number>>;
 
 export type MoveOptionsContext = {
-  mega?: MegaForm; // 내 액티브 메가 활성 시 종족값·타입·자속을 메가 폼으로 swap한다.
-  opponentMega?: MegaForm; // 상대 메가 활성 시 상대 종족값·타입을 swap한다.
-  myRanks?: StatRanks; // 내 액티브 랭크업/다운 (-6..+6). 미지정 시 0.
-  opponentRanks?: StatRanks; // 상대 랭크업/다운.
-  myStatus?: StatusCondition | ''; // 화상 시 물리 공격 ÷2. 마비는 스피드 영향이라 데미지엔 무관.
-  // 상대 진영 스크린. 빛의장막=특수기 0.5배, 리플렉터=물리기 0.5배. 기술 분류에 맞게 적용.
+  mega?: MegaForm;
+  opponentMega?: MegaForm;
+  myRanks?: StatRanks;
+  opponentRanks?: StatRanks;
+  myStatus?: StatusCondition | '';
   opponentScreens?: { light?: boolean; reflect?: boolean };
 };
 

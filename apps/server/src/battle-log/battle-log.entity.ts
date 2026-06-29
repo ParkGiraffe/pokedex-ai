@@ -5,7 +5,6 @@ import { uuidv7 } from 'uuidv7';
 import { User } from '../users/user.entity';
 import { BATTLE_GIMMICKS, BATTLE_RESULTS, type BattleGimmick, type BattleResult } from './battle-log.enums';
 
-// 사용자가 직접 적는 대전 일지 한 건. 이 앱은 배틀을 돌리지 않으므로 결과는 수동 기록이다.
 @Entity({ tableName: 'battle_logs' })
 export class BattleLog {
   @PrimaryKey({ type: 'uuid' })
@@ -14,7 +13,6 @@ export class BattleLog {
   @ManyToOne(() => User, { deleteRule: 'cascade' })
   user!: User;
 
-  // 대전 일시 — 기본은 등록 시각, 사용자가 바꿀 수 있다.
   @Property()
   playedAt!: Date;
 

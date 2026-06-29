@@ -3,8 +3,6 @@ import { resolve } from 'node:path';
 
 import { fetchJson } from './pokeapi';
 
-// gen9 싱글 포맷들의 Smogon 세트를 병합한다. BSS 전용 세트는 Smogon에 없으므로
-// 경쟁 메타 전반(OU~AG)의 세트를 "흔한 샘플 세트" 라이브러리로 모은다(파훼·EV 가정용).
 const FORMATS = [
   'gen9ou',
   'gen9ubers',

@@ -3,7 +3,6 @@ import { type PartyDraft } from '@pokedex-agent/pokedex-core';
 
 import { PresetsService } from './presets.service';
 
-// 인기 공유 파티 리더보드. JwtAuthGuard 없음 — 비로그인도 열람 가능.
 @Controller('leaderboard')
 export class LeaderboardController {
   constructor(private readonly presets: PresetsService) {}

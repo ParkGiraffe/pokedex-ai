@@ -20,7 +20,6 @@ const evValue = (raw: unknown): number => {
   return Number.isFinite(value) ? Math.max(0, Math.min(32, Math.round(value))) : 0;
 };
 
-// 파티 JSON(슬롯 배열) → 파티빌더 드래프트. 누락 필드는 기본값으로 채운다.
 export const parsePartyImport = (text: string): MemberDraft[] => {
   const data: unknown = JSON.parse(text);
   if (!Array.isArray(data)) {
@@ -43,7 +42,6 @@ export const parsePartyImport = (text: string): MemberDraft[] => {
       level: typeof raw.level === 'number' ? raw.level : base.level,
       ability: typeof raw.ability === 'string' ? raw.ability : '',
       item: typeof raw.item === 'string' ? raw.item : '',
-      // 임의 문자열을 그대로 캐스트하면 actualStat의 NATURE_TABLE 조회에서 터진다. Zod로 검증 후 폴백.
       nature: NatureName.safeParse(raw.nature).success ? (raw.nature as NatureName) : base.nature,
       teraType: TeraType.safeParse(raw.teraType).success ? (raw.teraType as TeraType) : base.teraType,
       moves: [moves[0] ?? '', moves[1] ?? '', moves[2] ?? '', moves[3] ?? ''],

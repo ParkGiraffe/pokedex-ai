@@ -15,7 +15,6 @@ type AuthState = {
   clear: () => void;
 };
 
-// 토큰·사용자만 보관(localStorage). 만료 토큰이면 보호 요청이 401을 주고, 그때 clear한다.
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({

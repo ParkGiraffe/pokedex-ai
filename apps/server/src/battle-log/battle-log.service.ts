@@ -25,7 +25,6 @@ export type MetaSummary = {
   gimmickUsage: MetaGimmickRecord[];
 };
 
-// 승률은 백분율(소수 1자리)로 돌려준다. 0판이면 0.
 const winRate = (wins: number, games: number): number => (games > 0 ? Math.round((wins / games) * 1000) / 10 : 0);
 
 @Injectable()
@@ -36,7 +35,6 @@ export class BattleLogService {
     return this.em.find(BattleLog, { user: userId }, { orderBy: { playedAt: 'desc' } });
   }
 
-  // 소유자 본인 것만 — 남의 로그는 존재 여부도 노출하지 않도록 404.
   async getOwned(userId: string, id: string): Promise<BattleLog> {
     const log = await this.em.findOne(BattleLog, { id, user: userId });
     if (!log) {
@@ -45,7 +43,6 @@ export class BattleLogService {
     return log;
   }
 
-  // 개수 검사 + 생성을 한 트랜잭션으로 묶어 backstop 상한을 넘기지 못하게 한다.
   create(userId: string, input: CreateBattleLogInput): Promise<BattleLog> {
     return this.em.transactional(async (em) => {
       const user = await em.findOne(User, { id: userId });
@@ -75,7 +72,6 @@ export class BattleLogService {
     await this.em.flush();
   }
 
-  // 전체 사용자 대전 로그를 집계해 리빙 메타 요약을 반환한다. 유저 식별자는 포함하지 않는다.
   async meta(limit = 15): Promise<MetaSummary> {
     const logs = await this.em.find(BattleLog, {});
     const totalGames = logs.length;
@@ -128,7 +124,6 @@ export class BattleLogService {
     };
   }
 
-  // 전체 승률 + 내 선발별 / 상대 선발별 전적. 개인 규모라 메모리 집계로 충분하다.
   async stats(userId: string): Promise<BattleStats> {
     const logs = await this.em.find(BattleLog, { user: userId });
     const total = logs.length;

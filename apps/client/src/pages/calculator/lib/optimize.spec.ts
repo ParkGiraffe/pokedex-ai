@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { optimizeBulk, optimizePower, optimizeSpeed } from './optimize';
 
-const NEUTRAL = '노력' as const; // 보정 없는 성격
+const NEUTRAL = '노력' as const;
 
 describe('스피드 역산', () => {
   it('목표가 아주 낮으면 0 투자로 추월한다', () => {

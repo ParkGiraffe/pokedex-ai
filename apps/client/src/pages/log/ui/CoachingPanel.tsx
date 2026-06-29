@@ -8,7 +8,6 @@ import { analyzeCoaching } from '../lib/coaching';
 
 type AggregatedCounter = { pick: string; appearances: number; minKo: number; survivesAll: boolean; robust: boolean };
 
-// 상대의 여러 세트에 걸쳐 내 풀의 카운터를 집계한다. 모든 세트에 대응하면 robust.
 const aggregateCounters = (data: CounterRes): AggregatedCounter[] => {
   const totalSets = data.entries.length;
   const map = new Map<string, { appearances: number; minKo: number; survivesAll: boolean }>();

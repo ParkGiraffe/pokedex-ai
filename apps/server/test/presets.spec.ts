@@ -137,7 +137,6 @@ describe('프리셋 (티어 한도)', () => {
     const shareToken = (shared.body as { shareToken: string }).shareToken;
     expect(shareToken).toBeTruthy();
 
-    // 비로그인(토큰 헤더 없음)으로도 열람 가능, name·party만 노출.
     const publicView = await request(app.getHttpServer()).get(`/shared-presets/${shareToken}`);
     expect(publicView.status).toBe(200);
     const publicBody = publicView.body as { name: string; party: unknown; id?: string; shareToken?: string };

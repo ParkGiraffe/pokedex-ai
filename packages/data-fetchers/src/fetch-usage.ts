@@ -3,8 +3,6 @@ import { resolve } from 'node:path';
 
 import { fetchJson } from './pokeapi';
 
-// Smogon chaos 통계. BSS 전용은 없으므로 ou+ubers를 병합해 경쟁 메타 분포를 근사한다.
-// (인게임 랭크 정확 사용률은 포켓몬 HOME 공식 — docs/meta-collection.md 참고, 수기)
 const FORMATS = ['gen9ou', 'gen9ubers'];
 const BASE = 'https://data.pkmn.cc/stats';
 const OUT = resolve(import.meta.dirname, '../../pokedex-core/data/gen9-fallback/usage-gen9.json');
@@ -48,7 +46,7 @@ const main = async () => {
     for (const [species, stats] of Object.entries(data.pokemon)) {
       const id = toShowdownId(species);
       if (pokemon[id]) {
-        continue; // 먼저 본 포맷(ou) 우선
+        continue;
       }
       pokemon[id] = {
         display: species,

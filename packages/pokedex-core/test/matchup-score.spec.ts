@@ -18,7 +18,6 @@ const garchomp: Party[number] = {
 describe('개별 매치업', () => {
   it('땅 자속이 전기 종족을 압박하면 유리하다', () => {
     const score = pairwise(garchomp, '라이츄');
-    // 위력 가중 모델: 지진(땅 100위력 자속 × 라이츄 전기 2배) = 100*1.5*2/100 = 3.0
     expect(score?.offensivePressure).toBeGreaterThanOrEqual(2);
     expect(score?.verdict).toBe('유리');
   });

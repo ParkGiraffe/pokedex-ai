@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest';
 
 import { calculateDamage, type DamageInput } from '../src/formula/damage';
 
-// 노말 기술 vs 불꽃 (상성 1배)로 자속·상성을 분리해 검증한다.
 const base: DamageInput = {
   level: 50,
   attack: 130,
@@ -28,14 +27,13 @@ describe('SV 데미지 공식', () => {
     const stab = calculateDamage({ ...base, attackerTypes: ['노말'] });
     const noStab = calculateDamage(base);
     expect(noStab.max).toBe(47);
-    expect(stab.max).toBe(70); // pokeRound(47 * 1.5)
+    expect(stab.max).toBe(70);
   });
 
   it('타입 상성 2배가 적용된다', () => {
-    // 격투 공격자가 물 기술 사용 → 비자속, 물 vs 불꽃 2배만 적용
     const result = calculateDamage({ ...base, moveType: '물' });
     expect(result.effectiveness).toBe(2);
-    expect(result.max).toBe(94); // 47 * 2
+    expect(result.max).toBe(94);
   });
 
   it('타입 상성 0이면 데미지가 0이다', () => {
@@ -58,7 +56,7 @@ describe('SV 데미지 공식', () => {
       attackerTerastalized: true,
     });
     const plainStab = calculateDamage({ ...base, attackerTypes: ['노말'] });
-    expect(teraSame.max).toBe(94); // pokeRound(47 * 2.0)
+    expect(teraSame.max).toBe(94);
     expect(teraSame.max).toBeGreaterThan(plainStab.max);
   });
 
@@ -81,8 +79,8 @@ describe('SV 데미지 공식', () => {
       attackerTerastalized: true,
     });
     const plainNonStab = calculateDamage(base);
-    expect(stellarStab.max).toBe(teraSame.max); // 둘 다 2.0
-    expect(stellarNonStab.max).toBeGreaterThan(plainNonStab.max); // 1.2 > 1.0
+    expect(stellarStab.max).toBe(teraSame.max);
+    expect(stellarNonStab.max).toBeGreaterThan(plainNonStab.max);
   });
 
   it('화상은 물리 공격의 실수치를 절반으로 깎는다', () => {

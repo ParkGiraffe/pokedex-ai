@@ -9,11 +9,8 @@ export type CalcResult = {
   defenseStat: number;
   minPercent: number;
   maxPercent: number;
-  // 최소 데미지(=최악의 롤) 기준 N타 KO. min=0이면 ∞.
   guaranteedHits: number;
-  // 최대 데미지(=가장 운 좋은 롤) 기준 N타 KO. max=0이면 ∞.
   possibleHits: number;
-  // 한국 SV 표기: guaranteed === possible이면 "확정 N타", 다르면 "난수 N타" 단일 형식.
   hitsText: string;
   attackerTypes: readonly TypeName[];
   defenderTypes: readonly TypeName[];

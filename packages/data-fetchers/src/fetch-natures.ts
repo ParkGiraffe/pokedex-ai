@@ -11,7 +11,6 @@ type NatureResponse = {
   decreased_stat: { name: string } | null;
 };
 
-// 성격이 보정하는 능력치는 HP를 제외한 5종. PokeAPI 슬러그를 내부 키로 매핑한다.
 const STAT_SLUG_TO_KEY: Record<string, 'A' | 'B' | 'C' | 'D' | 'S'> = {
   attack: 'A',
   defense: 'B',

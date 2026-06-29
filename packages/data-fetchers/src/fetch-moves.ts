@@ -65,7 +65,7 @@ const main = async () => {
         try {
           const data = await fetchJson<MoveResponse>(`/move/${i}/`);
           const ko = pickKo(data.names);
-          if (!ko) return; // 한국어명 없는 기술은 한국 발매에 없음, 스킵
+          if (!ko) return;
           const flavorKo = data.flavor_text_entries.find(
             (f) => f.language.name === 'ko' && f.version_group.name === 'scarlet-violet',
           )?.flavor_text;

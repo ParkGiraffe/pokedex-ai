@@ -51,7 +51,6 @@ export class PresetsController {
     return toRes(await this.presets.create(userId, body.name, body.party));
   }
 
-  // 공유 토큰으로 원본을 내 프리셋으로 복사한다. 원본 copyCount가 1 증가한다.
   @Post('copy')
   @HttpCode(201)
   async copyFromShare(

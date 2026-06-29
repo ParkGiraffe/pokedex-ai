@@ -7,7 +7,6 @@ export interface AuthenticatedRequest extends Request {
   userId: string;
 }
 
-// Authorization: Bearer <jwt> 검증 후 req.userId를 채운다. 토큰 검증은 TokenService 포트에 위임.
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
   constructor(@Inject(TOKEN_SERVICE) private readonly tokens: TokenService) {}

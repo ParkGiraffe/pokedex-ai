@@ -1,5 +1,3 @@
-// 업로드 전 이미지를 긴 변 기준 maxSize로 줄여 base64 data URL로 만든다.
-// 로컬 비전 모델 처리 속도를 위해(원본 1080p+는 매우 느림) 1280px로 다운스케일.
 export const downscaleImage = (file: File, maxSize = 1280): Promise<string> =>
   new Promise((resolve, reject) => {
     const image = new Image();

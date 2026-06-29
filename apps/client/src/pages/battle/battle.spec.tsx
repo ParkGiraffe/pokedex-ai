@@ -10,7 +10,6 @@ import { battleRoute } from '@/routes/battle';
 
 import { battleOptions } from './lib/battle';
 
-// 탭 셸이 라우트 search(?tab=)를 읽으므로 실제 라우터로 감싸 렌더한다.
 const renderPage = (initial: string) =>
   render(
     <QueryClientProvider client={new QueryClient()}>

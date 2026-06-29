@@ -76,7 +76,6 @@ export const ImportPartyBody = z
     message: '이미지가 필요합니다',
   });
 
-// 배틀 화면 스크린샷 1장 + 선택 메모. Sonnet 비전으로 다음 한 수를 조언한다.
 export const BattleScreenshotBody = z.object({
   image: z.string().min(1),
   note: z.string().max(200).optional(),

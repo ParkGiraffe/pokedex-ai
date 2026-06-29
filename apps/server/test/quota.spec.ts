@@ -58,7 +58,6 @@ describe('일일 쿼터', () => {
 
   it('한도(2회) 소진 후 AI 호출은 429', async () => {
     const { token, userId } = await register();
-    // 한도(2)까지 미리 채운다. 원자 소비 자체는 실제 요청 컨텍스트에서 일어나도록 둔다.
     await app
       .get(MikroORM)
       .em.getConnection()

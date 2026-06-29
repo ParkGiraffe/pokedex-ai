@@ -16,7 +16,6 @@ const normalize = (draft: MemberDraft) => ({
   ivs: PERFECT_IVS,
 });
 
-// Zod 기본 메시지(영어) 대신 어떤 칸이 비었는지 한국어로 안내한다.
 const FIELD_LABEL: Record<string, string> = {
   species: '포켓몬',
   ability: '특성',

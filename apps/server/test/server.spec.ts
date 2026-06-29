@@ -9,8 +9,6 @@ type DecideRes = { moveOptions: MoveOption[]; summary: string };
 type TeamSelectRes = { board: Array<{ myPick: string; score: number; favorable: number; unfavorable: number }> };
 type CounterRes = { entries: unknown[] };
 
-// 기존 Fastify 서버와 동일 입출력을 NestJS에서 재현하는 동등성 테스트.
-// Anthropic을 호출하는 엔드포인트(/analyze-party·/import-party 등)는 외부 의존이라 제외.
 describe('어드바이저 서버 (NestJS 동등성)', () => {
   let app: NestExpressApplication;
 

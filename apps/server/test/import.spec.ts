@@ -30,7 +30,6 @@ describe('buildImportResult', () => {
       [{ species: '한카리아스', ability: '까칠한피부', item: '기합의띠', moves: ['지진', '역린'] }],
       [{ species: '킬라플로로', points: { A: 32, S: 32, H: 2 } }],
     ]);
-    // 능력 화면 기술 + 스테이터스 화면 EV가 한 종족으로 합쳐지고, 종족 오타는 정규화로 매칭
     const garchomp = mergeMembers([
       [{ species: '한카리아스', moves: ['지진'] }],
       [{ species: '한카리아스', points: { A: 32 } }],

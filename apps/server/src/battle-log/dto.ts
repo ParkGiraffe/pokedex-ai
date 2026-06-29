@@ -8,7 +8,6 @@ export const CreateBattleLogBody = z.object({
   gimmick: z.enum(BATTLE_GIMMICKS),
   result: z.enum(BATTLE_RESULTS),
   memo: z.string().max(300).optional(),
-  // ISO 문자열만 받는다(미지정 시 서버가 등록 시각으로 채움).
   playedAt: z
     .string()
     .refine((value) => !Number.isNaN(Date.parse(value)), '유효한 날짜가 아닙니다')

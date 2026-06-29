@@ -62,8 +62,6 @@ export const usePartyStore = create<PartyState>()(
     }),
     {
       name: 'pokedex-party',
-      // v1 → v2: 본가 EV(0~252) → 챔피언스 노력 포인트(0~32) 마이그레이션.
-      // 옛 데이터(예: 252)는 round(v / 8)로 변환되어 32 cap에 맞춰진다.
       version: 2,
       migrate: (persistedState, version) => {
         if (version >= 2 || typeof persistedState !== 'object' || persistedState === null) {

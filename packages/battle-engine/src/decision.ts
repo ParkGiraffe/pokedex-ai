@@ -17,7 +17,6 @@ export type MatchupVerdict = '유리' | '불리' | '호각';
 
 const firstOf = <T>(value: T | T[] | undefined): T | undefined => (Array.isArray(value) ? value[0] : value);
 
-// 받침에 따라 조사 로/으로를 붙인다(예: 지진 → 지진으로, 한카리아스 → 한카리아스로).
 const withRo = (word: string): string => {
   const code = word.charCodeAt(word.length - 1);
   if (code < 0xac00 || code > 0xd7a3) {
@@ -39,7 +38,6 @@ const fromChampions = (set: ChampionsSet): MyMon => ({
   megaForme: set.megaForme,
 });
 
-// "예상 세트": 챔피언스 사용률 1위 조합을 우선하고, 없으면 Smogon SV로 폴백한다.
 export const assumedSet = (species: string): MyMon | undefined => {
   const champion = championsAssumedSet(species);
   if (champion) {
@@ -109,18 +107,15 @@ export type Pairwise = {
 const verdictOf = (myKo: number, oppKo: number, faster: 'win' | 'lose' | 'tie'): MatchupVerdict => {
   const iThreaten = myKo >= 0.5;
   const oppThreatens = oppKo >= 0.5;
-  // 한쪽만 결정타가 있으면 그쪽이 유리/불리.
   if (iThreaten && !oppThreatens) {
     return '유리';
   }
   if (oppThreatens && !iThreaten) {
     return '불리';
   }
-  // 둘 다 결정타가 있으면(공격 메타) 스피드가 승부를 가른다.
   if (iThreaten && oppThreatens) {
     return faster === 'win' ? '유리' : faster === 'lose' ? '불리' : '호각';
   }
-  // 둘 다 결정타가 없으면 화력 + 스피드 미세 우위로 본다.
   const speedBias = faster === 'win' ? 0.15 : faster === 'lose' ? -0.15 : 0;
   const score = myKo - oppKo + speedBias;
   return score > 0.2 ? '유리' : score < -0.2 ? '불리' : '호각';
@@ -202,7 +197,6 @@ export const inBattle = (active: MyMon, opponentSpecies: string, bench: MyMon[],
   const faster = speedOf(active) > speedOf(opponentSide);
 
   let recommendation: string;
-  // 결정타가 있고, 내가 더 빠르거나 상대가 날 한 방에 못 잡으면 공격이 안전하다.
   if (topMove && topMove.koChance >= 0.5 && (faster || oppKoOnMe < 1)) {
     recommendation = `${withRo(topMove.move)} 공격 (KO ${Math.round(topMove.koChance * 100)}%${faster ? ', 선공' : ''})`;
   } else if (bestSwitch && bestSwitch.matchup.verdict === '유리') {
@@ -220,7 +214,6 @@ export type GimmickChoice = 'none' | 'mega' | 'tera';
 export type GimmickOption = { gimmick: GimmickChoice; move: string; koChance: number; max: number; desc: string };
 export type GimmickPlan = { recommend: GimmickChoice; options: GimmickOption[] };
 
-// 챔피언스 기믹 1개 규칙: 메가/테라/안 씀 중 이번 공격에 KO가 가장 잘 나오는 선택을 고른다.
 export const bestGimmick = (
   attacker: MyMon,
   defender: EngineSide,
@@ -257,7 +250,6 @@ export type CounterEntry = {
 
 type LabeledSet = { label: string; mon: MyMon };
 
-// 상대 흔한 세트: 챔피언스 공개 샘플(메가·도구 포함)을 우선하고, 없으면 Smogon SV로 폴백.
 const opponentSets = (species: string): LabeledSet[] => {
   const samples = championsSamples(species, 3);
   if (samples.length > 0) {

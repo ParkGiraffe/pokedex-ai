@@ -2,7 +2,6 @@ import naturesRaw from '../data/natures.json' with { type: 'json' };
 import typesRaw from '../data/types.json' with { type: 'json' };
 import { findPokemon } from './lookup';
 
-// 한국어/영문/표시명 → Pokémon Showdown ID (소문자, 영숫자 외 제거).
 export const toShowdownId = (name: string): string => name.toLowerCase().replace(/[^a-z0-9]/g, '');
 
 const capitalize = (value: string): string => (value ? value.charAt(0).toUpperCase() + value.slice(1) : value);
@@ -12,7 +11,6 @@ const natureEnByKo = new Map(
 );
 const typeEnByKo = (typesRaw as { types_ko_to_en: Record<string, string> }).types_ko_to_en;
 
-// 성격/타입 한국어 → Showdown 영문 표기(예: 고집 → Adamant, 강철 → Steel). 미상은 그대로.
 export const natureEnOf = (nature: string): string => natureEnByKo.get(nature) ?? nature;
 export const typeEnOf = (type: string): string => capitalize(typeEnByKo[type] ?? type.toLowerCase());
 
@@ -41,7 +39,6 @@ export type SmogonUsage = {
   teammates: Array<[string, number]>;
 };
 
-// 입력이 한국어명/도감번호면 도감으로 영문명을 찾아 id화하고, 아니면 그대로 id화한다.
 const resolveId = (species: string): string => {
   const entry = findPokemon(species);
   return toShowdownId(entry ? entry.en : species);

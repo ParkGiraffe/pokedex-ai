@@ -3,7 +3,6 @@ import { zodOutputFormat } from '@anthropic-ai/sdk/helpers/zod';
 import { Injectable } from '@nestjs/common';
 import { z } from 'zod';
 
-// 배틀 스크린샷 조언은 경량 Sonnet 비전. OCR(Opus)과 달리 실시간 한 수 조언용으로 max_tokens도 작게.
 const MODEL = process.env.ADVISOR_MODEL_BATTLE_VISION ?? 'claude-sonnet-4-6';
 
 const SYSTEM = [
@@ -36,7 +35,6 @@ const mediaTypeOf = (source: string): MediaType => {
 
 @Injectable()
 export class BattleVisionService {
-  // 타임아웃 없으면 Claude API가 hang할 때 요청이 무한 대기한다.
   private readonly anthropic = new Anthropic({ timeout: 90_000 });
 
   async adviseFromScreenshot(source: string, note?: string): Promise<BattleVisionAdvice> {

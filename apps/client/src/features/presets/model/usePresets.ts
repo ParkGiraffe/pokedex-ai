@@ -4,7 +4,6 @@ import { useAuthStore } from '@/features/auth';
 
 import { fetchPresets, type PresetRes } from '../api';
 
-// 로그인 상태에서만 조회한다.
 export const usePresets = (): ReturnType<typeof useQuery<PresetRes[]>> => {
   const token = useAuthStore((state) => state.token);
   return useQuery({

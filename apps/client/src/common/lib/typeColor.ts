@@ -1,5 +1,3 @@
-// 포켓몬 18타입 정식 색(커뮤니티 표준). 키는 한국어 타입명.
-// 약점 매트릭스의 배율색(×4·반감 등 의미색)과는 별개로, 타입 "정체성"을 나타낼 때 쓴다.
 export const TYPE_COLOR: Record<string, string> = {
   노말: '#9099A1',
   불꽃: '#FF9D55',
@@ -21,7 +19,6 @@ export const TYPE_COLOR: Record<string, string> = {
   페어리: '#EC8FE6',
 };
 
-// 밝은 배경색이라 흰 글자 대신 어두운 글자가 필요한 타입.
 const DARK_TEXT_TYPES = new Set(['전기', '얼음', '바위']);
 
 export const typeColor = (type: string): string => TYPE_COLOR[type] ?? '#6b7280';

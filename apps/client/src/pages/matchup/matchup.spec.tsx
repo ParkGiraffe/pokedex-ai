@@ -6,7 +6,6 @@ import { describe, expect, it } from 'vitest';
 import { rootRoute } from '@/routes/__root';
 import { matchupRoute } from '@/routes/matchup';
 
-// 탭 셸이 라우트 search(?tab=)를 읽으므로 실제 라우터로 감싸 렌더한다.
 const renderPage = (initial: string) =>
   render(
     <QueryClientProvider client={new QueryClient()}>

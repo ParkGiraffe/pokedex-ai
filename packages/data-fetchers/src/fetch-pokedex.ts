@@ -55,7 +55,6 @@ const OUT = resolve(import.meta.dirname, '../../pokedex-core/data/pokedex.json')
 
 const main = async () => {
   process.stderr.write('[1/3] type map\n');
-  // 동시 완료 순서에 의존하지 않도록 id 순으로 typeMap을 구성한다 (멱등성).
   const typeResults = await Promise.all(
     Array.from({ length: TYPE_COUNT }, (_, i) => i + 1).map((i) =>
       concurrency(() => fetchJson<TypeResponse>(`/type/${i}/`)),

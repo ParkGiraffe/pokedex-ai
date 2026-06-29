@@ -11,7 +11,6 @@ type PokemonPickerProps = {
   invalid?: boolean;
 };
 
-// 사용자 입력의 앞뒤 공백은 자동 제거한다 ("리자몽 "·" 리자몽"도 매칭).
 export const PokemonPicker = ({ value, onSelect, id, invalid }: PokemonPickerProps) => (
   <Input
     id={id}

@@ -19,14 +19,10 @@ type SelectProps = {
   className?: string;
 };
 
-// Radix Select.Item은 빈 문자열 value를 금지하므로, 외부 "" ↔ 내부 sentinel을 자동 변환한다.
-// 호출 측은 빈 문자열을 그대로 쓸 수 있다.
 const EMPTY_SENTINEL = '__select_empty__';
 const toInner = (value: string) => (value === '' ? EMPTY_SENTINEL : value);
 const toOuter = (value: string) => (value === EMPTY_SENTINEL ? '' : value);
 
-// shadcn 패턴의 커스텀 셀렉트. native <select>를 대체한다.
-// 옵션은 배열로 전달, value는 string 단일. 숫자/유니언은 호출 측에서 캐스팅한다.
 export const Select = ({ value, onValueChange, options, placeholder, disabled, className }: SelectProps) => (
   <SelectPrimitive.Root
     value={toInner(value)}

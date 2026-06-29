@@ -39,7 +39,6 @@ export class BattleLogController {
     return (await this.battleLogs.list(userId)).map(toRes);
   }
 
-  // 'stats'는 고정 경로라 :id 라우트보다 먼저 둔다(여기선 :id GET이 없지만 의도를 명시).
   @Get('stats')
   async stats(@CurrentUserId() userId: string): Promise<BattleStats> {
     return this.battleLogs.stats(userId);

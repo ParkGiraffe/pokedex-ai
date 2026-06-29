@@ -5,8 +5,6 @@ import { Injectable } from '@nestjs/common';
 
 import { type PasswordHasher } from '../domain/password-hasher.port';
 
-// node:crypto scrypt 기반 — 외부 해시 라이브러리·네이티브 빌드 의존 없음. PasswordHasher 포트의 한 구현일 뿐이라
-// argon2/bcrypt로 교체하려면 이 어댑터만 바꾸면 된다.
 const scryptAsync = promisify(scrypt) as (password: string, salt: Buffer, keylen: number) => Promise<Buffer>;
 const KEY_LENGTH = 64;
 const SALT_LENGTH = 16;

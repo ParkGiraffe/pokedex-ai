@@ -5,10 +5,6 @@ import type { PokedexEntry } from '@pokedex-agent/pokedex-core';
 
 import { announce, concurrency, fetchJson, pickKo } from './pokeapi';
 
-// 챔피언스 합법 메가만 다룬다. 이미 받아둔 champions/samples-singles.json의
-// megaForm 슬러그를 출발점으로 잡고, PokeAPI에서 pokemon-form/pokemon/pokemon-species를
-// 모아 종족값·타입·특성·한국어 명칭을 채운다.
-// 챔피언스 신규 메가는 PokeAPI에 없을 수 있으므로 누락은 skipped에 남기고 진행한다.
 const CORE = resolve(import.meta.dirname, '../../pokedex-core/data');
 const SAMPLES_PATH = resolve(CORE, 'champions/samples-singles.json');
 const OUT = resolve(CORE, 'champions/megas.json');
@@ -70,8 +66,6 @@ type TypeResource = {
   names: Array<{ language: { name: string }; name: string }>;
 };
 
-// 메가 폼 슬러그(scizor-mega, charizard-mega-x) → 메가 폼 정보.
-// `-mega-x|y` 또는 `-mega`만 인정. 나머지(region form 등)는 undefined.
 const parseMegaForm = (form: string): { megaForme: 'X' | 'Y' | null } | undefined => {
   if (form.endsWith('-mega-x')) {
     return { megaForme: 'X' };
@@ -85,8 +79,6 @@ const parseMegaForm = (form: string): { megaForme: 'X' | 'Y' | null } | undefine
   return undefined;
 };
 
-// 메가 폼 → 메가스톤 슬러그 (UI에서 도구 입력으로 메가 폼 결정용).
-// scizor-mega → scizorite, charizard-mega-x → charizardite-x
 const formToStone = (form: string): string => {
   const match = form.match(/^(.+)-mega(?:-([xy]))?$/);
   if (!match) {
@@ -174,7 +166,6 @@ const buildTypeKoMap = async (): Promise<Map<string, string>> => {
 const main = async () => {
   mkdirSync(resolve(OUT, '..'), { recursive: true });
 
-  // 1. 이미 받아둔 챔피언스 samples-singles에서 메가 폼만 추출.
   const samplesFile = JSON.parse(readFileSync(SAMPLES_PATH, 'utf8')) as {
     byPokemon: Record<string, Array<{ megaForm?: string }>>;
   };
@@ -195,8 +186,6 @@ const main = async () => {
   }
   process.stderr.write(`[fetch-megas] 메가 폼 ${candidates.length}개 (samples 내 form ${forms.size}개)\n`);
 
-  // 2. 미리 ability/type 한국어 매핑을 모은다. 메가 ability 슬러그를 먼저 sniff하는 비용 대비
-  //    PokeAPI 호출 후 캐싱이 더 간단하므로 메가 본체 fetch 시 1회 통과한다.
   const typeKo = await buildTypeKoMap();
 
   const megas: MegaEntry[] = [];

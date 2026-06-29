@@ -1,11 +1,11 @@
 export type SpeedInput = {
   base: number;
-  rank?: number; // -6..+6
+  rank?: number;
   tailwind?: boolean;
   paralyzed?: boolean;
   stickyWeb?: boolean;
-  itemMultiplier?: number; // 구애스카프 1.5, 두꺼운자루 0.5 등
-  abilityMultiplier?: number; // 가속 1.5, 모래헤치기 2.0 등 (날씨·특성)
+  itemMultiplier?: number;
+  abilityMultiplier?: number;
 };
 
 const rankMultiplier = (rank: number): number => {
@@ -27,7 +27,6 @@ export const effectiveSpeed = (input: SpeedInput): number => {
   let value = Math.floor(base * rankMultiplier(rank));
   value = Math.floor(value * itemMultiplier);
   value = Math.floor(value * abilityMultiplier);
-  // 끈적네트는 스피드 1랭크 다운(= 2/3배), 1/3배가 아니다.
   if (stickyWeb) value = Math.floor((value * 2) / 3);
   if (paralyzed) value = Math.floor(value / 2);
   if (tailwind) value *= 2;

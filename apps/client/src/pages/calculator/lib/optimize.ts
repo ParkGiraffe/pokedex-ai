@@ -1,12 +1,10 @@
 import { findPokemon, formula, type NatureName, type TeraType, type TypeName } from '@pokedex-agent/pokedex-core';
 
-// 챔피언스 노력 포인트는 스탯당 0~32. 역산은 목표(생존·추월·KO)를 만족하는 최소 포인트를 찾는다.
 export const EV_MIN = 0;
 export const EV_MAX = 32;
 
 type Category = '물리' | '특수';
 
-// 한 방 데미지 계산(공격측 실수치는 호출 측에서 미리 만든다)에 필요한 고정 입력.
 type AttackShape = {
   level: number;
   category: Category;
@@ -32,7 +30,6 @@ const attackStatOf = (
   return formula.actualStat({ stat: key, base: entry.base[key], iv: 31, ev, level, nature });
 };
 
-// ---------- 모드 1: 내구 역산 (특정 공격을 확정으로 버티는 최소 HP/방어 노력) ----------
 export type BulkInput = {
   defenderSpecies: string;
   defenderLevel: number;
@@ -42,7 +39,7 @@ export type BulkInput = {
   attackerNature: NatureName;
   attackerEv: number;
   attack: AttackShape;
-  hits: number; // 몇 번의 공격을 버틸지 (1 = 단발 확정 생존)
+  hits: number;
 };
 
 export type BulkSpread = {
@@ -52,7 +49,6 @@ export type BulkSpread = {
   hp: number;
   defense: number;
   maxDamage: number;
-  // 최대 롤 기준 받는 데미지 비율(%). 100 미만이면 단발 확정 생존.
   takenPercent: number;
 };
 
@@ -114,7 +110,6 @@ export const optimizeBulk = (input: BulkInput): BulkResult | undefined => {
         attackerTerastalized: input.attack.terastalized,
         itemMultiplier: input.attack.itemMultiplier,
       });
-      // 누적 최대 데미지가 HP 미만이면 hits번 버틴다.
       if (damage.max * hits < hp) {
         survivable.push({
           hpEv,
@@ -133,7 +128,6 @@ export const optimizeBulk = (input: BulkInput): BulkResult | undefined => {
     return { canSurvive: false };
   }
 
-  // 최소 총 포인트(동률이면 더 균형 잡힌 쪽), HP 몰빵 최소, 방어 몰빵 최소.
   const byTotal = [...survivable].sort(
     (a, b) => a.total - b.total || Math.abs(a.hpEv - a.defEv) - Math.abs(b.hpEv - b.defEv),
   );
@@ -142,20 +136,19 @@ export const optimizeBulk = (input: BulkInput): BulkResult | undefined => {
   return { best: byTotal[0], hpHeavy, defHeavy, canSurvive: true };
 };
 
-// ---------- 모드 2: 스피드 역산 (목표 스피드를 추월하는 최소 스피드 노력) ----------
 export type SpeedReverseInput = {
   species: string;
   level: number;
   nature: NatureName;
-  itemMultiplier: number; // 구애스카프 1.5 등
-  abilityMultiplier: number; // 가속 1.5 등
-  targetSpeed: number; // 추월하려는 상대 실효 스피드
+  itemMultiplier: number;
+  abilityMultiplier: number;
+  targetSpeed: number;
 };
 
 export type SpeedReverseResult = {
-  evNeeded: number | null; // null이면 최대 투자로도 추월 불가
-  achievedSpeed: number; // 최소 투자(또는 32)에서의 내 실효 스피드
-  maxSpeed: number; // 32 투자 시 실효 스피드
+  evNeeded: number | null;
+  achievedSpeed: number;
+  maxSpeed: number;
 };
 
 const effectiveSpeedAt = (
@@ -196,11 +189,9 @@ export const optimizeSpeed = (input: SpeedReverseInput): SpeedReverseResult | un
   return { evNeeded: null, achievedSpeed: maxSpeed, maxSpeed };
 };
 
-// 상대 종족의 실효 스피드(목표 스피드 채우기 보조). 기본 최대 투자 가정.
 export const assumedSpeed = (species: string, level: number, nature: NatureName, ev = EV_MAX): number | undefined =>
   effectiveSpeedAt(species, ev, { level, nature, itemMultiplier: 1, abilityMultiplier: 1 });
 
-// ---------- 모드 3: 화력 역산 (목표 N타 KO를 내는 최소 공격 노력) ----------
 export type PowerInput = {
   attackerSpecies: string;
   attackerLevel: number;
@@ -211,13 +202,13 @@ export type PowerInput = {
   defenderNature: NatureName;
   defenderHpEv: number;
   defenderDefEv: number;
-  targetHits: number; // 목표 N타 (1 = 1타)
-  guaranteed: boolean; // true=확정(최악 롤), false=난수(최선 롤)
+  targetHits: number;
+  guaranteed: boolean;
 };
 
 export type PowerResult = {
-  evNeeded: number | null; // null이면 최대 투자로도 목표 N타 불가
-  achievedHitsText: string; // 최소 투자(또는 32)에서의 N타 표기
+  evNeeded: number | null;
+  achievedHitsText: string;
   maxDamagePercent: number;
 };
 
@@ -271,7 +262,6 @@ export const optimizePower = (input: PowerInput): PowerResult | undefined => {
     });
   };
 
-  // 확정 N타 = 최악 롤(min) 기준 ceil(HP/min) ≤ N. 난수 N타 = 최선 롤(max) 기준.
   const hitsMet = (damage: formula.DamageResult): boolean => {
     const roll = input.guaranteed ? damage.min : damage.max;
     if (roll <= 0) {
