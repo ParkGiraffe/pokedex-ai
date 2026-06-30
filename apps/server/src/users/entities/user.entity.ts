@@ -2,8 +2,8 @@ import { type Opt } from '@mikro-orm/core';
 import { Entity, Enum, PrimaryKey, Property, Unique } from '@mikro-orm/decorators/legacy';
 import { uuidv7 } from 'uuidv7';
 
-import { type ProviderName } from '../auth/domain/identity';
-import { UserTier } from './user.enums';
+import { type ProviderName } from '../../auth/domain/identity';
+import { UserTier } from '../enums';
 
 @Entity({ tableName: 'users' })
 @Unique({ properties: ['provider', 'providerUserId'] })

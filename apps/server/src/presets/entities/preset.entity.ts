@@ -3,7 +3,7 @@ import { Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/decorators/l
 import { type PartyDraft } from '@pokedex-agent/pokedex-core';
 import { uuidv7 } from 'uuidv7';
 
-import { User } from '../users/user.entity';
+import { User } from '../../users/entities';
 
 @Entity({ tableName: 'presets' })
 export class Preset {

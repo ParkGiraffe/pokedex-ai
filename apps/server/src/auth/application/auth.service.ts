@@ -1,6 +1,6 @@
 import { ConflictException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 
-import { type User } from '../../users/user.entity';
+import { type User } from '../../users/entities';
 import { UsersService } from '../../users/users.service';
 import { AUTH_PROVIDERS, type AuthProvider } from '../domain/auth-provider.port';
 import { type ProviderName, type VerifiedIdentity } from '../domain/identity';

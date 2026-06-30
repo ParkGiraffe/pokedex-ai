@@ -4,10 +4,10 @@ import { defineConfig, UnderscoreNamingStrategy } from '@mikro-orm/postgresql';
 import { SeedManager } from '@mikro-orm/seeder';
 import { config } from 'dotenv';
 
-import { BattleLog } from './battle-log/battle-log.entity';
-import { Preset } from './presets/preset.entity';
-import { UsageDaily } from './quota/usage-daily.entity';
-import { User } from './users/user.entity';
+import { BattleLog } from './battle-log/entities';
+import { Preset } from './presets/entities';
+import { UsageDaily } from './quota/entities';
+import { User } from './users/entities';
 
 export const getEnvFilePath = (): string => `.env.${process.env.NODE_ENV ?? 'development'}`;
 export const isProduction = (): boolean => process.env.NODE_ENV === 'production';

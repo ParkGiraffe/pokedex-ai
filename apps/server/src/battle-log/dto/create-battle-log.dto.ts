@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { BATTLE_GIMMICKS, BATTLE_RESULTS } from './battle-log.enums';
+import { BATTLE_GIMMICKS, BATTLE_RESULTS } from '../enums';
 
 export const CreateBattleLogBody = z.object({
   myLead: z.string().min(1).max(50),

@@ -2,8 +2,8 @@ import { type Opt } from '@mikro-orm/core';
 import { Entity, Enum, ManyToOne, PrimaryKey, Property } from '@mikro-orm/decorators/legacy';
 import { uuidv7 } from 'uuidv7';
 
-import { User } from '../users/user.entity';
-import { BATTLE_GIMMICKS, BATTLE_RESULTS, type BattleGimmick, type BattleResult } from './battle-log.enums';
+import { User } from '../../users/entities';
+import { BATTLE_GIMMICKS, BATTLE_RESULTS, type BattleGimmick, type BattleResult } from '../enums';
 
 @Entity({ tableName: 'battle_logs' })
 export class BattleLog {

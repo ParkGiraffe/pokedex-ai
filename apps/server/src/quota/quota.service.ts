@@ -1,10 +1,10 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 
-import { UserTier } from '../users/user.enums';
+import { UserTier } from '../users/enums';
 import { UsersService } from '../users/users.service';
+import { UsageDaily } from './entities';
 import { QUOTA_CAP_BY_TIER } from './quota-caps';
-import { UsageDaily } from './usage-daily.entity';
 
 export type QuotaStatus = { used: number; remaining: number; cap: number };
 

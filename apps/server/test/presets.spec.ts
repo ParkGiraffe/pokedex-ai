@@ -6,8 +6,8 @@ import request from 'supertest';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { createApp } from '../src/app.factory';
-import { User } from '../src/users/user.entity';
-import { UserTier } from '../src/users/user.enums';
+import { User } from '../src/users/entities';
+import { UserTier } from '../src/users/enums';
 
 type AuthRes = { accessToken: string; user: { id: string } };
 type PresetRes = { id: string; name: string; party: unknown; shareToken?: string | null };

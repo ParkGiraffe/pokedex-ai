@@ -3,9 +3,9 @@ import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/commo
 import { type PartyDraft } from '@pokedex-agent/pokedex-core';
 import { uuidv7 } from 'uuidv7';
 
-import { User } from '../users/user.entity';
-import { UserTier } from '../users/user.enums';
-import { Preset } from './preset.entity';
+import { User } from '../users/entities';
+import { UserTier } from '../users/enums';
+import { Preset } from './entities';
 import { PRESET_CAP_BY_TIER } from './preset-caps';
 
 @Injectable()
