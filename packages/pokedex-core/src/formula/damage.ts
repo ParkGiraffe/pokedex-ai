@@ -1,5 +1,5 @@
 import type { TeraType, TypeName } from '../types';
-import { typeEffectiveness } from './matchup';
+import { typeEffectiveness } from './type-effectiveness';
 
 export type DamageCategory = '물리' | '특수';
 
