@@ -1,11 +1,11 @@
 import { ConflictException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 
-import { type User } from '../../users/entities';
-import { UsersService } from '../../users/users.service';
-import { AUTH_PROVIDERS, type AuthProvider } from '../domain/auth-provider.port';
-import { type ProviderName, type VerifiedIdentity } from '../domain/identity';
-import { PASSWORD_HASHER, type PasswordHasher } from '../domain/password-hasher.port';
-import { TOKEN_SERVICE, type TokenService } from '../domain/token-service.port';
+import { type User } from '../users/entities';
+import { UsersService } from '../users/users.service';
+import { AUTH_PROVIDERS, type AuthProvider } from './providers/auth-provider.port';
+import { type ProviderName, type VerifiedIdentity } from './providers/identity';
+import { PASSWORD_HASHER, type PasswordHasher } from './providers/password-hasher.port';
+import { TOKEN_SERVICE, type TokenService } from './providers/token-service.port';
 
 export interface AuthResult {
   accessToken: string;

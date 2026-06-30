@@ -1,7 +1,7 @@
 import { type CanActivate, type ExecutionContext, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { type Request } from 'express';
 
-import { TOKEN_SERVICE, type TokenService } from './domain/token-service.port';
+import { TOKEN_SERVICE, type TokenService } from './providers/token-service.port';
 
 export interface AuthenticatedRequest extends Request {
   userId: string;

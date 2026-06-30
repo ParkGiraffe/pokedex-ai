@@ -3,7 +3,7 @@ import { promisify } from 'node:util';
 
 import { Injectable } from '@nestjs/common';
 
-import { type PasswordHasher } from '../domain/password-hasher.port';
+import { type PasswordHasher } from './password-hasher.port';
 
 const scryptAsync = promisify(scrypt) as (password: string, salt: Buffer, keylen: number) => Promise<Buffer>;
 const KEY_LENGTH = 64;
