@@ -6,9 +6,9 @@ import { Checkbox } from '@/common/ui/Checkbox';
 import { Field } from '@/common/ui/Field';
 import { NumberField } from '@/common/ui/NumberField';
 import { Select } from '@/common/ui/Select';
-import { PokemonDatalist } from '@/features/pokemon-picker/ui/PokemonDatalist';
-import { PokemonIcon } from '@/features/pokemon-picker/ui/PokemonIcon';
-import { PokemonPicker } from '@/features/pokemon-picker/ui/PokemonPicker';
+import { PokemonDatalist } from '@/features/pokemon-picker';
+import { PokemonIcon } from '@/features/pokemon-picker';
+import { PokemonPicker } from '@/features/pokemon-picker';
 
 import { computeCalc } from '../lib/calc';
 import { useCalculatorStore } from '../model/store';

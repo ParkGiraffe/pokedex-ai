@@ -2,9 +2,9 @@ import { useNavigate, useSearch } from '@tanstack/react-router';
 
 import { cn } from '@/common/lib/cn';
 import { Card } from '@/common/ui/Card';
-import { useBattleAdvice } from '@/features/advisor/model/useBattleAdvice';
-import { AnalysisResult } from '@/features/advisor/ui/AnalysisResult';
-import { PokemonDatalist } from '@/features/pokemon-picker/ui/PokemonDatalist';
+import { useBattleAdvice } from '@/features/advisor';
+import { AnalysisResult } from '@/features/advisor';
+import { PokemonDatalist } from '@/features/pokemon-picker';
 import { buildParty } from '@/pages/party/lib/party';
 import { usePartyStore } from '@/pages/party/model/store';
 

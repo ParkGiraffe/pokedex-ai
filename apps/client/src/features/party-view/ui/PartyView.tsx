@@ -1,7 +1,7 @@
 import { type PartyDraft, speciesDisplayName } from '@pokedex-agent/pokedex-core';
 
 import { Card } from '@/common/ui/Card';
-import { PokemonIcon } from '@/features/pokemon-picker/ui/PokemonIcon';
+import { PokemonIcon } from '@/features/pokemon-picker';
 
 const EV_LABEL: Record<string, string> = { H: 'HP', A: '공격', B: '방어', C: '특공', D: '특방', S: '스피드' };
 

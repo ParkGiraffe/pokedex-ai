@@ -12,10 +12,10 @@ import { cn } from '@/common/lib/cn';
 import { Badge } from '@/common/ui/Badge';
 import { Button } from '@/common/ui/Button';
 import { Card } from '@/common/ui/Card';
-import { useMatchupLeadrec } from '@/features/advisor/model/useMatchupLeadrec';
-import { PokemonDatalist } from '@/features/pokemon-picker/ui/PokemonDatalist';
-import { PokemonIcon } from '@/features/pokemon-picker/ui/PokemonIcon';
-import { PokemonPicker } from '@/features/pokemon-picker/ui/PokemonPicker';
+import { useMatchupLeadrec } from '@/features/advisor';
+import { PokemonDatalist } from '@/features/pokemon-picker';
+import { PokemonIcon } from '@/features/pokemon-picker';
+import { PokemonPicker } from '@/features/pokemon-picker';
 import { buildParty } from '@/pages/party/lib/party';
 import { usePartyStore } from '@/pages/party/model/store';
 

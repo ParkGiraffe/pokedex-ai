@@ -5,7 +5,7 @@ import { type ComponentType } from 'react';
 import { cn } from '@/common/lib/cn';
 import { Badge } from '@/common/ui/Badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/common/ui/Card';
-import { PokemonIcon } from '@/features/pokemon-picker/ui/PokemonIcon';
+import { PokemonIcon } from '@/features/pokemon-picker';
 
 type Kind = 'strength' | 'weakness' | 'warning' | 'recommendation';
 

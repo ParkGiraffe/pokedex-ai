@@ -4,8 +4,8 @@ import { cn } from '@/common/lib/cn';
 import { Badge } from '@/common/ui/Badge';
 import { Button } from '@/common/ui/Button';
 import { Card } from '@/common/ui/Card';
-import { POKEMON_DATALIST_ID } from '@/features/pokemon-picker/ui/PokemonDatalist';
-import { PokemonIcon } from '@/features/pokemon-picker/ui/PokemonIcon';
+import { POKEMON_DATALIST_ID } from '@/features/pokemon-picker';
+import { PokemonIcon } from '@/features/pokemon-picker';
 
 export const MAX_TEAM = 6;
 

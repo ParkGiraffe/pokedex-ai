@@ -3,7 +3,7 @@ import { toast } from 'sonner';
 
 import { Button } from '@/common/ui/Button';
 import { Sheet } from '@/common/ui/Sheet';
-import { useImportParty } from '@/features/advisor/model/useImportParty';
+import { useImportParty } from '@/features/advisor';
 
 import { downscaleImage } from '../lib/image';
 import { parsePartyImport } from '../lib/import';

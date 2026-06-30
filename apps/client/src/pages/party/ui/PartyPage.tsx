@@ -4,9 +4,9 @@ import { useState } from 'react';
 import { cn } from '@/common/lib/cn';
 import { Button } from '@/common/ui/Button';
 import { Card } from '@/common/ui/Card';
-import { useAnalyzeParty } from '@/features/advisor/model/useAnalyzeParty';
-import { AnalysisResult } from '@/features/advisor/ui/AnalysisResult';
-import { PokemonDatalist } from '@/features/pokemon-picker/ui/PokemonDatalist';
+import { useAnalyzeParty } from '@/features/advisor';
+import { AnalysisResult } from '@/features/advisor';
+import { PokemonDatalist } from '@/features/pokemon-picker';
 import { PresetManager } from '@/features/presets';
 
 import { buildParty, teamWeakness } from '../lib/party';

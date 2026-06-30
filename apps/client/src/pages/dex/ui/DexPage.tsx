@@ -9,7 +9,7 @@ import { Input } from '@/common/ui/Input';
 import { Select } from '@/common/ui/Select';
 import { StatBox } from '@/common/ui/StatBox';
 import { TypeBadge } from '@/common/ui/TypeBadge';
-import { PokemonIcon } from '@/features/pokemon-picker/ui/PokemonIcon';
+import { PokemonIcon } from '@/features/pokemon-picker';
 
 const PageInput = ({ value, max, onCommit }: { value: number; max: number; onCommit: (page: number) => void }) => {
   const [draft, setDraft] = useState<string>(String(value));

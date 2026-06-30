@@ -1,5 +1,5 @@
-import { MegaControl } from '@/features/pokemon-picker/ui/MegaControl';
-import { PokemonIcon } from '@/features/pokemon-picker/ui/PokemonIcon';
+import { MegaControl } from '@/features/pokemon-picker';
+import { PokemonIcon } from '@/features/pokemon-picker';
 
 type MegaFormSectionProps = {
   myMegaPicks: string[];

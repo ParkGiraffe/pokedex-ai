@@ -2,9 +2,9 @@ import { useNavigate, useSearch } from '@tanstack/react-router';
 
 import { cn } from '@/common/lib/cn';
 import { Card, CardContent, CardHeader, CardTitle } from '@/common/ui/Card';
-import { type MetaLeadRecord } from '@/features/meta/api';
-import { useMeta } from '@/features/meta/model/useMeta';
-import { PokemonIcon } from '@/features/pokemon-picker/ui/PokemonIcon';
+import { type MetaLeadRecord } from '@/features/meta';
+import { useMeta } from '@/features/meta';
+import { PokemonIcon } from '@/features/pokemon-picker';
 
 import { PopularPresetsTab } from './PopularPresetsTab';
 

@@ -5,8 +5,8 @@ import { Card } from '@/common/ui/Card';
 import { Field } from '@/common/ui/Field';
 import { NumberField } from '@/common/ui/NumberField';
 import { Select } from '@/common/ui/Select';
-import { PokemonIcon } from '@/features/pokemon-picker/ui/PokemonIcon';
-import { PokemonPicker } from '@/features/pokemon-picker/ui/PokemonPicker';
+import { PokemonIcon } from '@/features/pokemon-picker';
+import { PokemonPicker } from '@/features/pokemon-picker';
 
 import { assumedSpeed, optimizeSpeed, type SpeedReverseInput } from '../lib/optimize';
 import { natureOptions } from './ev-options';

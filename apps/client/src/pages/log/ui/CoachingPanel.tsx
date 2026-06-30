@@ -1,8 +1,8 @@
 import { Button } from '@/common/ui/Button';
 import { Card } from '@/common/ui/Card';
-import { type BattleStatsRes } from '@/features/battle-log/api';
-import { type CounterPoolMon, type CounterRes } from '@/features/counter/api';
-import { useCounters } from '@/features/counter/model/useCounters';
+import { type BattleStatsRes } from '@/features/battle-log';
+import { type CounterPoolMon, type CounterRes } from '@/features/counter';
+import { useCounters } from '@/features/counter';
 
 import { analyzeCoaching } from '../lib/coaching';
 

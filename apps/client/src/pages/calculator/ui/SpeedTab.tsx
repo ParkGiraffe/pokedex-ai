@@ -9,10 +9,10 @@ import { Field } from '@/common/ui/Field';
 import { NumberField } from '@/common/ui/NumberField';
 import { Select } from '@/common/ui/Select';
 import { TypeBadge } from '@/common/ui/TypeBadge';
-import { MegaControl } from '@/features/pokemon-picker/ui/MegaControl';
-import { PokemonDatalist } from '@/features/pokemon-picker/ui/PokemonDatalist';
-import { PokemonIcon } from '@/features/pokemon-picker/ui/PokemonIcon';
-import { PokemonPicker } from '@/features/pokemon-picker/ui/PokemonPicker';
+import { MegaControl } from '@/features/pokemon-picker';
+import { PokemonDatalist } from '@/features/pokemon-picker';
+import { PokemonIcon } from '@/features/pokemon-picker';
+import { PokemonPicker } from '@/features/pokemon-picker';
 
 import { compareSpeed, computeSpeed } from '../lib/speed-calc';
 import { type SpeedSide, useSpeedStore } from '../model/speed-store';

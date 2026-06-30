@@ -3,7 +3,7 @@ import { Link } from '@tanstack/react-router';
 import { Badge } from '@/common/ui/Badge';
 import { Button } from '@/common/ui/Button';
 import { Card } from '@/common/ui/Card';
-import { PokemonIcon } from '@/features/pokemon-picker/ui/PokemonIcon';
+import { PokemonIcon } from '@/features/pokemon-picker';
 import { useLeaderboard } from '@/features/presets/model/useLeaderboard';
 
 const RANK_STYLES = [
