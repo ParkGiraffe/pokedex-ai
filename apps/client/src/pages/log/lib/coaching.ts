@@ -1,4 +1,4 @@
-import { type BattleStatsRes } from '@/features/battle-log/api';
+import { type BattleStatsRes } from '@/features/battle-log';
 
 const MIN_GAMES = 3;
 const WEAK_RATE = 50;

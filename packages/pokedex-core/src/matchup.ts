@@ -1,6 +1,6 @@
 import { pokedexByKo } from './data';
-import { typeEffectiveness } from './formula/matchup';
 import { actualStat } from './formula/stat';
+import { typeEffectiveness } from './formula/type-effectiveness';
 import { findMove } from './lookup';
 import type { MegaForm } from './megas';
 import type { Party, PartyMember, TypeName } from './types';

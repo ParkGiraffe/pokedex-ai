@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { typeEffectiveness } from '../src/formula/matchup';
+import { typeEffectiveness } from '../src/formula/type-effectiveness';
 
 describe('타입 상성', () => {
   it('물이 불꽃에 2배', () => {

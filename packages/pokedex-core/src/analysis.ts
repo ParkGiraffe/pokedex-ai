@@ -1,6 +1,6 @@
 import { pokedexByKo } from './data';
-import { typeEffectiveness } from './formula/matchup';
 import { actualStatBlock } from './formula/stat';
+import { typeEffectiveness } from './formula/type-effectiveness';
 import { type Party, type StatBlock, TYPE_NAMES, type TypeName } from './types';
 
 type ResolvedMember = {

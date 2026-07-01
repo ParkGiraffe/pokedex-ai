@@ -11,7 +11,7 @@ import {
   UpdatePresetBody,
   type UpdatePresetInput,
 } from './dto';
-import { type Preset } from './preset.entity';
+import { type Preset } from './entities';
 import { PresetsService } from './presets.service';
 
 type PresetRes = {

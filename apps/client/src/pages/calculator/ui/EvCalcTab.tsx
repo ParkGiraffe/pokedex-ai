@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { cn } from '@/common/lib/cn';
-import { PokemonDatalist } from '@/features/pokemon-picker/ui/PokemonDatalist';
+import { PokemonDatalist } from '@/features/pokemon-picker';
 
 import { BulkMode } from './BulkMode';
 import { EvSpeedMode } from './EvSpeedMode';

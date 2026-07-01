@@ -1,10 +1,10 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 
-import { User } from '../users/user.entity';
-import { BattleLog } from './battle-log.entity';
+import { User } from '../users/entities';
 import { MAX_BATTLE_LOGS } from './battle-log-cap';
 import { type CreateBattleLogInput } from './dto';
+import { BattleLog } from './entities';
 
 export type LeadRecord = { lead: string; games: number; wins: number; winRate: number };
 export type OpponentRecord = { opponent: string; games: number; wins: number; winRate: number };

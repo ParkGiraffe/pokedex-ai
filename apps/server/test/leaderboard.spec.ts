@@ -6,9 +6,9 @@ import request from 'supertest';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 import { createApp } from '../src/app.factory';
-import { Preset } from '../src/presets/preset.entity';
-import { User } from '../src/users/user.entity';
-import { UserTier } from '../src/users/user.enums';
+import { Preset } from '../src/presets/entities';
+import { User } from '../src/users/entities';
+import { UserTier } from '../src/users/enums';
 
 type AuthRes = { accessToken: string; user: { id: string } };
 type PresetRes = { id: string; shareToken?: string | null };

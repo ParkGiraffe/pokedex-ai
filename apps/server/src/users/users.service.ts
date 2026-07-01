@@ -1,8 +1,8 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 
-import { type ProviderName } from '../auth/domain/identity';
-import { User } from './user.entity';
+import { type ProviderName } from '../auth/providers/identity';
+import { User } from './entities';
 
 @Injectable()
 export class UsersService {

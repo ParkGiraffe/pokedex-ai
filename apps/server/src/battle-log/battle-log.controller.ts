@@ -3,9 +3,9 @@ import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Post, Us
 import { JwtAuthGuard } from '../auth/auth.guard';
 import { CurrentUserId } from '../auth/current-user.decorator';
 import { ZodValidationPipe } from '../common/zod-validation.pipe';
-import { type BattleLog } from './battle-log.entity';
 import { BattleLogService, type BattleStats } from './battle-log.service';
 import { CreateBattleLogBody, type CreateBattleLogInput } from './dto';
+import { type BattleLog } from './entities';
 
 type BattleLogRes = {
   id: string;

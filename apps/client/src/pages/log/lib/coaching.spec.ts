@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { type BattleStatsRes } from '@/features/battle-log/api';
+import { type BattleStatsRes } from '@/features/battle-log';
 
 import { analyzeCoaching } from './coaching';
 

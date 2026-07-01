@@ -3,7 +3,7 @@ import { type Party } from '@pokedex-agent/pokedex-core';
 import { cn } from '@/common/lib/cn';
 import { Badge } from '@/common/ui/Badge';
 import { Card } from '@/common/ui/Card';
-import { PokemonIcon } from '@/features/pokemon-picker/ui/PokemonIcon';
+import { PokemonIcon } from '@/features/pokemon-picker';
 
 type RosterCardProps = {
   myParty: Party;

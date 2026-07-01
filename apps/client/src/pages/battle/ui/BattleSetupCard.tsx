@@ -4,7 +4,7 @@ import { Card } from '@/common/ui/Card';
 import { Field } from '@/common/ui/Field';
 import { NumberField } from '@/common/ui/NumberField';
 import { Select } from '@/common/ui/Select';
-import { PokemonPicker } from '@/features/pokemon-picker/ui/PokemonPicker';
+import { PokemonPicker } from '@/features/pokemon-picker';
 
 const WEATHERS: Weather[] = ['맑음', '비', '모래바람', '눈'];
 

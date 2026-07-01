@@ -5,7 +5,7 @@ import { Button } from '@/common/ui/Button';
 import { Card } from '@/common/ui/Card';
 import { Input } from '@/common/ui/Input';
 import { useAuthStore } from '@/features/auth';
-import { useBattleVision } from '@/features/battle-vision/model/useBattleVision';
+import { useBattleVision } from '@/features/battle-vision';
 
 export const ScreenshotTab = () => {
   const isLoggedIn = useAuthStore((state) => Boolean(state.token));

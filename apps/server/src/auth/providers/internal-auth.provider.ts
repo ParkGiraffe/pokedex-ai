@@ -1,9 +1,9 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 
 import { UsersService } from '../../users/users.service';
-import { type AuthProvider } from '../domain/auth-provider.port';
-import { type ProviderName, type VerifiedIdentity } from '../domain/identity';
-import { PASSWORD_HASHER, type PasswordHasher } from '../domain/password-hasher.port';
+import { type AuthProvider } from './auth-provider.port';
+import { type ProviderName, type VerifiedIdentity } from './identity';
+import { PASSWORD_HASHER, type PasswordHasher } from './password-hasher.port';
 
 @Injectable()
 export class InternalAuthProvider implements AuthProvider {

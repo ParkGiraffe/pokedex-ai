@@ -6,10 +6,10 @@ import { cn } from '@/common/lib/cn';
 import { Badge } from '@/common/ui/Badge';
 import { Button } from '@/common/ui/Button';
 import { Card } from '@/common/ui/Card';
-import { type LeadScore, type Pairwise } from '@/features/matchup-matrix/api';
-import { useMatchupMatrix } from '@/features/matchup-matrix/model/useMatchupMatrix';
-import { PokemonDatalist } from '@/features/pokemon-picker/ui/PokemonDatalist';
-import { PokemonIcon } from '@/features/pokemon-picker/ui/PokemonIcon';
+import { type LeadScore, type Pairwise } from '@/features/matchup-matrix';
+import { useMatchupMatrix } from '@/features/matchup-matrix';
+import { PokemonDatalist } from '@/features/pokemon-picker';
+import { PokemonIcon } from '@/features/pokemon-picker';
 
 import { MatrixLegend } from './MatrixLegend';
 import { MAX_TEAM, TeamInputCard } from './TeamInputCard';

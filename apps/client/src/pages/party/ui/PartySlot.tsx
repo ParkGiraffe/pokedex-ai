@@ -6,8 +6,8 @@ import { Field } from '@/common/ui/Field';
 import { Input } from '@/common/ui/Input';
 import { NumberField } from '@/common/ui/NumberField';
 import { Select } from '@/common/ui/Select';
-import { PokemonIcon } from '@/features/pokemon-picker/ui/PokemonIcon';
-import { PokemonPicker } from '@/features/pokemon-picker/ui/PokemonPicker';
+import { PokemonIcon } from '@/features/pokemon-picker';
+import { PokemonPicker } from '@/features/pokemon-picker';
 
 import { memberError } from '../lib/party';
 import { type MemberDraft } from '../model/store';

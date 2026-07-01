@@ -7,8 +7,8 @@ import { Field } from '@/common/ui/Field';
 import { HpBar } from '@/common/ui/HpBar';
 import { NumberField } from '@/common/ui/NumberField';
 import { Select } from '@/common/ui/Select';
-import { MegaControl } from '@/features/pokemon-picker/ui/MegaControl';
-import { PokemonIcon } from '@/features/pokemon-picker/ui/PokemonIcon';
+import { MegaControl } from '@/features/pokemon-picker';
+import { PokemonIcon } from '@/features/pokemon-picker';
 
 import { type BattleAdvice } from '../lib/battle';
 

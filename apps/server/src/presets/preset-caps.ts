@@ -1,4 +1,4 @@
-import { UserTier } from '../users/user.enums';
+import { UserTier } from '../users/enums';
 
 export const PRESET_CAP_BY_TIER: Record<UserTier, number> = {
   [UserTier.FREE]: 2,

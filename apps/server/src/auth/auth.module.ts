@@ -3,15 +3,15 @@ import { ConfigService } from '@nestjs/config';
 import { JwtModule, type JwtModuleOptions } from '@nestjs/jwt';
 
 import { UsersModule } from '../users/users.module';
-import { AuthService } from './application/auth.service';
 import { AuthController } from './auth.controller';
 import { JwtAuthGuard } from './auth.guard';
-import { AUTH_PROVIDERS } from './domain/auth-provider.port';
-import { PASSWORD_HASHER } from './domain/password-hasher.port';
-import { TOKEN_SERVICE } from './domain/token-service.port';
-import { InternalAuthProvider } from './infrastructure/internal-auth.provider';
-import { JwtTokenService } from './infrastructure/jwt-token.service';
-import { ScryptPasswordHasher } from './infrastructure/scrypt-password-hasher';
+import { AuthService } from './auth.service';
+import { AUTH_PROVIDERS } from './providers/auth-provider.port';
+import { InternalAuthProvider } from './providers/internal-auth.provider';
+import { JwtTokenService } from './providers/jwt-token.service';
+import { PASSWORD_HASHER } from './providers/password-hasher.port';
+import { ScryptPasswordHasher } from './providers/scrypt-password-hasher';
+import { TOKEN_SERVICE } from './providers/token-service.port';
 
 @Module({
   imports: [
